@@ -11,6 +11,7 @@
             margin: 0;
             padding: 0;
             background-color: #f8f9fa;
+            padding-bottom: 50px; /* Sayfa altına rahatlık payı */
         }
 
         /* Üst Menü (Navbar) */
@@ -94,7 +95,6 @@
             gap: 15px;
             position: relative;
             z-index: 10;
-            margin-bottom: 400px;
         }
 
         /* Açılır Liste (Select) */
@@ -148,6 +148,18 @@
             font-weight: bold;
             display: none;
         }
+
+        /* =========================================
+           GİZLİ FORMLARIN TASARIMI
+           ========================================= */
+        .gizli-form { display: none; background: white; max-width: 900px; margin: 20px auto; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .gizli-form h2 { color: #1b656e; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 0; text-align: center; }
+        .form-grup { margin-bottom: 15px; text-align: left; }
+        .form-grup label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; font-size: 14px; }
+        .form-grup input, .form-grup select, .form-grup textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
+        .form-bilgi { font-size: 12px; color: #e74c3c; margin-top: 5px; display: block; }
+        .form-satir { display: flex; gap: 15px; }
+        .form-satir .form-grup { flex: 1; }
     </style>
 </head>
 <body>
@@ -204,16 +216,157 @@
     
     <div id="hata-mesaji">Lütfen listeden bir form seçiniz!</div>
 
+    <!-- =========================================
+         GİZLİ FORMLAR BURAYA EKLENDİ
+         ========================================= -->
+
+    <!-- F-52 FORMU -->
+    <div id="form_f52.php" class="gizli-form">
+        <h2>Akıllı Kart İşlem Formu (F-52)</h2>
+        <form>
+            <div class="form-satir">
+                <div class="form-grup"><label>Ad, Soyad</label><input type="text" required></div>
+                <div class="form-grup"><label>TC Kimlik No</label><input type="text" maxlength="11" required></div>
+            </div>
+            <div class="form-satir">
+                <div class="form-grup"><label>Fakülte/YO/MYO/Birim</label><input type="text"></div>
+                <div class="form-grup"><label>İrtibat Telefonu</label><input type="text"></div>
+            </div>
+            <div class="form-grup">
+                <label>Kart (Kişi) Tipi</label>
+                <select required>
+                    <option value="">Seçiniz...</option>
+                    <option>Akademik Personel</option>
+                    <option>İdari Personel</option>
+                    <option>Hizmet Alımı Personeli</option>
+                    <option>Firma Personeli</option>
+                    <option>Diğer Kurum Personeli</option>
+                    <option>Misafir Personel</option>
+                    <option>Koruma ve Güvenlik Personeli</option>
+                    <option>Özel Güvenlik Personeli</option>
+                    <option>Emekli Personel</option>
+                    <option>Onursal</option>
+                    <option>Kütüphane</option>
+                </select>
+            </div>
+            <div class="form-grup">
+                <label>Yapılacak İşlem Türü</label>
+                <select required>
+                    <option value="">Seçiniz...</option>
+                    <option>Akıllı kartın ilk kez verilmesi</option>
+                    <option>Hatalı Basılan Kart Bilgisinin Düzeltilmesi</option>
+                    <option>Bilgi Değişikliği</option>
+                    <option>Ayrılış (İstifa, Emeklilik vb.)</option>
+                </select>
+            </div>
+            <div class="form-satir">
+                <div class="form-grup"><label>Unvanı</label><input type="text"></div>
+                <div class="form-grup"><label>Bölüm</label><input type="text"></div>
+                <div class="form-grup"><label>Kurum Sicil No</label><input type="text"></div>
+            </div>
+            <div class="form-satir">
+                <div class="form-grup"><label>Ödemeye Esas Ek Gösterge</label><input type="text"></div>
+                <div class="form-grup"><label>Kan Grubu</label><input type="text"></div>
+            </div>
+            <div class="form-grup">
+                <label>Fotoğraf Yükle</label>
+                <input type="file" accept=".jpg, .jpeg">
+                <span class="form-bilgi">* Fotoğraflar yakın tarihli, vesikalık, dijital çekilmiş (en az 300dpi) ve T.C. kimlik no adıyla .jpg olmalıdır.</span>
+            </div>
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- F-53 FORMU -->
+    <div id="form_f53.php" class="gizli-form">
+        <h2>Akıllı Kart Öğrenci İşlem Formu (F-53)</h2>
+        <form>
+            <div class="form-satir">
+                <div class="form-grup"><label>Ad Soyad</label><input type="text" required></div>
+                <div class="form-grup"><label>Okul No</label><input type="text" required></div>
+                <div class="form-grup"><label>TC Kimlik No</label><input type="text" maxlength="11" required></div>
+            </div>
+            <div class="form-satir">
+                <div class="form-grup"><label>Fakülte/Yüksekokul/MYO/Enstitü</label><input type="text"></div>
+                <div class="form-grup"><label>Bölüm</label><input type="text"></div>
+                <div class="form-grup"><label>Program</label><input type="text"></div>
+            </div>
+            <div class="form-grup">
+                <label>Açıklama (Öğrencinin son durumu ile ilgili bilgi)</label>
+                <textarea rows="3" placeholder="Yeni kayıt, mezun, kayıt dondurmuş vb."></textarea>
+            </div>
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- F-54 FORMU -->
+    <div id="form_f54.php" class="gizli-form">
+        <h2>Kayıp Akıllı Kart Müracaat Formu (F-54)</h2>
+        <form>
+            <div class="form-grup"><label>Görev Yapılan / Öğrenim Görülen Yer</label><input type="text" required></div>
+            <div class="form-satir">
+                <div class="form-grup"><label>TC Kimlik No</label><input type="text" maxlength="11" required></div>
+                <div class="form-grup"><label>Ad Soyad</label><input type="text" required></div>
+            </div>
+            <div class="form-satir">
+                <div class="form-grup"><label>Kart Seri No</label><input type="text"></div>
+                <div class="form-grup"><label>Kayıp Tarihi</label><input type="date"></div>
+                <div class="form-grup"><label>İrtibat Telefonu</label><input type="text"></div>
+            </div>
+            <p style="font-size: 14px; color: #555; text-align: justify;">
+                Yukarıda belirttiğim adıma kayıtlı olan akıllı kimlik kartımı kaybettim. Eski kimlik kartımın AKS sisteminden iptal edilmesini ve bedeli karşılığında yeni kimlik kartımın tanzim edilerek tarafıma verilmesini rica ederim.
+            </p>
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- F-55 FORMU -->
+    <div id="form_f55.php" class="gizli-form">
+        <h2>Arızalı Akıllı Kart Müracaat Formu (F-55)</h2>
+        <form>
+            <div class="form-grup"><label>Görev Yapılan / Öğrenim Görülen Yer</label><input type="text" required></div>
+            <div class="form-satir">
+                <div class="form-grup"><label>TC Kimlik No</label><input type="text" maxlength="11" required></div>
+                <div class="form-grup"><label>Ad Soyad</label><input type="text" required></div>
+            </div>
+            <div class="form-satir">
+                <div class="form-grup"><label>Kart Seri No</label><input type="text"></div>
+                <div class="form-grup"><label>Arıza Tarihi</label><input type="date"></div>
+                <div class="form-grup"><label>İrtibat Telefonu</label><input type="text"></div>
+            </div>
+            <p style="font-size: 14px; color: #555; text-align: justify;">
+                Eski kimlik kartımın AKS sisteminden iptal edilmesi ve teknik inceleme sonucunda, kart arızasının tarafımdan kaynakladığı takdirde bedeli karşılığında yeni akıllı kimlik kartımın tanzim edilerek tarafıma verilmesini rica ederim.
+            </p>
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- JS SCRİPT ALANI -->
     <script>
         function formYonetlendir() {
             var secilenForm = document.getElementById("formSecici").value;
             var hataMesaji = document.getElementById("hata-mesaji");
+            var tumFormlar = document.querySelectorAll(".gizli-form");
             
+            // "Tamam" butonuna her basıldığında önce tüm formları ekrandan gizle
+            tumFormlar.forEach(function(form) {
+                form.style.display = "none";
+            });
+            
+            // Eğer açılır listeden bir şey seçilmemişse
             if (secilenForm === "") {
                 hataMesaji.style.display = "block";
             } else {
                 hataMesaji.style.display = "none";
-                alert("Sistem bu aşamada " + secilenForm + " dosyasına yönlendirme yapacaktır. Formlar oluşturulduğunda bu uyarı kalkacaktır.");
+                
+                // Seçilen formu ekranda göster
+                var acilacakForm = document.getElementById(secilenForm);
+                if (acilacakForm) {
+                    acilacakForm.style.display = "block";
+                } else {
+                    // Eğer seçilen form Bilgi İşlem formlarından biriyse
+                    alert("Seçtiğiniz form (" + secilenForm + ") yapım aşamasındadır. Şimdilik sadece F-52, F-53, F-54 ve F-55 kart formları aktiftir.");
+                }
             }
         }
     </script>
