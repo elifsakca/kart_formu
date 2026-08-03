@@ -134,9 +134,7 @@
         </div>
         <div style="font-size: 14px; color: #555;">
             ANASAYFA &nbsp;&nbsp;|&nbsp;&nbsp; FORMLAR HAKKINDA
-            <div>
-            <a href="https://bidb.balikesir.edu.tr/" target="_blank" class="navbar-link">BİLGİ İŞLEM DAİRE BAŞKANLIĞI | Balıkesir Üniversitesi</a>
-            </div>
+            
         </div>
     </div>
 
