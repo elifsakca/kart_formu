@@ -27,17 +27,19 @@
         .btn-tamam:hover { background-color: rgb(3, 149, 159); }
         #hata-mesaji { color: #e74c3c; text-align: center; margin-top: 15px; font-weight: bold; display: none; }
 
-        /* Gizli Formların Tasarımı ve Kırmızı Uyarı Yazıları */
+        /* Gizli Formların Tasarımı */
         .gizli-form { display: none; background: white; max-width: 900px; margin: 20px auto; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .gizli-form h2 { color: #1b656e; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 0; text-align: center; }
         .form-grup { margin-bottom: 15px; text-align: left; }
         .form-grup label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; font-size: 14px; }
         .form-grup input[type="text"], .form-grup input[type="date"], .form-grup select, .form-grup textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
         
-        /* Önemli Uyarı Sınıfı (Kırmızı ve Küçük) */
+        /* Önemli Uyarı ve Checkbox Sınıfları */
         .form-bilgi { font-size: 11.5px; color: #d93025; margin-top: 4px; display: block; font-weight: 500; }
         .form-bilgi-liste { font-size: 11.5px; color: #d93025; background: #fce8e6; padding: 10px; border-radius: 5px; border-left: 3px solid #d93025; margin-bottom: 15px; }
         .resmi-yazi { font-size: 14px; color: #333; text-align: justify; line-height: 1.6; background: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #eee; margin-bottom: 20px; }
+        .checkbox-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; font-size: 13px; color: #333; }
+        .checkbox-grid label { font-weight: normal !important; display: flex; align-items: center; gap: 8px; cursor: pointer; color: #333 !important; }
         
         .form-satir { display: flex; gap: 15px; }
         .form-satir .form-grup { flex: 1; }
@@ -96,7 +98,7 @@
     <div id="hata-mesaji">Lütfen listeden bir form seçiniz!</div>
 
     <!-- =========================================
-         GİZLİ FORMLAR (BİREBİR ORİJİNAL EVRAK METİNLERİ İLE)
+         GİZLİ FORMLAR
          ========================================= -->
 
     <!-- F-52 FORMU (PERSONEL İŞLEMLERİ) -->
@@ -184,7 +186,7 @@
             <div class="form-grup">
                 <label>Ödemeye Esas Ek Göstergesi</label>
                 <input type="text">
-                <span class="form-bilgi">Personelin ödemeye esas ek göstergesi yemek ücretinin belirlenmesinde baz alınacağı için doğruluğundan ilgili birim sorumlu olacaktır. (Akademik, İdari Personel ve Güvenlik görevlileri içindir.)</span>
+                <span class="form-bilgi">Personelin ödemeye esas ek göstergesi yemek ücretinin belirlenmesinde baz alınacağı için doğruluğundan ilgili birim sorumlu olacaktır.</span>
             </div>
 
             <div class="form-satir">
@@ -203,9 +205,31 @@
                 <span class="form-bilgi">Bu kısmı sadece Yerleşke Misafir Giriş Kartı alacak personel doldurmalıdır.</span>
             </div>
 
-            <!-- Bilgi Değişikliği Özel Alanı -->
+            <!-- Bilgi Değişikliği Özel Alanı (CHECKBOX İLE GÜNCELLENDİ) -->
             <div class="form-bilgi-liste" style="background:#e8f4f8; border-left-color:#1b656e;">
-                <label style="color:#1b656e; font-weight:bold; font-size:13px; margin-bottom:5px; display:block;">Hatalı Basılan Kart veya Bilgi Değişikliği Yapılacaksa (Düzeltilecek veya değişecek yeni bilginizi aşağıya yazınız):</label>
+                <label style="color:#1b656e; font-weight:bold; font-size:14px; margin-bottom:10px; display:block;">Hatalı Basılan Kart veya Bilgi Değişikliği Yapılacaksa Düzeltilecek / Değişecek Kısmı Seçiniz:</label>
+                
+                <div class="checkbox-grid">
+                    <label><input type="checkbox"> Ad, Soyad</label>
+                    <label><input type="checkbox"> Unvan</label>
+                    <label><input type="checkbox"> Görev</label>
+                    <label><input type="checkbox"> Birim</label>
+                    <label><input type="checkbox"> Bölüm</label>
+                    <label><input type="checkbox"> Kurum Sicil No</label>
+                    <label><input type="checkbox"> TC Kimlik No</label>
+                    <label><input type="checkbox"> Hizmet Yeri</label>
+                    <label><input type="checkbox"> Firma Adı</label>
+                    <label><input type="checkbox"> Kurum Adı</label>
+                    <label><input type="checkbox"> Kan Grubu</label>
+                    <label><input type="checkbox"> Fotoğraf</label>
+                    <label style="grid-column: span 2;"><input type="checkbox"> Ödemeye Esas Ek Göstergesi</label>
+                    <label style="grid-column: span 3; display: flex; gap: 10px;">
+                        <input type="checkbox"> Diğer: 
+                        <input type="text" style="width: 250px; padding: 4px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+                    </label>
+                </div>
+
+                <label style="color:#1b656e; font-weight:bold; font-size:13px; margin-bottom:5px; margin-top: 15px; display:block;">Yeni Bilgi (Seçtiğiniz alanın doğru halini aşağıya yazınız):</label>
                 <textarea rows="2" style="width:100%; border:1px solid #ccc; border-radius:4px; padding:5px;"></textarea>
             </div>
 
@@ -269,12 +293,12 @@
         </form>
     </div>
 
-    <!-- F-54 FORMU (KAYIP KART) -->
+    <!-- F-54 FORMU (KAYIP KART - YAZI GÜNCELLENDİ) -->
     <div id="form_f54.php" class="gizli-form">
         <h2>Kayıp Akıllı Kart Müracaat Formu (F-54)</h2>
         <form>
             <div class="resmi-yazi">
-                Yukarıda belirttiğim adıma kayıtlı olan akıllı kimlik kartımı kaybettim. Eski kimlik kartımın AKS sisteminden iptal edilmesini ve bedeli karşılığında yeni kimlik kartımın tanzim edilerek tarafıma verilmesini rica ederim.
+                Aşağıda belirttiğim adıma kayıtlı olan akıllı kimlik kartımı kaybettim. Eski kimlik kartımın AKS sisteminden iptal edilmesini ve bedeli karşılığında yeni kimlik kartımın tanzim edilerek tarafıma verilmesini rica ederim.
             </div>
             
             <div class="form-grup"><label>Görev Yapılan / Öğrenim Görülen Yer</label><input type="text" required></div>
