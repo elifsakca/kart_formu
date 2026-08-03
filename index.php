@@ -30,6 +30,24 @@
             font-weight: bold;
             color: #1b656e;
             font-size: 18px;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .navbar-logo:hover {
+            opacity: 0.8;
+        }
+
+        /* Navbar Link Stili */
+        .navbar-link {
+            font-size: 14px;
+            color: #555;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .navbar-link:hover {
+            color: #1b656e;
         }
 
         /* Banner Alanı */
@@ -53,6 +71,17 @@
             opacity: 0.9;
         }
 
+        .banner p a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .banner p a:hover {
+            opacity: 0.7;
+            text-decoration: underline;
+        }
+
         /* Form Seçim Kutusu */
         .secim-kutusu {
             background: white;
@@ -65,7 +94,6 @@
             gap: 15px;
             position: relative;
             z-index: 10;
-            /* LİSTENİN AŞAĞI AÇILMASI İÇİN EKLENEN BOŞLUK */
             margin-bottom: 400px;
         }
 
@@ -79,7 +107,6 @@
             outline: none;
             color: #333;
             appearance: none;
-            /* Açılır ok işaretinin rengi URL encoding içinde %231b656e olarak güncellendi */
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%231b656e%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat;
             background-position: right 15px top 50%;
@@ -127,21 +154,19 @@
 
     <!-- Üst Menü -->
     <div class="navbar">
-        <div class="navbar-logo">
-            <!-- Güncellenmiş Logo URL'si -->
+        <a href="https://bid.balikesir.edu.tr" target="_blank" class="navbar-logo">
             <img src="https://baunwebapi.balikesir.edu.tr/uploads/1729083231270.png" alt="BAÜN Logo" height="50">
             BALIKESİR ÜNİVERSİTESİ
-        </div>
-        <div style="font-size: 14px; color: #555;">
-            ANASAYFA &nbsp;&nbsp;|&nbsp;&nbsp; FORMLAR HAKKINDA
-            
+        </a>
+        <div>
+            <a href="https://bid.balikesir.edu.tr" target="_blank" class="navbar-link">BİLGİ İŞLEM DAİRE BAŞKANLIĞI | Balıkesir Üniversitesi</a>
         </div>
     </div>
 
     <!-- Banner -->
     <div class="banner">
         <h1>Üniversitemiz Form İşlem Merkezi</h1>
-        <p>ANASAYFA > FORMLAR</p>
+        <p><a href="https://bid.balikesir.edu.tr" target="_blank">ANASAYFA</a> > FORMLAR</p>
     </div>
 
     <!-- Form Seçim Kutusu -->
@@ -149,7 +174,7 @@
         <select id="formSecici" class="form-select">
             <option value="">-- Doldurmak İstediğiniz Formu Seçiniz --</option>
             
-            <!-- Önceki Akıllı Kart Formları -->
+            <!-- Akıllı Kart Formları -->
             <optgroup label="Akıllı Kart Formları">
                 <option value="form_f52.php">Akıllı Kart İşlem Formu (F-52)</option>
                 <option value="form_f53.php">Akıllı Kart Öğrenci İşlem Formu (F-53)</option>
@@ -157,7 +182,7 @@
                 <option value="form_f55.php">Arızalı Akıllı Kart Müracaat Formu (F-55)</option>
             </optgroup>
 
-            <!-- Görselden Eklenen Yeni Bilgi İşlem Formları -->
+            <!-- Bilgi İşlem Daire Başkanlığı Formları -->
             <optgroup label="Bilgi İşlem Daire Başkanlığı Formları">
                 <option value="form_0071.php">KDYS.FR.0071 - Bilgi İşlem DB Bakım Onarım Takip Formu</option>
                 <option value="form_0072.php">KDYS.FR.0072 - Bilgi İşlem DB Kurumsal E-Posta Talep Formu</option>
@@ -172,7 +197,6 @@
             </optgroup>
         </select>
         
-        <!-- İkon kaldırılmış Tamam butonu -->
         <button class="btn-tamam" onclick="formYonetlendir()">
             Tamam
         </button>
