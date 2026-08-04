@@ -595,58 +595,9 @@
                 Birimimiz adına kullanılmak üzere, sistemde yukarıda belirtilen e-posta hesabının açılmasını talep ediyoruz. Ayrıca yukarıda bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, T.C. Balıkesir Üniversitesi E-posta Kullanım Politikası ve Bilgi İşlem Daire Başkanlığı web sayfasında bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaların okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.
             </div>
 
-            <div class="form-satir">
-                <div class="form-grup">
-                    <label>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</label>
-                    <input type="text" required>
-                </div>
-                <div class="form-grup">
-                    <label>Tarih</label>
-                    <input type="date" required>
-                </div>
-            </div>
+        
 
-            <!-- BİLGİ İŞLEM DAİRESİ İŞLEMLERİ BÖLÜMÜ -->
-            <table class="teknik-tablo">
-                <tr>
-                    <td colspan="2" class="baslik-ortali">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ</td>
-                </tr>
-                <tr>
-                    <td class="baslik-gri">İşlem Tarihi *</td>
-                    <td><input type="date" style="max-width: 200px;"></td>
-                </tr>
-                <tr>
-                    <td class="baslik-gri">E-posta Adresi *</td>
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <input type="text" style="flex: 1;" placeholder="........................">
-                            <strong>@balikesir.edu.tr</strong>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="baslik-gri">E-posta adresinin geçerlilik süresi *</td>
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 20px;">
-                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
-                                <input type="checkbox"> Süresiz
-                            </label>
-                            <div style="display: flex; align-items: center; gap: 5px;">
-                                <input type="text" style="width: 150px;" placeholder="____">
-                                <span>ay/gün/yıl</span>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="baslik-gri">Kullanıcı Şifresi *</td>
-                    <td><input type="text"></td>
-                </tr>
-                <tr>
-                    <td class="baslik-gri">İşlemi Yapan Personel *</td>
-                    <td><input type="text" placeholder="Ad Soyad"></td>
-                </tr>
-            </table>
+                
 
             <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
         </form>
@@ -1105,11 +1056,7 @@
                 <p>Kullanım ve Kullanıcı tanımlarının yetersiz kaldığı ya da “BAÜN Bilişim Kaynakları Kullanım Politikası” belgesi dâhilinde tanımlı olmayan durumlar BAÜN makamlarınca değerlendirilir.</p>
             </div>
  
-            <div class="form-bilgi-liste" style="background: #f9f9f9; border-left-color: #1b656e; color: #333;">
-                <label style="display: flex; align-items: center; gap: 8px; font-weight: bold; cursor: pointer;">
-                    <input type="checkbox" required> Yukarıdaki bilgilerin doğruluğunu ve BAÜN Bilişim Kaynakları Kullanım Politikasını kabul ediyorum.
-                </label>
-            </div>
+            
             <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Talebi ve Sözleşmeyi Gönder</button>
         </form>
     </div>
