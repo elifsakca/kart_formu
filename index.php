@@ -32,7 +32,7 @@
         .gizli-form h2 { color: #1b656e; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 0; text-align: center; }
         .form-grup { margin-bottom: 15px; text-align: left; }
         .form-grup label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; font-size: 14px; }
-        .form-grup input[type="text"], .form-grup input[type="date"], .form-grup select, .form-grup textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
+        .form-grup input[type="text"], .form-grup input[type="date"], .form-grup input[type="time"], .form-grup select, .form-grup textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
         
         /* Önemli Uyarı ve Checkbox Sınıfları */
         .form-bilgi { font-size: 11.5px; color: #d93025; margin-top: 4px; display: block; font-weight: 500; }
@@ -205,7 +205,7 @@
                 <span class="form-bilgi">Bu kısmı sadece Yerleşke Misafir Giriş Kartı alacak personel doldurmalıdır.</span>
             </div>
 
-            <!-- Bilgi Değişikliği Özel Alanı (CHECKBOX İLE GÜNCELLENDİ) -->
+            <!-- Bilgi Değişikliği Özel Alanı -->
             <div class="form-bilgi-liste" style="background:#e8f4f8; border-left-color:#1b656e;">
                 <label style="color:#1b656e; font-weight:bold; font-size:14px; margin-bottom:10px; display:block;">Hatalı Basılan Kart veya Bilgi Değişikliği Yapılacaksa Düzeltilecek / Değişecek Kısmı Seçiniz:</label>
                 
@@ -293,7 +293,7 @@
         </form>
     </div>
 
-    <!-- F-54 FORMU (KAYIP KART - YAZI GÜNCELLENDİ) -->
+    <!-- F-54 FORMU (KAYIP KART) -->
     <div id="form_f54.php" class="gizli-form">
         <h2>Kayıp Akıllı Kart Müracaat Formu (F-54)</h2>
         <form>
@@ -347,6 +347,274 @@
         </form>
     </div>
 
+    <!-- KDYS.FR.0071 - Bilgi İşlem DB Bakım Onarım Takip Formu -->
+    <div id="form_0071.php" class="gizli-form">
+        <h2>KDYS.FR.0071 - Bilgi İşlem DB Bakım Onarım Takip Formu</h2>
+        <form>
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Birim Adı</label>
+                    <input type="text" value="BALIKESİR ÜNİVERSİTESİ-" required>
+                </div>
+                <div class="form-grup">
+                    <label>Talebi İleten Personelin Adı-Soyadı</label>
+                    <input type="text" required>
+                </div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Telefonu</label>
+                    <input type="text">
+                </div>
+                <div class="form-grup">
+                    <label>Cihazın Marka/Modeli ve Seri No</label>
+                    <input type="text" placeholder="Marka/Model - Seri No: ...">
+                </div>
+            </div>
+
+            <div class="form-grup">
+                <label>Arıza / Bakım / Tesis Tanımı (Şikâyet sebebi)</label>
+                <textarea rows="3" required></textarea>
+            </div>
+
+            <div class="form-grup">
+                <label>Donanım Destek Grubuna İletmeniz Gereken Bir Durum Var mı?</label>
+                <textarea rows="2"></textarea>
+            </div>
+
+            <div class="form-bilgi-liste" style="background: #f9f9f9; border-left-color: #1b656e; color: #333;">
+                <p style="margin: 0 0 8px 0;">* Donanım destek birimine teslim edilen cihaz içerisinde destek personelinin görmesinde sakınca olan hiçbir veri bulunmamalıdır.</p>
+                <p style="margin: 0 0 8px 0;">* Formatlanması için teslim edilen cihazdaki tüm veriler cihazın sahibi tarafından yedeklenmelidir (Donanım destek biriminde yedek alınmayacaktır).</p>
+                <p style="margin: 0 0 10px 0;">* Donanım destek birimi personeli tarafından cihazdaki verinin kopyalanmayacağı ve hiçbir şekilde paylaşılmayacağı taahhüt edilir.</p>
+                <label style="display: flex; align-items: center; gap: 8px; font-weight: bold; cursor: pointer;">
+                    <input type="checkbox" required> Açıklamaları okudum, onaylıyorum.
+                </label>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Bildirimde Bulunan Ad-Soyad</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-grup">
+                    <label>Tarih ve Saat</label>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="date" required>
+                        <input type="time" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- KDYS.FR.0072 - Bilgi İşlem DB Kurumsal E-Posta Talep Formu -->
+    <div id="form_0072.php" class="gizli-form">
+        <h2>KDYS.FR.0072 - Bilgi İşlem DB Kurumsal E-Posta Talep Formu</h2>
+        <form>
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Birim Adı</label>
+                    <input type="text" value="BALIKESİR ÜNİVERSİTESİ-" required>
+                </div>
+                <div class="form-grup">
+                    <label>Sorumlu Personelin Adı Soyadı</label>
+                    <input type="text" required>
+                </div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Unvanı</label>
+                    <input type="text">
+                </div>
+                <div class="form-grup">
+                    <label>T.C. Kimlik Numarası</label>
+                    <input type="text" maxlength="11" required>
+                </div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Telefonu</label>
+                    <input type="text">
+                </div>
+                <div class="form-grup">
+                    <label>E-posta adresi (Hesap bilgileri gönderilecek)</label>
+                    <input type="text" required>
+                </div>
+            </div>
+
+            <div class="form-grup">
+                <label>Talep Edilen E-posta Adresi</label>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <input type="text" style="flex: 1;" placeholder="örnek" required>
+                    <span>@balikesir.edu.tr</span>
+                </div>
+            </div>
+
+            <div class="form-grup">
+                <label>Kurumsal E-posta Kullanım Amacı</label>
+                <div class="checkbox-grid">
+                    <label><input type="checkbox"> Fakülte/YO Adına</label>
+                    <label><input type="checkbox"> Bölüm/Birim Adına</label>
+                    <label><input type="checkbox"> Topluluk/Dernek</label>
+                    <label><input type="checkbox"> Proje Grubu</label>
+                    <label><input type="checkbox"> Konferans/Kongre/Sempozyum</label>
+                    <label><input type="checkbox"> Diğer</label>
+                </div>
+                <textarea rows="2" placeholder="Diğer veya ek açıklamalarınız..."></textarea>
+            </div>
+
+            <div class="resmi-yazi" style="font-size: 12.5px;">
+                Birimimiz adına kullanılmak üzere, sistemde yukarıda belirtilen e-posta hesabının açılmasını talep ediyoruz. Ayrıca bu sayfanın arkasında bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, T.C. Balıkesir Üniversitesi E-posta Kullanım Politikası ve Bilgi İşlem Daire Başkanlığı web sayfasında bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaların okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-grup">
+                    <label>Tarih</label>
+                    <input type="date" required>
+                </div>
+            </div>
+
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- KDYS.FR.0073 - Bilgi İşlem DB E-İmza Mini Kart Okuyucu Teslim Tesellüm Tutanağı -->
+    <div id="form_0073.php" class="gizli-form">
+        <h2>KDYS.FR.0073 - E-İmza Mini Kart Okuyucu Teslim Tesellüm Tutanağı</h2>
+        <form>
+            <div class="resmi-yazi" style="text-align: center; font-weight: bold;">
+                ÜRÜNÜ ALAN KİŞİ BİLGİLERİ
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>AD, SOYAD</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-grup">
+                    <label>TC KİMLİK NO</label>
+                    <input type="text" maxlength="11" required>
+                </div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Fakülte/YO/MYO/Birim</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-grup">
+                    <label>İrtibat Telefonu</label>
+                    <input type="text">
+                </div>
+            </div>
+
+            <div class="form-grup">
+                <label>Talep Tarihi</label>
+                <input type="date" required>
+            </div>
+
+            <div class="resmi-yazi">
+                Yukarıda belirtilen tarihte talep etmiş olduğum e-imza mini kart okuyucuyu TÜBİTAK Bilişim ve Bilgi Güvenliği İleri Teknolojileri Araştırma Merkezi firmasından tarafımca teslim aldığımı beyan ederim.
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Görevi / Unvanı</label>
+                    <input type="text">
+                </div>
+                <div class="form-grup">
+                    <label>Teslim Onayı</label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; margin-top: 10px;">
+                        <input type="checkbox" required> Teslim aldığımı onaylıyorum.
+                    </label>
+                </div>
+            </div>
+
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- KDYS.FR.0077 - Bilgi İşlem DB Kişisel Web Adı ve Alanı Sözleşmesi -->
+    <div id="form_0077.php" class="gizli-form">
+        <h2>KDYS.FR.0077 - Kişisel Web Adı ve Alanı Talep Formu</h2>
+        <form>
+            <div class="resmi-yazi" style="text-align: center; font-weight: bold;">
+                KİŞİSEL WEB ADI ve ALANI TALEP BİLGİLERİ
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Birim Adı</label>
+                    <input type="text" value="BALIKESİR ÜNİVERSİTESİ-" required>
+                </div>
+                <div class="form-grup">
+                    <label>Personelin Adı-Soyadı</label>
+                    <input type="text" required>
+                </div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Unvanı</label>
+                    <input type="text">
+                </div>
+                <div class="form-grup">
+                    <label>T.C Kimlik Numarası</label>
+                    <input type="text" maxlength="11" required>
+                </div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Telefonu</label>
+                    <input type="text">
+                </div>
+                <div class="form-grup">
+                    <label>E-posta (Hesap bilgileri gönderilecek)</label>
+                    <input type="text" required>
+                </div>
+            </div>
+
+            <div class="form-grup">
+                <label>Talep Edilen Web Adı</label>
+                <input type="text" placeholder="örnek.baun.edu.tr" required>
+            </div>
+
+            <div class="form-grup">
+                <label>Kullanım Amacı</label>
+                <textarea rows="3" required></textarea>
+            </div>
+
+            <div class="resmi-yazi" style="font-size: 12.5px;">
+                Akademik/İdari çalışmalarımda kullanmak üzere, sistemde yukarıda belirtilen alan adının açılması, 150 MB web ve 20 MB veritabanı (istenirse) kotalı alanın tahsis edilmesi ve bu alanların kullanımı için gerekli web kullanıcısının açılarak erişim bilgilerinin tarafıma teslim edilmesini talep ediyorum. Ayrıca bu sayfanın arkasında bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası ve http://bid.balikesir.edu.tr adresinde bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaları okuduğumu ve bunlara uygun hareket edeceğimi taahhüt ederim.
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Başvuru Tarihi</label>
+                    <input type="date" required>
+                </div>
+                <div class="form-grup">
+                    <label>Onay</label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; margin-top: 10px;">
+                        <input type="checkbox" required> Şartları ve politikaları kabul ediyorum.
+                    </label>
+                </div>
+            </div>
+
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
+        </form>
+    </div>
+
     <!-- Yönlendirme JS Kodu -->
     <script>
         function formYonetlendir() {
@@ -364,7 +632,7 @@
                 if (acilacakForm) {
                     acilacakForm.style.display = "block";
                 } else {
-                    alert("Seçtiğiniz form (" + secilenForm + ") yapım aşamasındadır. Şimdilik sadece F-52, F-53, F-54 ve F-55 kart formları aktiftir.");
+                    alert("Seçtiğiniz form (" + secilenForm + ") henüz hazırlanmaktadır. Şimdilik F-52, F-53, F-54, F-55, KDYS.FR.0071, KDYS.FR.0072, KDYS.FR.0073 ve KDYS.FR.0077 formları aktiftir.");
                 }
             }
         }
