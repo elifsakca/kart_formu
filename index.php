@@ -578,14 +578,14 @@
                 <span class="icon">▼</span>
             </button>
             <div class="accordion-panel">
-                <p>Bu metin, Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası metninin "Elektronik Posta Hesabı Kullanım Kuralları" başlığı altındaki kuralları içermektedir. Kullanıcılar e-posta hizmetini kullanırken aşağıdaki kurallara uyacağını kabul ederler:</p>
+                <p>BALIKESİR ÜNİVERSİTESİ ELEKTRONİK POSTA (e-mail) ADRESİ KULLANIM KURALLARI</p>
                 <ol>
-                    <li>Balıkesir Üniversitesi e-posta hesapları, yalnızca üniversitenin eğitim, araştırma, yönetim ve akademik faaliyetlerini desteklemek amacıyla kullanılabilir. Ticari, siyasi, reklam veya kişisel kazanç sağlamaya yönelik amaçlarla kullanılamaz.</li>
-                    <li>E-posta hesabı sahibi, hesabının güvenliğinden ve hesabından yapılan tüm işlemlerden doğrudan sorumludur. Şifreler hiçbir koşulda üçüncü kişilerle paylaşılamaz.</li>
-                    <li>Üniversite e-posta sistemi üzerinden genel ahlak kurallarına aykırı, tehdit edici, taciz edici, hakaret içeren veya yasadışı içerikli iletiler gönderilemez.</li>
-                    <li>Sistem kaynaklarını gereksiz yere tüketecek kitlesel veya zincirleme e-posta (Spam, Chain Mail vb.) gönderimi yapılması ve zararlı yazılım içeren dosyaların iletilmesi kesinlikle yasaktır.</li>
-                    <li>E-posta hesabının yetkisiz erişim, kimlik avı (phishing) veya güvenlik ihlallerinde kullanıldığının tespiti durumunda Bilgi İşlem Daire Başkanlığı hesabı derhal askıya alma yetkisine sahiptir.</li>
-                    <li>Geçici süreli açılan kurumsal e-posta hesaplarının geçerlilik süresi dolduğunda veya kullanım amacı sona erdiğinde hesap kapatılır.</li>
+                    <li> 1- KANUNİ YÜKÜMLÜLÜK: </li>
+                    <li>1.1-@balikesir.edu.tr domain’i T.C. Balıkesir Üniversitesi personeline (Akademik vce İdari) hizmet vermektedir. Bu hizmet akademik eğitim- öğretim amaçlı araştırma ve geliştirme faaliyetleri içermektedir. </li>
+                    <li>1.2-@balikesir.edu.tr domain’ine ait e-posta hesaplarını kullanan şahıslar Türkiye Cumhuriyeti kanun ve bunlara bağlı olan yönetmeliklere, Türkiye Bilimsel ve Teknik Araştırma Kurumu'nun (TÜBİTAK) bir enstitüsü olan Ulusal Akademik Ağ ve Bilgi Merkezi (ULAKBİM) tarafından işletilen Ulusal Akademik Ağ'ın (ULAKNET) kullanımına ilişkin usul ve esaslara, T.C. Balıkesir Üniversitesi yönetmeliklerine aykırı hareket edemezler</li>
+                    <li>1.2.1-İnternet Ortamında Yapılan Yayınların Düzenlenmesi ve Bu Yayınlar Yoluyla İşlenen Suçlarla Mücadele    Edilmesi Hakkında Kanun. (Kanun/Karar No: 5651, Tarih: 23.05.2007http://www.resmigazete.gov.tr/main.aspx?home=http://www.resmigazete.gov.tr/eskiler/2007/11/20071130-6.htm/20071130.htm&main=http://www.resmigazete.gov.tr/eskiler/2007/11/20071130-6.htm </li>
+                    <li>1.2.2-İnternet Ortamında Yapılan Yayınların Düzenlenmesine Dair Usul ve Esaslar Hakkında Yönetmelik  (Tarih:30.11.2007)  </li>
+                    <a href="https://www.resmigazete.gov.tr/eskiler/2007/11/20071130-6.htm" target="_blank" onclick="event.stopPropagation();" class="navbar-link">BİLGİ İŞLEM DAİRE BAŞKANLIĞI | Balıkesir Üniversitesi</a>
                 </ol>
             </div>
 
