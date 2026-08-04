@@ -756,11 +756,7 @@
                     </tfoot>
                 </table>
             </div>
-            <div class="form-bilgi-liste" style="background: #f9f9f9; border-left-color: #1b656e; color: #333;">
-                <label style="display: flex; align-items: center; gap: 8px; font-weight: bold; cursor: pointer;">
-                    <input type="checkbox" required> Tablodaki bilgilerin doğruluğunu ve e-imza başvuru şartlarını onaylıyorum.
-                </label>
-            </div>
+            
             <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
         </form>
     </div>
@@ -823,7 +819,7 @@
 
             <!-- Açılır/Kapanır Bilişim Politikası Paneli -->
             <button type="button" class="accordion-btn" onclick="toggleAccordion(this)">
-                <span>📜 BAÜN Bilişim Kaynakları Kullanım Politikası</span>
+                <span> BAÜN Bilişim Kaynakları Kullanım Politikası</span>
                 <span style="font-size: 16px;">▼</span>
             </button>
             <div class="accordion-panel">
@@ -939,7 +935,7 @@
  
             <!-- Açılır/Kapanır Bilişim Politikası Paneli -->
             <button type="button" class="accordion-btn" onclick="toggleAccordion(this)">
-                <span>📜 BAÜN Bilişim Kaynakları Kullanım Politikası</span>
+                <span> BAÜN Bilişim Kaynakları Kullanım Politikası</span>
                 <span style="font-size: 16px;">▼</span>
             </button>
             <div class="accordion-panel">
@@ -984,11 +980,7 @@
                 <p>Kullanım ve Kullanıcı tanımlarının yetersiz kaldığı ya da “BAÜN Bilişim Kaynakları Kullanım Politikası” belgesi dâhilinde tanımlı olmayan durumlar BAÜN makamlarınca değerlendirilir.</p>
             </div>
  
-            <div class="form-bilgi-liste" style="background: #f9f9f9; border-left-color: #1b656e; color: #333;">
-                <label style="display: flex; align-items: center; gap: 8px; font-weight: bold; cursor: pointer;">
-                    <input type="checkbox" required> Yukarıdaki bilgilerin doğruluğunu ve BAÜN Bilişim Kaynakları Kullanım Politikasını kabul ediyorum.
-                </label>
-            </div>
+    
             <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Talebi ve Sözleşmeyi Gönder</button>
         </form>
     </div>
@@ -1068,7 +1060,7 @@
  
             <!-- Açılır/Kapanır Bilişim Politikası Paneli -->
             <button type="button" class="accordion-btn" onclick="toggleAccordion(this)">
-                <span>📜 BAÜN Bilişim Kaynakları Kullanım Politikası</span>
+                <span> BAÜN Bilişim Kaynakları Kullanım Politikası</span>
                 <span style="font-size: 16px;">▼</span>
             </button>
             <div class="accordion-panel">
@@ -1250,7 +1242,7 @@
  
             <!-- Açılır/Kapanır Kullanım Kuralları Paneli -->
             <button type="button" class="accordion-btn" onclick="toggleAccordion(this)">
-                <span>📜 BALIKESİR ÜNİVERSİTESİ Elektronik Posta (e-mail) Adresi Kullanım Kuralları</span>
+                <span> BALIKESİR ÜNİVERSİTESİ Elektronik Posta (e-mail) Adresi Kullanım Kuralları</span>
                 <span style="font-size: 16px;">▼</span>
             </button>
             <div class="accordion-panel">
@@ -1298,11 +1290,7 @@
                 <p>Kullanıcı, adına düzenlenmiş bu formu doldurup imzaladıktan sonra bu sözleşme yürürlüğe girer ve T.C. Balıkesir Üniversitesi personeli olduğu sürece devam eder.</p>
             </div>
  
-            <div class="form-bilgi-liste" style="background: #f9f9f9; border-left-color: #1b656e; color: #333;">
-                <label style="display: flex; align-items: center; gap: 8px; font-weight: bold; cursor: pointer;">
-                    <input type="checkbox" required> Yukarıda açıklanan e-posta kullanım kurallarının tümünü okudum ve kabul ediyorum.
-                </label>
-            </div>
+            
  
             <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Başvuruyu Gönder</button>
         </form>
