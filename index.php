@@ -28,7 +28,7 @@
         #hata-mesaji { color: #e74c3c; text-align: center; margin-top: 15px; font-weight: bold; display: none; }
 
         /* Gizli Formların Tasarımı */
-        .gizli-form { display: none; background: white; max-width: 900px; margin: 20px auto; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .gizli-form { display: none; background: white; max-width: 1100px; margin: 20px auto; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .gizli-form h2 { color: #1b656e; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 0; text-align: center; }
         .form-grup { margin-bottom: 15px; text-align: left; }
         .form-grup label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; font-size: 14px; }
@@ -43,6 +43,13 @@
         
         .form-satir { display: flex; gap: 15px; }
         .form-satir .form-grup { flex: 1; }
+
+        /* Tablo Stil Ayarları (Yeni Eklenen Form İçin) */
+        .form-tablosu-wrapper { overflow-x: auto; margin-bottom: 20px; }
+        .form-tablosu { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .form-tablosu th, .form-tablosu td { border: 1px solid #ddd; padding: 8px 5px; text-align: center; }
+        .form-tablosu th { background-color: #1b656e; color: white; font-weight: 600; white-space: nowrap; }
+        .form-tablosu td input, .form-tablosu td select { width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px; box-sizing: border-box; font-size: 11px; }
     </style>
 </head>
 <body>
@@ -123,7 +130,6 @@
                 <div class="form-grup"><label>İrtibat Telefonu</label><input type="text"></div>
             </div>
 
-            <!-- Kart (Kişi) Tipi Alanı -->
             <div class="form-grup">
                 <label>Kart (Kişi) Tipi (Fareyi seçeneklerin üzerinde bekleterek açıklamaları görebilirsiniz)</label>
                 <select required>
@@ -142,7 +148,6 @@
                 </select>
             </div>
 
-            <!-- İşlem Türü Alanı -->
             <div class="form-grup">
                 <label>Yapılacak İşlem Türü</label>
                 <select required>
@@ -156,7 +161,6 @@
             
             <hr style="border:1px solid #eee; margin: 20px 0;">
 
-            <!-- Detaylı Kurum Bilgileri -->
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Unvanı</label>
@@ -205,7 +209,6 @@
                 <span class="form-bilgi">Bu kısmı sadece Yerleşke Misafir Giriş Kartı alacak personel doldurmalıdır.</span>
             </div>
 
-            <!-- Bilgi Değişikliği Özel Alanı -->
             <div class="form-bilgi-liste" style="background:#e8f4f8; border-left-color:#1b656e;">
                 <label style="color:#1b656e; font-weight:bold; font-size:14px; margin-bottom:10px; display:block;">Hatalı Basılan Kart veya Bilgi Değişikliği Yapılacaksa Düzeltilecek / Değişecek Kısmı Seçiniz:</label>
                 
@@ -233,7 +236,6 @@
                 <textarea rows="2" style="width:100%; border:1px solid #ccc; border-radius:4px; padding:5px;"></textarea>
             </div>
 
-            <!-- Form AÇIKLAMA Listesi -->
             <div class="form-bilgi-liste">
                 <strong>AÇIKLAMA (Lütfen kart tipinize göre zorunlu alanları kontrol ediniz):</strong><br>
                 + <b>Akademik Personel Kimlik Kartı</b> için Ad, Soyad, Unvan, Görev, Birim, Bölüm, Kurum sicil no ve T.C Kimlik No kısımları doldurulacaktır.<br>
@@ -543,6 +545,147 @@
         </form>
     </div>
 
+    <!-- KDYS.FR.0074 - Bilgi İşlem DB E-İmza Talep Formu (YENİ EKLENEN FORM) -->
+    <div id="form_0074.php" class="gizli-form">
+        <h2>KDYS.FR.0074 - Bilgi İşlem DB E-İmza Talep Formu</h2>
+        <form>
+            <div class="resmi-yazi" style="text-align: center; font-weight: bold;">
+                E-İMZA BAŞVURU SAHİBİ / PERSONEL BİLGİ LİSTESİ
+            </div>
+
+            <div class="form-tablosu-wrapper">
+                <table class="form-tablosu">
+                    <thead>
+                        <tr>
+                            <th>S.N.</th>
+                            <th>T.C. Kimlik No</th>
+                            <th>Doğum Tarihi (Gün/Ay/Yıl)</th>
+                            <th>Ad</th>
+                            <th>Soyad</th>
+                            <th>E-Posta Adresi</th>
+                            <th>Çalıştığı Birimi</th>
+                            <th>Görevi</th>
+                            <th>Cep Tel. No</th>
+                            <th>Başvuru Türü</th>
+                            <th>Ödeme</th>
+                            <th>Açıklama</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 1. Satır -->
+                        <tr>
+                            <td>1</td>
+                            <td><input type="text" maxlength="11"></td>
+                            <td><input type="date"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td>
+                                <select>
+                                    <option value="İlk Sertifika">İlk Sertifika</option>
+                                    <option value="Yenileme">Yenileme</option>
+                                </select>
+                            </td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                        </tr>
+                        <!-- 2. Satır -->
+                        <tr>
+                            <td>2</td>
+                            <td><input type="text" maxlength="11"></td>
+                            <td><input type="date"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td>
+                                <select>
+                                    <option value="İlk Sertifika">İlk Sertifika</option>
+                                    <option value="Yenileme">Yenileme</option>
+                                </select>
+                            </td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                        </tr>
+                        <!-- 3. Satır -->
+                        <tr>
+                            <td>3</td>
+                            <td><input type="text" maxlength="11"></td>
+                            <td><input type="date"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td>
+                                <select>
+                                    <option value="İlk Sertifika">İlk Sertifika</option>
+                                    <option value="Yenileme">Yenileme</option>
+                                </select>
+                            </td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                        </tr>
+                        <!-- 4. Satır -->
+                        <tr>
+                            <td>4</td>
+                            <td><input type="text" maxlength="11"></td>
+                            <td><input type="date"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td>
+                                <select>
+                                    <option value="İlk Sertifika">İlk Sertifika</option>
+                                    <option value="Yenileme">Yenileme</option>
+                                </select>
+                            </td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                        </tr>
+                        <!-- 5. Satır -->
+                        <tr>
+                            <td>5</td>
+                            <td><input type="text" maxlength="11"></td>
+                            <td><input type="date"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td>
+                                <select>
+                                    <option value="İlk Sertifika">İlk Sertifika</option>
+                                    <option value="Yenileme">Yenileme</option>
+                                </select>
+                            </td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-bilgi-liste" style="background: #f9f9f9; border-left-color: #1b656e; color: #333;">
+                <label style="display: flex; align-items: center; gap: 8px; font-weight: bold; cursor: pointer;">
+                    <input type="checkbox" required> Tablodaki bilgilerin doğruluğunu ve e-imza başvuru şartlarını onaylıyorum.
+                </label>
+            </div>
+
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
+        </form>
+    </div>
+
     <!-- KDYS.FR.0077 - Bilgi İşlem DB Kişisel Web Adı ve Alanı Sözleşmesi -->
     <div id="form_0077.php" class="gizli-form">
         <h2>KDYS.FR.0077 - Kişisel Web Adı ve Alanı Talep Formu</h2>
@@ -632,7 +775,7 @@
                 if (acilacakForm) {
                     acilacakForm.style.display = "block";
                 } else {
-                    alert("Seçtiğiniz form (" + secilenForm + ") henüz hazırlanmaktadır. Şimdilik F-52, F-53, F-54, F-55, KDYS.FR.0071, KDYS.FR.0072, KDYS.FR.0073 ve KDYS.FR.0077 formları aktiftir.");
+                    alert("Seçtiğiniz form (" + secilenForm + ") henüz hazırlanmaktadır. Şimdilik F-52, F-53, F-54, F-55, KDYS.FR.0071, KDYS.FR.0072, KDYS.FR.0073, KDYS.FR.0074 ve KDYS.FR.0077 formları aktiftir.");
                 }
             }
         }
