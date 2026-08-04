@@ -106,8 +106,6 @@
                 <option value="form_0073.php">KDYS.FR.0073 - Bilgi İşlem DB E-İmza Mini Kart Okuyucu Teslim Tesellüm Tutanağı</option>
                 <option value="form_0074.php">KDYS.FR.0074 - Bilgi İşlem DB E-İmza Talep Formu</option>
                 <option value="form_0077.php">KDYS.FR.0077 - Bilgi İşlem DB Kişisel Web Adı ve Alanı Sözleşmesi</option>
-                <option value="form_0078.php">KDYS.FR.0078 - Bilgi İşlem DB Kurumsal Statik IP Sözleşmesi</option>
-                <option value="form_0079.php">KDYS.FR.0079 - Bilgi İşlem DB Kurumsal Web Adı ve Alanı Sözleşmesi</option>
                 <option value="form_0080.php">KDYS.FR.0080 - Bilgi İşlem DB Mernis Taahhütnamesi</option>
                 <option value="form_0082.php">KDYS.FR.0082 - Bilgi İşlem DB Personel Elektronik Posta Başvuru Formu</option>
                 <option value="form_0087.php">KDYS.FR.0087 - Bilgi İşlem UAM Mernis Taahhütnamesi</option>
@@ -370,6 +368,330 @@
             </div>
 
             <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- KDYS.FR.0071 - Bilgi İşlem DB Bakım Onarım Takip Formu -->
+    <div id="form_0071.php" class="gizli-form">
+        <h2>KDYS.FR.0071 - Bilgi İşlem DB Bakım Onarım Takip Formu</h2>
+        <form>
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Birim Adı</label>
+                    <input type="text" value="BALIKESİR ÜNİVERSİTESİ-" required>
+                </div>
+                <div class="form-grup">
+                    <label>Talebi İleten Personelin Adı-Soyadı</label>
+                    <input type="text" required>
+                </div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Telefonu</label>
+                    <input type="text">
+                </div>
+                <div class="form-grup">
+                    <label>Cihazın Marka/Modeli ve Seri No</label>
+                    <input type="text" placeholder="Marka/Model - Seri No: ...">
+                </div>
+            </div>
+
+            <div class="form-grup">
+                <label>Arıza / Bakım / Tesis Tanımı (Şikâyet sebebi)</label>
+                <textarea rows="3" required></textarea>
+            </div>
+
+            <div class="form-grup">
+                <label>Donanım Destek Grubuna İletmeniz Gereken Bir Durum Var mı?</label>
+                <textarea rows="2"></textarea>
+            </div>
+
+            <div class="form-bilgi-liste" style="background: #f9f9f9; border-left-color: #1b656e; color: #333;">
+                <p style="margin: 0 0 8px 0;">* Donanım destek birimine teslim edilen cihaz içerisinde destek personelinin görmesinde sakınca olan hiçbir veri bulunmamalıdır.</p>
+                <p style="margin: 0 0 8px 0;">* Formatlanması için teslim edilen cihazdaki tüm veriler cihazın sahibi tarafından yedeklenmelidir (Donanım destek biriminde yedek alınmayacaktır).</p>
+                <p style="margin: 0 0 10px 0;">* Donanım destek birimi personeli tarafından cihazdaki verinin kopyalanmayacağı ve hiçbir şekilde paylaşılmayacağı taahhüt edilir.</p>
+                <label style="display: flex; align-items: center; gap: 8px; font-weight: bold; cursor: pointer;">
+                    <input type="checkbox" required> Açıklamaları okudum, onaylıyorum.
+                </label>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Bildirimde Bulunan Ad-Soyad</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-grup">
+                    <label>Tarih ve Saat</label>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="date" required>
+                        <input type="time" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEKNİK DEĞERLENDİRME VE TESLİM BÖLÜMÜ -->
+            <table class="teknik-tablo">
+                <tr>
+                    <td class="baslik-gri">Tespit Edilen Durum</td>
+                    <td><textarea rows="2"></textarea></td>
+                    <td class="secenek-kutusu">
+                        <label>Antivirüs Var</label>
+                        <input type="checkbox">
+                    </td>
+                    <td class="secenek-kutusu">
+                        <label>Garanti Var</label>
+                        <input type="checkbox">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">Arıza Bakım Tesis Sebebi</td>
+                    <td colspan="3"><input type="text"></td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">Yapılan İşlemler</td>
+                    <td colspan="3"><textarea rows="2"></textarea></td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">Kullanılan Malzemeler</td>
+                    <td colspan="3"><input type="text"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="imza-baslik">İş Bitirme</td>
+                    <td colspan="2" class="imza-baslik">Teslim<br><span style="font-size:11px; font-weight:normal;">(Cihaz Donanım Destek Grubuna Bırakıldıysa)</span></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="imza-alani">
+                        <strong>İşlemi Yapan Personel</strong><br><br>
+                        <input type="text" placeholder="Ad Soyad / Tarih">
+                    </td>
+                    <td class="imza-alani">
+                        <strong>Teslim Eden Personel</strong><br><br>
+                        <input type="text" placeholder="Ad Soyad / Tarih">
+                    </td>
+                    <td class="imza-alani">
+                        <strong>Teslim Alan Personel</strong><br><br>
+                        <input type="text" placeholder="Ad Soyad / Tarih">
+                    </td>
+                </tr>
+            </table>
+
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- KDYS.FR.0072 - Bilgi İşlem DB Kurumsal E-Posta Talep Formu -->
+    <div id="form_0072.php" class="gizli-form">
+        <h2>KDYS.FR.0072 - Bilgi İşlem DB Kurumsal E-Posta Talep Formu</h2>
+        <form>
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Birim Adı</label>
+                    <input type="text" value="BALIKESİR ÜNİVERSİTESİ-" required>
+                </div>
+                <div class="form-grup">
+                    <label>Sorumlu Personelin Adı Soyadı</label>
+                    <input type="text" required>
+                </div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Unvanı</label>
+                    <input type="text">
+                </div>
+                <div class="form-grup">
+                    <label>T.C. Kimlik Numarası</label>
+                    <input type="text" maxlength="11" required>
+                </div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Telefonu</label>
+                    <input type="text">
+                </div>
+                <div class="form-grup">
+                    <label>E-posta adresi (Hesap bilgileri gönderilecek)</label>
+                    <input type="text" required>
+                </div>
+            </div>
+
+            <div class="form-grup">
+                <label>Talep Edilen E-posta Adresi</label>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <input type="text" style="flex: 1;" placeholder="örnek" required>
+                    <span>@balikesir.edu.tr</span>
+                </div>
+            </div>
+
+            <div class="form-grup">
+                <label>Kurumsal E-posta Kullanım Amacı</label>
+                <div class="checkbox-grid">
+                    <label><input type="checkbox"> Fakülte/YO Adına</label>
+                    <label><input type="checkbox"> Bölüm/Birim Adına</label>
+                    <label><input type="checkbox"> Topluluk/Dernek</label>
+                    <label><input type="checkbox"> Proje Grubu</label>
+                    <label><input type="checkbox"> Konferans/Kongre/Sempozyum</label>
+                    <label><input type="checkbox"> Diğer</label>
+                </div>
+                <textarea rows="2" placeholder="Diğer veya ek açıklamalarınız..."></textarea>
+            </div>
+
+            <!-- AÇILIR / KAPANIR E-POSTA KULLANIM KURALLARI BUTONU -->
+            <button type="button" class="accordion-btn" onclick="toggleAccordion(this)">
+                <span>BALIKESİR ÜNİVERSİTESİ ELEKTRONİK POSTA (e-mail) ADRESİ KULLANIM KURALLARI</span>
+                <span class="icon">▼</span>
+            </button>
+            <div class="accordion-panel">
+                <div style="padding-top: 15px; padding-bottom: 15px;">
+                    <p><strong>1- KANUNİ YÜKÜMLÜLÜK:</strong></p>
+                    <p>1.1- @balikesir.edu.tr domain’i T.C. Balıkesir Üniversitesi personeline (Akademik vce İdari) hizmet vermektedir. Bu hizmet akademik eğitim- öğretim amaçlı araştırma ve geliştirme faaliyetleri içermektedir.</p>
+                    <p>1.2- @balikesir.edu.tr domain’ine ait e-posta hesaplarını kullanan şahıslar Türkiye Cumhuriyeti kanun ve bunlara bağlı olan yönetmeliklere, Türkiye Bilimsel ve Teknik Araştırma Kurumu'nun (TÜBİTAK) bir enstitüsü olan Ulusal Akademik Ağ ve Bilgi Merkezi (ULAKBİM) tarafından işletilen Ulusal Akademik Ağ'ın (ULAKNET) kullanımına ilişkin usul ve esaslara, T.C. Balıkesir Üniversitesi yönetmeliklerine aykırı hareket edemezler.</p>
+                    <ul style="list-style-type: none; padding-left: 10px;">
+                        <li style="margin-bottom: 8px;">1.2.1- İnternet Ortamında Yapılan Yayınların Düzenlenmesi ve Bu Yayınlar Yoluyla İşlenen Suçlarla Mücadele Edilmesi Hakkında Kanun. (Kanun/Karar No: 5651, Tarih: 23.05.2007) <br><a href="http://www.resmigazete.gov.tr/main.aspx?home=http://www.resmigazete.gov.tr/eskiler/2007/11/20071130-6.htm/20071130.htm&main=http://www.resmigazete.gov.tr/eskiler/2007/11/20071130-6.htm" target="_blank" style="color:#1b656e; text-decoration: underline; font-weight: bold;">Resmi Gazete Linki İçin Tıklayınız</a></li>
+                        <li style="margin-bottom: 8px;">1.2.2- İnternet Ortamında Yapılan Yayınların Düzenlenmesine Dair Usul ve Esaslar Hakkında Yönetmelik (Tarih:30.11.2007) <br><a href="http://www.resmigazete.gov.tr/main.aspx?home=http://www.resmigazete.gov.tr/eskiler/2007/11/20071130-6.htm/20071130.htm&main=http://www.resmigazete.gov.tr/eskiler/2007/11/20071130-6.htm" target="_blank" style="color:#1b656e; text-decoration: underline; font-weight: bold;">Resmi Gazete Linki İçin Tıklayınız</a></li>
+                        <li style="margin-bottom: 8px;">1.2.3- Birlikte Çalışabilirlik Esasları Rehberi ile İlgili 2005/20 Sayılı Başbakanlık Genelgesi. (Tarih: 05.08.2005) <br><a href="http://www.resmigazete.gov.tr/main.aspx?home=http://www.resmigazete.gov.tr/eskiler/2005/08/20050805-11.htm/20050805.htm&main=http://www.resmigazete.gov.tr/eskiler/2005/08/20050805-11.htm" target="_blank" style="color:#1b656e; text-decoration: underline; font-weight: bold;">Resmi Gazete Linki İçin Tıklayınız</a></li>
+                        <li style="margin-bottom: 8px;">1.2.4- Türkiye Bilimsel ve Teknik Araştırma Kurumu'nun (TÜBİTAK) bir enstitüsü olan Ulusal Akademik Ağ ve Bilgi Merkezi (ULAKBİM) tarafından işletilen Ulusal Akademik Ağ'ın (ULAKNET) kullanımına ilişkin usul ve esasları <br><a href="http://ulakbim.tubitak.gov.tr/sites/images/Ulakbim/ukp-v2011.pdf" target="_blank" style="color:#1b656e; text-decoration: underline; font-weight: bold;">ULAKBİM Belge Linki İçin Tıklayınız</a></li>
+                    </ul>
+
+                    <p><strong>2- GİZLİLİK ve GÜVENLİK:</strong></p>
+                    <p>2.1- T.C. Balıkesir Üniversitesinden personel e-posta adresi talep eden şahıslar, bu formu doldurup personel kimlikleri ile birlikte Bilgi İşlem Dairesi Başkanlığına şahsen müracaat etmeleri gerekmektedir. Diğer talepler değerlendirmeye alınmayacaktır.</p>
+                    <p>2.2- Balıkesir Üniversitesinden e-posta adresi alan kişi, Bilgi İşlem Daire Başkanlığı’nın belirleyeceği bir e-posta hesap adı, öğrenci numarasından oluşan bir kullanıcı adı ve kendisinin belirleyeceği bir kullanıcı şifresine sahip olur.</p>
+                    <p>2.3- Kullanıcı adı ve e-posta adı kişiye özeldir ve @balikesir.edu.tr domainin de bir benzeri daha yoktur.</p>
+                    <p>2.4- Kullanıcı şifresi sadece kullanıcı tarafından bilinir. Kullanıcı dilediği zaman şifresini değiştirebilir. Şifrenin seçimi ve korunması tamamıyla kullanıcının sorumluluğundadır. Bilgi İşlem Daire Başkanlığı, şifre kullanımından doğacak problemlerden kesinlikle sorumlu değildir.</p>
+                    <p>2.5- E-posta şifresini unutan kullanıcılar, Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığına bizzat müracaat etmek zorundadır.</p>
+
+                    <p><strong>3- E-POSTA ADRESİ ALAN KİŞİNİN YÜKÜMLÜLÜKLERİ: Kişi;</strong></p>
+                    <p>3.1- E-posta hesabı sahibi, bu servisi kullanırken ileri sürdüğü şahsi fikir, düşünce ve ifadeler ile elektronik ortama eklediği dosya ve/veya bilgilerin sorumluluğunun şahsına ait olduğunu ve bundan dolayı bu e-posta ile ekli dosyalardan dolayı hiçbir şekilde Balıkesir Üniversitesinin sorumlu tutulmayacağını kabul eder.</p>
+                    <p>3.2- Balıkesir Üniversitesi e-posta hizmetlerinde, e-posta sitesinin geneline zarar verecek veya Balıkesir Üniversitesi’ni başka şahıs ya da kuruluşlarla adli (mahkemelik) duruma getirecek herhangi bir yazılım veya materyal bulunduramayacağını, paylaşamayacağını ve hukuki bir durum doğarsa tüm adli ve cezai sorumlulukları üstüne aldığını kabul eder.</p>
+                    <p>3.3- E-posta servisinin kullanımı sırasında kaybolacak ve/veya eksik alınacak, yanlış adrese iletilecek bilgi, mesaj ve dosyalardan Balıkesir Üniversitesi Bilgi İşlem dairesi Başkanlığının sorumlu olmayacağını kabul eder.</p>
+                    <p>3.4- E-posta hesabı sahibi, teknik nedenlerden (arıza, güncelleme, aktarma vb.) dolayı e-posta lardaki gecikme ve kayıplardan dolayı Balıkesir Üniversitesi Bilgi İşlem Dairesi Bşk. sorumlu olmayacağını kabul eder.</p>
+                    <p>3.5- E-posta hesabı sahibi, posta hesaplarındaki verilerinin, Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığı’nın ihmali görülmeden, yetkisiz kişilerce okunmasından (e-posta sahiplerinin, gizli bilgilerini başka kişiler ile paylaşması, siteden ayrılırken çıkış yapmaması, vb. durumlardan) dolayı gelebilecek maddi ve manevi zararlardan ötürü, Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığı’nın sorumlu olmadığını kabul eder.</p>
+                    <p>3.6- E-posta hesabı sahibi, başka şahıs veya kuruluşlardaki bilgisayara, bu bilgisayarlardaki bilgilere ya da yazılıma zarar verecek bilgi veya programlar göndermemeyi ve barındırmamayı, aksi takdirde doğacak tüm hukuki ve cezai sorumluluğun şahsına ait olduğunu kabul eder.</p>
+                    <p>3.7- Üniversite e-posta servisini kullanarak elde edilen herhangi bir bilgi veya materyalin tamamıyla kullanıcının rızası dahilinde olduğunu, kullanıcı bilgisayarında yaratacağı arızalar, bilgi kaybı ve diğer kayıpların sorumluluğunun tamamıyla kendisine ait olduğunu, eposta servisinin kullanımından dolayı uğrayabileceği zararlardan Balıkesir Üniversitesinin sorumlu olmadığını kabul eder.</p>
+                    <p>3.8- E-posta hesabı sahibi, genel ahlak ve adaba aykırı, ırkçı, ayrımcı, ticari, siyasi propaganda, taciz ve tehdit edici ile Türkiye Cumhuriyeti yasalarına, vatandaşı olduğu diğer ülkelerin yasalarına ve uluslararası anlaşmalara aykırı e-posta göndermemeyi, barındırmamayı ve bunlara aykırı her türlü uygulamalardan doğacak cezai ve hukuki sorumluluğun şahsına ait olduğunu kabul eder.</p>
+                    <p>3.9- E-posta hesabı sahibi, T.C. Kanunlara göre postalanması yasak, gizli olan bilgileri postalamamayı, barındırmamayı ve gönderilme yetkisi olamayan postaları dağıtmamayı ile bunlara ait yasal yükümlülüğü kabul eder.</p>
+                    <p>3.10- E-posta hesabı sahibi, zincir posta (chain mail), yazılım virüsü vb. postaları başka posta hesaplarına dağıtmamayı, barındırmamayı ve bunlara ait cezai ve yasal yükümlülüğü kabul eder.</p>
+                    <p>3.11- E-posta hesabı sahibi, rastgele ve alıcının istemi dışında mesaj (spam iletiler) göndermeyceğini ve bunlara ait yasal yükümlülüğü kabul eder.</p>
+                    <p>3.12- E-posta hesabı sahibi, e-posta kullanıcı adıyla yapacağı her türlü işlemden bizzat kendisinin sorumlu olduğunu kabul eder.</p>
+                    <p>3.13- E-posta hesabı sahipleri, kullanım haklarını, doğrudan ya da dolaylı olarak 3. şahıslara devredemez ve kiralayamazlar.</p>
+                    <p>3.14- E-posta hesabı sahibi yasa ve kurallara aykırı davrandığı takdirde Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığı’nın gerekli müdahalelerde bulunma, kişiyi hizmet dışına çıkarma ve üyeliğine son verme hakkına sahip olduğunu kabul eder.</p>
+                    <p>3.15- E-posta hesabı sahibi, yasa ve kurallara aykırı davrandığı takdirde T.C. Balıkesir Üniversitesi makamlarının; gerekli sözlü ve yazılı uyarıda bulunmaya, kişiyi sınırlı veya sınırsız hizmet dışına çıkarmaya, üniversite içi idari soruşturma başlatmaya ya da adli yargıya bildirimde bulunma hakkına sahip olduğunu kabul eder.</p>
+                    <p>3.16- E-posta hesabı sahibi, e-posta hesabını tek taraflı olarak iptal ettirse bile, bu iptal işleminden önce, üyeliği sırasında gerçekleştirdiği icraatlardan kendisinin sorumlu olacağını kabul eder.</p>
+                    <p>3.17- E-posta sahibi, Balıkesir Üniversitesi e-posta hizmetinden yararlandığı sırada, kayıt formunda yer alan bilgilerin doğru olduğunu ve bu bilgilerin gerekli olduğu (şifre unutma gibi) durumlarda, bilginin hatalı veya noksan olmasından doğacak zararlardan dolayı sorumluluğun kendisine ait olduğunu, bu hallerde e-mail adresinin iptal edileceğini kabul eder.</p>
+                    <p>3.18- T.C. Balıkesir Üniversitesi Bilgi İşlem Dairesi Başkanlığı, kullanıcıların bilgisi olmaksızın E-posta hizmetleri servis politikasında değişiklik yapma hakkına sahiptir. Kullanıcılar bu metinde yer alan bilgileri izlemek ve olası değişikliklerden haberdar olmakla yükümlüdürler.</p>
+                    <p>3.19- Başvuran Taraf, ULAKBİM'in yasal ve teknolojik gelişmeleri gözönünde tutarak bu Kullanım Politikası'nı kısmen değiştirebileceğinden haberdardır ve bunu açıkça kabul eder. Değiştirilen Kullanım Politikası, <a href="http://www.ulakbim.gov.tr/ulaknet/kullanim-politikasi.uhtml" target="_blank" style="color:#1b656e; text-decoration: underline; font-weight: bold;">http://www.ulakbim.gov.tr/ulaknet/kullanim-politikasi.uhtml</a> adresinde yeralması ile birlikte yürürlüğe girer. Başvuran Taraf ULAKBİM'in Kullanım Politikası'nı tam olarak anladığını, tanıdığını, uyacağını kabul eder.</p>
+                    <p>3.20- Tüm bu maddeleri daha sonra hiçbir itiraza mahal vermeyecek şekilde okuduğunu, KABUL ve TAAHHÜT ETMİŞTİR.</p>
+
+                    <p><strong>4- YÜRÜRLÜLÜK:</strong></p>
+                    <p>Kullanıcı, adına düzenlenmiş bu formu doldurduktan sonra bu sözleşme yürürlüğe girer ve T.C. Balıkesir Üniversitesi birimi olduğu sürece devam eder.</p>
+                </div>
+            </div>
+
+            <div class="resmi-yazi" style="font-size: 12.5px;">
+                Birimimiz adına kullanılmak üzere, sistemde yukarıda belirtilen e-posta hesabının açılmasını talep ediyoruz. Ayrıca yukarıda bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, T.C. Balıkesir Üniversitesi E-posta Kullanım Politikası ve Bilgi İşlem Daire Başkanlığı web sayfasında bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaların okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-grup">
+                    <label>Tarih</label>
+                    <input type="date" required>
+                </div>
+            </div>
+
+            <!-- BİLGİ İŞLEM DAİRESİ İŞLEMLERİ BÖLÜMÜ -->
+            <table class="teknik-tablo">
+                <tr>
+                    <td colspan="2" class="baslik-ortali">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ</td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">İşlem Tarihi *</td>
+                    <td><input type="date" style="max-width: 200px;"></td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">E-posta Adresi *</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <input type="text" style="flex: 1;" placeholder="........................">
+                            <strong>@balikesir.edu.tr</strong>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">E-posta adresinin geçerlilik süresi *</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                <input type="checkbox"> Süresiz
+                            </label>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <input type="text" style="width: 150px;" placeholder="____">
+                                <span>ay/gün/yıl</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">Kullanıcı Şifresi *</td>
+                    <td><input type="text"></td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">İşlemi Yapan Personel *</td>
+                    <td><input type="text" placeholder="Ad Soyad"></td>
+                </tr>
+            </table>
+
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- KDYS.FR.0073 - Bilgi İşlem DB E-İmza Mini Kart Okuyucu Teslim Tesellüm Tutanağı -->
+    <div id="form_0073.php" class="gizli-form">
+        <h2>KDYS.FR.0073 - E-İmza Mini Kart Okuyucu Teslim Tesellüm Tutanağı</h2>
+        <form>
+            <div class="resmi-yazi" style="text-align: center; font-weight: bold;">
+                ÜRÜNÜ ALAN KİŞİ BİLGİLERİ
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>AD, SOYAD</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-grup">
+                    <label>TC KİMLİK NO</label>
+                    <input type="text" maxlength="11" required>
+                </div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Fakülte/YO/MYO/Birim</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-grup">
+                    <label>İrtibat Telefonu</label>
+                    <input type="text">
+                </div>
+            </div>
+
+            <div class="form-grup">
+                <label>Talep Tarihi</label>
+                <input type="date" required>
+            </div>
+
+            <div class="resmi-yazi">
+                Yukarıda belirtilen tarihte talep etmiş olduğum e-imza mini kart okuyucuyu TÜBİTAK Bilişim ve Bilgi Güvenliği İleri Teknolojileri Araştırma Merkezi firmasından tarafımca teslim aldığımı beyan ederim.
+            </div>
+
+            
+
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
         </form>
     </div>
 
