@@ -34,13 +34,17 @@
         .form-grup label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; font-size: 14px; }
         .form-grup input[type="text"], .form-grup input[type="date"], .form-grup input[type="time"], .form-grup select, .form-grup textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
         
+        /* Önemli Uyarı ve Checkbox Sınıfları (Akıllı Kart Formları İçin) */
+        .form-bilgi { font-size: 11.5px; color: #d93025; margin-top: 4px; display: block; font-weight: 500; }
         .form-bilgi-liste { font-size: 11.5px; color: #d93025; background: #fce8e6; padding: 10px; border-radius: 5px; border-left: 3px solid #d93025; margin-bottom: 15px; }
         .resmi-yazi { font-size: 14px; color: #333; text-align: justify; line-height: 1.6; background: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #eee; margin-bottom: 20px; }
+        .checkbox-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; font-size: 13px; color: #333; }
+        .checkbox-grid label { font-weight: normal !important; display: flex; align-items: center; gap: 8px; cursor: pointer; color: #333 !important; }
         
         .form-satir { display: flex; gap: 15px; }
         .form-satir .form-grup { flex: 1; }
 
-        /* Tablo Stil Ayarları */
+        /* Tablo Stil Ayarları (E-İmza Formu İçin) */
         .form-tablosu { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px; }
         .form-tablosu th, .form-tablosu td { border: 1px solid #ddd; padding: 8px 5px; text-align: center; }
         .form-tablosu th { background-color: #1b656e; color: white; font-weight: 600; white-space: nowrap; }
@@ -118,6 +122,256 @@
     <div id="hata-mesaji">Lütfen listeden bir form seçiniz!</div>
 
     <!-- GİZLİ FORMLAR -->
+
+    <!-- =========================================
+         AKILLI KART FORMLARI EKLENDİ
+         ========================================= -->
+
+    <!-- F-52 FORMU (PERSONEL İŞLEMLERİ) -->
+    <div id="form_f52.php" class="gizli-form">
+        <h2>Akıllı Kart İşlem Formu (F-52)</h2>
+        <form>
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Ad, Soyad</label>
+                    <input type="text" required>
+                    <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
+                </div>
+                <div class="form-grup">
+                    <label>TC Kimlik No</label>
+                    <input type="text" maxlength="11" required>
+                    <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
+                </div>
+            </div>
+            
+            <div class="form-satir">
+                <div class="form-grup"><label>Fakülte/YO/MYO/Birim</label><input type="text"></div>
+                <div class="form-grup"><label>İrtibat Telefonu</label><input type="text"></div>
+            </div>
+
+            <!-- Kart (Kişi) Tipi Alanı -->
+            <div class="form-grup">
+                <label>Kart (Kişi) Tipi (Fareyi seçeneklerin üzerinde bekleterek açıklamaları görebilirsiniz)</label>
+                <select required>
+                    <option value="">Seçiniz...</option>
+                    <option>Akademik Personel</option>
+                    <option>İdari Personel</option>
+                    <option title="Temizlik, Hastane Destek vb.">Hizmet Alımı Personeli</option>
+                    <option title="müteahhit firma, kiralama, özel yurt personeli, satın alma, yapım, altyapı, onarım, bakım firması">Firma Personeli</option>
+                    <option title="Üniversitemiz kadrosunda bulunmayan diğer devlet memurları">Diğer Kurum Personeli</option>
+                    <option title="Üniversitemiz kadrosunda öğretim görevlileri veya farklı amaçlarla geçici süre çalışan personel">Misafir Personel</option>
+                    <option>Koruma ve Güvenlik Personeli</option>
+                    <option>Özel Güvenlik Personeli</option>
+                    <option>Emekli Personel</option>
+                    <option title="Rektörlük Makamınca uygun görülen ve Üniversiteye maddi, manevi katkıları bulunmuş kişiler">Onursal</option>
+                    <option>Kütüphane</option>
+                </select>
+            </div>
+
+            <!-- İşlem Türü Alanı -->
+            <div class="form-grup">
+                <label>Yapılacak İşlem Türü</label>
+                <select required>
+                    <option value="">Seçiniz...</option>
+                    <option title="Yeni Başlayan Personel/kişiler için">Akıllı kartın ilk kez verilmesi</option>
+                    <option>Hatalı Basılan Kart Bilgisinin Düzeltilmesi</option>
+                    <option title="Soyad, Kadro Yeri, ek gösterge vb. Değişikliği">Bilgi Değişikliği</option>
+                    <option title="Sebebi: İstifa, Emeklilik, Tayin, Nakil vb.">Ayrılış</option>
+                </select>
+            </div>
+            
+            <hr style="border:1px solid #eee; margin: 20px 0;">
+
+            <!-- Detaylı Kurum Bilgileri -->
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Unvanı</label>
+                    <input type="text">
+                    <span class="form-bilgi">Bu kısım Akademik, İdari Personel ve Yerleşke Onursal, Emekli, Hizmet, Firma, Kurum, Misafir, Kütüphane Giriş Kartları içindir.</span>
+                </div>
+                <div class="form-grup">
+                    <label>Birim</label>
+                    <input type="text">
+                    <span class="form-bilgi">Akademik ve İdari Personelin kadrosunun olduğu birim, diğer kart tipleri için personelin çalıştığı birim yazılmalıdır.</span>
+                </div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Bölüm</label>
+                    <input type="text">
+                    <span class="form-bilgi">Akademik Personelin kadrosunun olduğu bölüm yazılmalıdır.</span>
+                </div>
+                <div class="form-grup">
+                    <label>Kurum Sicil No'su</label>
+                    <input type="text">
+                    <span class="form-bilgi">Bu kısım Akademik, İdari Personel, Koruma Güvenlik görevlisi ve Yerleşke Kurum Giriş Kartları içindir.</span>
+                </div>
+            </div>
+
+            <div class="form-grup">
+                <label>Ödemeye Esas Ek Göstergesi</label>
+                <input type="text">
+                <span class="form-bilgi">Personelin ödemeye esas ek göstergesi yemek ücretinin belirlenmesinde baz alınacağı için doğruluğundan ilgili birim sorumlu olacaktır.</span>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup"><label>Hizmet Yeri</label><input type="text"><span class="form-bilgi">Sadece Yerleşke Hizmet, Firma, Kurum Giriş Kartları içindir.</span></div>
+                <div class="form-grup"><label>Firma Adı</label><input type="text"><span class="form-bilgi">Sadece Yerleşke Firma Giriş Kartları içindir.</span></div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup"><label>Kurumu</label><input type="text"><span class="form-bilgi">Yerleşke Kurum Giriş Kartları içindir.</span></div>
+                <div class="form-grup"><label>Kan Grubu</label><input type="text"><span class="form-bilgi">Sadece Koruma Güvenlik veya Özel Güvenlik kartı alacak personel doldurmalıdır.</span></div>
+            </div>
+            
+            <div class="form-grup">
+                <label>Görev</label>
+                <input type="text">
+                <span class="form-bilgi">Bu kısmı sadece Yerleşke Misafir Giriş Kartı alacak personel doldurmalıdır.</span>
+            </div>
+
+            <!-- Bilgi Değişikliği Özel Alanı -->
+            <div class="form-bilgi-liste" style="background:#e8f4f8; border-left-color:#1b656e;">
+                <label style="color:#1b656e; font-weight:bold; font-size:14px; margin-bottom:10px; display:block;">Hatalı Basılan Kart veya Bilgi Değişikliği Yapılacaksa Düzeltilecek / Değişecek Kısmı Seçiniz:</label>
+                
+                <div class="checkbox-grid">
+                    <label><input type="checkbox"> Ad, Soyad</label>
+                    <label><input type="checkbox"> Unvan</label>
+                    <label><input type="checkbox"> Görev</label>
+                    <label><input type="checkbox"> Birim</label>
+                    <label><input type="checkbox"> Bölüm</label>
+                    <label><input type="checkbox"> Kurum Sicil No</label>
+                    <label><input type="checkbox"> TC Kimlik No</label>
+                    <label><input type="checkbox"> Hizmet Yeri</label>
+                    <label><input type="checkbox"> Firma Adı</label>
+                    <label><input type="checkbox"> Kurum Adı</label>
+                    <label><input type="checkbox"> Kan Grubu</label>
+                    <label><input type="checkbox"> Fotoğraf</label>
+                    <label style="grid-column: span 2;"><input type="checkbox"> Ödemeye Esas Ek Göstergesi</label>
+                    <label style="grid-column: span 3; display: flex; gap: 10px;">
+                        <input type="checkbox"> Diğer: 
+                        <input type="text" style="width: 250px; padding: 4px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+                    </label>
+                </div>
+
+                <label style="color:#1b656e; font-weight:bold; font-size:13px; margin-bottom:5px; margin-top: 15px; display:block;">Yeni Bilgi (Seçtiğiniz alanın doğru halini aşağıya yazınız):</label>
+                <textarea rows="2" style="width:100%; border:1px solid #ccc; border-radius:4px; padding:5px;"></textarea>
+            </div>
+
+            <!-- Form AÇIKLAMA Listesi -->
+            <div class="form-bilgi-liste">
+                <strong>AÇIKLAMA (Lütfen kart tipinize göre zorunlu alanları kontrol ediniz):</strong><br>
+                + <b>Akademik Personel Kimlik Kartı</b> için Ad, Soyad, Unvan, Görev, Birim, Bölüm, Kurum sicil no ve T.C Kimlik No kısımları doldurulacaktır.<br>
+                + <b>İdari Personel Kimlik Kartı</b> için Ad, Soyad, Unvan, Kadrosunun Olduğu Birim/Bölüm, Kurum sicil no ve T.C Kimlik no kısımları doldurulacaktır.<br>
+                + <b>Yerleşke Hizmet Giriş Kartı</b> için Ad, Soyad, Unvan, Firma Adı, Birim, Hizmet Yeri ve T.C Kimlik no kısımları doldurulacaktır.<br>
+                + <b>Yerleşke Firma Giriş Kartı</b> için Ad, Soyad, Unvan, Firma Adı, Birim, Hizmet Yeri ve T.C Kimlik no kısımları doldurulacaktır.<br>
+                + <b>Yerleşke Kurum Giriş Kartı</b> için Ad, Soyad, Unvan, Kurum, Kurum Sicil no, Hizmet Yeri ve T.C Kimlik no kısımları doldurulacaktır.<br>
+                + <b>Yerleşke Misafir Giriş Kartı</b> için Ad, Soyad, Unvan, Görev, Birim ve T.C Kimlik no kısımları doldurulacaktır.<br>
+                + <b>Yerleşke Emekli, Onursal ve Kütüphane Giriş Kartı</b> için Ad, Soyad, Unvan ve T.C Kimlik no kısımları doldurulacaktır.<br>
+                + <b>Koruma ve Güvenlik Görevlisi</b> için Ad, Soyad, Kan Grubu, Kurum Sicil no ve T.C Kimlik no doldurulacaktır.<br>
+                + <b>Özel Güvenlik Görevlisi</b> için Ad, Soyad, Kan Grubu ve T.C Kimlik no doldurulacaktır.
+            </div>
+
+            <div class="form-grup">
+                <label>Fotoğraf Yükle</label>
+                <input type="file" accept=".jpg, .jpeg">
+                <span class="form-bilgi"><b>Fotoğraflar için önemli not:</b> Gönderilecek fotoğraflar; yakın tarihli, vesikalık standardında, dijital olarak çekilmiş veya iyi taranmış (en az 300dpi) olmalıdır. Fotoğraf bilgileri; T.C kimlik no, dosya adı olmak üzere; jpg dosyası biçiminde (örnek: 12345678901.jpg) olmalıdır. Uygun Fotoğraf bilgisi olmayan kişiler için kart basımı yapılamamaktadır.</span>
+            </div>
+            
+            <div class="form-bilgi" style="margin-bottom:15px;">
+                <b>Önemli not:</b> Hatalı basılan veya değişecek kart bu form ile birlikte bir üst yazı ekinde Bilgi işlem Dairesi Başkanlığına gönderilecektir. BAUN akıllı merkezine gönderilmeyen veya getirilmeyen hatalı basılan veya değişecek kartlar ile ilgili herhangi bir işlem yapılmayacaktır. Ödemeye esas ek göstergenin değişimi için akıllı kart gönderilmeyecektir.
+            </div>
+
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- F-53 FORMU (ÖĞRENCİ) -->
+    <div id="form_f53.php" class="gizli-form">
+        <h2>Akıllı Kart Öğrenci İşlem Formu (F-53)</h2>
+        <form>
+            <div class="form-satir">
+                <div class="form-grup"><label>AD SOYAD</label><input type="text" required></div>
+                <div class="form-grup"><label>OKUL NO</label><input type="text" required></div>
+                <div class="form-grup"><label>TC Kimlik No</label><input type="text" maxlength="11" required></div>
+            </div>
+            
+            <div class="form-satir">
+                <div class="form-grup"><label>Fakülte/Yüksekokul/MYO/Enstitü</label><input type="text"></div>
+                <div class="form-grup"><label>BÖLÜM</label><input type="text"></div>
+                <div class="form-grup"><label>PROGRAM</label><input type="text"></div>
+            </div>
+            
+            <div class="form-grup">
+                <label title="Yeni kayıt (kart), lisans, yüksek lisans, yaz okulu, düzeltme, fotoğraf, mezun, kayıt dondurmuş, uzaklaştırma vb.">
+                    AÇIKLAMA (Öğrencinin son durumu ile ilgili bilgiyi yazınız)
+                </label>
+                <textarea rows="3"></textarea>
+                <span class="form-bilgi">Fare imlecini 'AÇIKLAMA' başlığının üzerinde bekleterek açıklama örneklerini görebilirsiniz.</span>
+            </div>
+            
+            <div class="form-bilgi" style="margin-bottom:15px;">
+                <b>Önemli Not:</b> Hatalı basılan veya değişecek kartlar bu form ile birlikte bir üst yazı ekinde Bilgi işlem Dairesi Başkanlığına gönderilecektir. BAUN akıllı merkezine gönderilmeyen veya getirilmeyen hatalı basılan veya değişecek kartlar ile ilgili herhangi bir işlem yapılmayacaktır.
+            </div>
+
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- F-54 FORMU (KAYIP KART) -->
+    <div id="form_f54.php" class="gizli-form">
+        <h2>Kayıp Akıllı Kart Müracaat Formu (F-54)</h2>
+        <form>
+            <div class="resmi-yazi">
+                Aşağıda belirttiğim adıma kayıtlı olan akıllı kimlik kartımı kaybettim. Eski kimlik kartımın AKS sisteminden iptal edilmesini ve bedeli karşılığında yeni kimlik kartımın tanzim edilerek tarafıma verilmesini rica ederim.
+            </div>
+            
+            <div class="form-grup"><label>Görev Yapılan / Öğrenim Görülen Yer</label><input type="text" required></div>
+            
+            <div class="form-satir">
+                <div class="form-grup"><label>TC Kimlik Numarası</label><input type="text" maxlength="11" required></div>
+                <div class="form-grup"><label>Ad Soyad (Adıma Kayıtlı Olan)</label><input type="text" required></div>
+            </div>
+            
+            <div class="form-satir">
+                <div class="form-grup"><label>Kart Seri No</label><input type="text"></div>
+                <div class="form-grup"><label>Kayıp Tarihi</label><input type="date"></div>
+                <div class="form-grup"><label>İrtibat Telefonu</label><input type="text"></div>
+            </div>
+
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+        </form>
+    </div>
+
+    <!-- F-55 FORMU (ARIZALI KART) -->
+    <div id="form_f55.php" class="gizli-form">
+        <h2>Arızalı Akıllı Kart Müracaat Formu (F-55)</h2>
+        <form>
+            <div class="resmi-yazi">
+                Eski kimlik kartımın AKS sisteminden iptal edilmesi ve akıllı kart merkezince yapılan teknik inceleme sonucunda, kart arızasının tarafımdan kaynakladığı takdirde bedeli karşılığında yeni akıllı kimlik kartımın tanzim edilerek tarafıma verilmesini rica ederim.
+            </div>
+
+            <div class="form-grup"><label>Görev Yapılan / Öğrenim Görülen Yer</label><input type="text" required></div>
+            
+            <div class="form-satir">
+                <div class="form-grup"><label>TC Kimlik Numarası</label><input type="text" maxlength="11" required></div>
+                <div class="form-grup"><label>Ad Soyad (Adıma Kayıtlı Olan)</label><input type="text" required></div>
+            </div>
+            
+            <div class="form-satir">
+                <div class="form-grup"><label>Kart Seri No</label><input type="text"></div>
+                <div class="form-grup"><label>Arızalanma Tarihi</label><input type="date"></div>
+                <div class="form-grup"><label>İrtibat Telefonu</label><input type="text"></div>
+            </div>
+            
+            <div class="form-bilgi" style="margin-bottom:15px; font-size:12px;">
+                <b>Uyarı:</b> Arızalı kart bu form ile birlikte Bilgi işlem Dairesi Başkanlığına gönderilecektir. BAUN akıllı merkezine gönderilmeyen veya getirilmeyen, hatalı basılan veya değişecek kartlar ile ilgili herhangi bir işlem yapılmayacaktır.
+            </div>
+
+            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+        </form>
+    </div>
 
     <!-- KDYS.FR.0074 - E-İmza Talep Formu -->
     <div id="form_0074.php" class="gizli-form">
