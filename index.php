@@ -1038,10 +1038,7 @@
                 Birimimiz adına kullanılmak üzere, sistemde yukarıda belirtilen alan adının açılması, 250 MB web ve 100 MB veri tabanı (istenirse) kotalı alanın tahsis edilmesi ve bu alanların kullanımı için gerekli web kullanıcısının açılarak yukarıda adı belirtilen personele teslim edilmesini talep ediyoruz. Ayrıca bu sayfanın arkasında bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, eki Web Kullanıcıları Servis Politikası ve <a href="http://bid.balikesir.edu.tr" target="_blank" style="color: #1b656e; font-weight: bold;">http://bid.balikesir.edu.tr</a> adresinde bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaların okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.
             </div>
  
-            <div class="form-grup">
-                <label>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı - Onay Tarihi *</label>
-                <input type="date" name="onay_tarihi" required>
-            </div>
+           
  
             <!-- Açılır/Kapanır Bilişim Politikası Paneli -->
             <button type="button" class="accordion-btn" onclick="toggleAccordion(this)">
