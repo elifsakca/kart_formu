@@ -51,7 +51,7 @@
         .form-tablosu th { background-color: #1b656e; color: white; font-weight: 600; white-space: nowrap; }
         .form-tablosu td input, .form-tablosu td select { width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px; box-sizing: border-box; font-size: 11px; }
 
-        /* Teknik Detay ve İdari Tablo Stilleri (0071 ve 0072 için) */
+        /* Teknik Detay ve İdari Tablo Stilleri */
         .teknik-tablo { width: 100%; border-collapse: collapse; margin-top: 20px; margin-bottom: 20px; font-size: 13px; }
         .teknik-tablo td, .teknik-tablo th { border: 1px solid #333; padding: 8px; vertical-align: middle; }
         .teknik-tablo .baslik-gri { background-color: #e0e0e0; font-weight: bold; color: #000; width: 180px; }
@@ -62,6 +62,47 @@
         .teknik-tablo .imza-baslik { background-color: #e0e0e0; font-weight: bold; text-align: center; }
         .teknik-tablo .imza-alani { text-align: center; padding: 15px 8px; vertical-align: top; }
         .teknik-tablo .imza-alani input { width: 90%; margin-bottom: 8px; text-align: center; }
+
+        /* Açılır / Kapanır Kurallar Butonu ve İçeriği */
+        .accordion-btn {
+            background-color: #e8f4f8;
+            color: #1b656e;
+            cursor: pointer;
+            padding: 12px 15px;
+            width: 100%;
+            border: 1px solid #1b656e;
+            border-radius: 5px;
+            text-align: left;
+            outline: none;
+            font-size: 13.5px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+            margin-bottom: 15px;
+        }
+        .accordion-btn:hover, .accordion-btn.active {
+            background-color: #1b656e;
+            color: white;
+        }
+        .accordion-panel {
+            padding: 0 18px;
+            background-color: #fdfdfd;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .accordion-panel ol { padding-left: 20px; }
+        .accordion-panel li { margin-bottom: 8px; }
     </style>
 </head>
 <body>
@@ -420,7 +461,7 @@
                 </div>
             </div>
 
-            <!-- GÖRSELDEKİ TEKNİK DEĞERLENDİRME VE TESLİM BÖLÜMÜ -->
+            <!-- TEKNİK DEĞERLENDİRME VE TESLİM BÖLÜMÜ -->
             <table class="teknik-tablo">
                 <tr>
                     <td class="baslik-gri">Tespit Edilen Durum</td>
@@ -531,8 +572,25 @@
                 <textarea rows="2" placeholder="Diğer veya ek açıklamalarınız..."></textarea>
             </div>
 
+            <!-- AÇILIR / KAPANIR E-POSTA KULLANIM KURALLARI BUTONU -->
+            <button type="button" class="accordion-btn" onclick="toggleAccordion(this)">
+                <span>BALIKESİR ÜNİVERSİTESİ ELEKTRONİK POSTA (e-mail) ADRESİ KULLANIM KURALLARI</span>
+                <span class="icon">▼</span>
+            </button>
+            <div class="accordion-panel">
+                <p>Bu metin, Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası metninin "Elektronik Posta Hesabı Kullanım Kuralları" başlığı altındaki kuralları içermektedir. Kullanıcılar e-posta hizmetini kullanırken aşağıdaki kurallara uyacağını kabul ederler:</p>
+                <ol>
+                    <li>Balıkesir Üniversitesi e-posta hesapları, yalnızca üniversitenin eğitim, araştırma, yönetim ve akademik faaliyetlerini desteklemek amacıyla kullanılabilir. Ticari, siyasi, reklam veya kişisel kazanç sağlamaya yönelik amaçlarla kullanılamaz.</li>
+                    <li>E-posta hesabı sahibi, hesabının güvenliğinden ve hesabından yapılan tüm işlemlerden doğrudan sorumludur. Şifreler hiçbir koşulda üçüncü kişilerle paylaşılamaz.</li>
+                    <li>Üniversite e-posta sistemi üzerinden genel ahlak kurallarına aykırı, tehdit edici, taciz edici, hakaret içeren veya yasadışı içerikli iletiler gönderilemez.</li>
+                    <li>Sistem kaynaklarını gereksiz yere tüketecek kitlesel veya zincirleme e-posta (Spam, Chain Mail vb.) gönderimi yapılması ve zararlı yazılım içeren dosyaların iletilmesi kesinlikle yasaktır.</li>
+                    <li>E-posta hesabının yetkisiz erişim, kimlik avı (phishing) veya güvenlik ihlallerinde kullanıldığının tespiti durumunda Bilgi İşlem Daire Başkanlığı hesabı derhal askıya alma yetkisine sahiptir.</li>
+                    <li>Geçici süreli açılan kurumsal e-posta hesaplarının geçerlilik süresi dolduğunda veya kullanım amacı sona erdiğinde hesap kapatılır.</li>
+                </ol>
+            </div>
+
             <div class="resmi-yazi" style="font-size: 12.5px;">
-                Birimimiz adına kullanılmak üzere, sistemde yukarıda belirtilen e-posta hesabının açılmasını talep ediyoruz. Ayrıca bu sayfanın arkasında bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, T.C. Balıkesir Üniversitesi E-posta Kullanım Politikası ve Bilgi İşlem Daire Başkanlığı web sayfasında bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaların okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.
+                Birimimiz adına kullanılmak üzere, sistemde yukarıda belirtilen e-posta hesabının açılmasını talep ediyoruz. Ayrıca yukarıda bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, T.C. Balıkesir Üniversitesi E-posta Kullanım Politikası ve Bilgi İşlem Daire Başkanlığı web sayfasında bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaların okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.
             </div>
 
             <div class="form-satir">
@@ -549,7 +607,7 @@
                 </div>
             </div>
 
-            <!-- GÖRSELDEKİ BİLGİ İŞLEM DAİRESİ İŞLEMLERİ BÖLÜMÜ -->
+            <!-- BİLGİ İŞLEM DAİRESİ İŞLEMLERİ BÖLÜMÜ -->
             <table class="teknik-tablo">
                 <tr>
                     <td colspan="2" class="baslik-ortali">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ</td>
@@ -864,8 +922,9 @@
         </form>
     </div>
 
-    <!-- Yönlendirme JS Kodu -->
+    <!-- JavaScript Kodları -->
     <script>
+        // Form Yönlendirme Fonksiyonu
         function formYonetlendir() {
             var secilenForm = document.getElementById("formSecici").value;
             var hataMesaji = document.getElementById("hata-mesaji");
@@ -881,8 +940,23 @@
                 if (acilacakForm) {
                     acilacakForm.style.display = "block";
                 } else {
-                    alert("Seçtiğiniz form (" + secilenForm + ") henüz hazırlanmaktadır. Şimdilik F-52, F-53, F-54, F-55, KDYS.FR.0071, KDYS.FR.0072, KDYS.FR.0073, KDYS.FR.0074 ve KDYS.FR.0077 formları aktiftir.");
+                    alert("Seçtiğiniz form (" + secilenForm + ") henüz hazırlanmaktadır.");
                 }
+            }
+        }
+
+        // Açılır / Kapanır Kurallar Fonksiyonu
+        function toggleAccordion(btn) {
+            btn.classList.toggle("active");
+            var panel = btn.nextElementSibling;
+            var icon = btn.querySelector(".icon");
+
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+                icon.textContent = "▼";
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+                icon.textContent = "▲";
             }
         }
     </script>
