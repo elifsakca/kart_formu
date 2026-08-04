@@ -78,6 +78,7 @@
             BALIKESİR ÜNİVERSİTESİ
         </a>
         <div>
+            <a href="login.php" class="navbar-link" style="font-weight:bold; color:#1b656e; margin-right:15px;">Yönetici Girişi</a>
             <a href="https://bid.balikesir.edu.tr" target="_blank" class="navbar-link">BİLGİ İŞLEM DAİRE BAŞKANLIĞI | Balıkesir Üniversitesi</a>
         </div>
     </div>
@@ -87,6 +88,13 @@
         <h1>Üniversitemiz Form İşlem Merkezi</h1>
         <p><a href="https://bid.balikesir.edu.tr" target="_blank">ANASAYFA</a> > FORMLAR</p>
     </div>
+
+    <!-- Başarılı Başvuru Bildirimi -->
+    <?php if(isset($_GET['durum']) && $_GET['durum'] == 'basarili'): ?>
+        <div style="max-width:900px; margin:20px auto; background:#d4edda; color:#155724; padding:15px; border-radius:5px; border-left:5px solid #28a745; text-align:center; font-weight:bold; position:relative; z-index:20;">
+            ✓ Form başvurunuz başarıyla veritabanına kaydedilmiştir. İlgili birim tarafından incelenmektedir.
+        </div>
+    <?php endif; ?>
 
     <!-- Form Seçim Kutusu -->
     <div class="secim-kutusu">
@@ -130,29 +138,32 @@
     <!-- F-52 FORMU (PERSONEL İŞLEMLERİ) -->
     <div id="form_f52.php" class="gizli-form">
         <h2>Akıllı Kart İşlem Formu (F-52)</h2>
-        <form>
+        <form method="POST" action="islem.php" enctype="multipart/form-data">
+            <input type="hidden" name="form_kodu" value="F-52">
+            <input type="hidden" name="form_adi" value="Akıllı Kart İşlem Formu (F-52)">
+
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Ad, Soyad</label>
-                    <input type="text" required>
+                    <input type="text" name="ad_soyad" required>
                     <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
                 </div>
                 <div class="form-grup">
                     <label>TC Kimlik No</label>
-                    <input type="text" maxlength="11" required>
+                    <input type="text" name="tc_no" maxlength="11" required>
                     <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
                 </div>
             </div>
             
             <div class="form-satir">
-                <div class="form-grup"><label>Fakülte/YO/MYO/Birim</label><input type="text"></div>
-                <div class="form-grup"><label>İrtibat Telefonu</label><input type="text"></div>
+                <div class="form-grup"><label>Fakülte/YO/MYO/Birim</label><input type="text" name="fakulte_birim"></div>
+                <div class="form-grup"><label>İrtibat Telefonu</label><input type="text" name="telefon"></div>
             </div>
 
             <!-- Kart (Kişi) Tipi Alanı -->
             <div class="form-grup">
                 <label>Kart (Kişi) Tipi (Fareyi seçeneklerin üzerinde bekleterek açıklamaları görebilirsiniz)</label>
-                <select required>
+                <select name="kart_tipi" required>
                     <option value="">Seçiniz...</option>
                     <option>Akademik Personel</option>
                     <option>İdari Personel</option>
@@ -171,7 +182,7 @@
             <!-- İşlem Türü Alanı -->
             <div class="form-grup">
                 <label>Yapılacak İşlem Türü</label>
-                <select required>
+                <select name="islem_turu" required>
                     <option value="">Seçiniz...</option>
                     <option title="Yeni Başlayan Personel/kişiler için">Akıllı kartın ilk kez verilmesi</option>
                     <option>Hatalı Basılan Kart Bilgisinin Düzeltilmesi</option>
@@ -186,12 +197,12 @@
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Unvanı</label>
-                    <input type="text">
+                    <input type="text" name="unvan">
                     <span class="form-bilgi">Bu kısım Akademik, İdari Personel ve Yerleşke Onursal, Emekli, Hizmet, Firma, Kurum, Misafir, Kütüphane Giriş Kartları içindir.</span>
                 </div>
                 <div class="form-grup">
                     <label>Birim</label>
-                    <input type="text">
+                    <input type="text" name="birim">
                     <span class="form-bilgi">Akademik ve İdari Personelin kadrosunun olduğu birim, diğer kart tipleri için personelin çalıştığı birim yazılmalıdır.</span>
                 </div>
             </div>
@@ -199,35 +210,35 @@
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Bölüm</label>
-                    <input type="text">
+                    <input type="text" name="bolum">
                     <span class="form-bilgi">Akademik Personelin kadrosunun olduğu bölüm yazılmalıdır.</span>
                 </div>
                 <div class="form-grup">
                     <label>Kurum Sicil No'su</label>
-                    <input type="text">
+                    <input type="text" name="sicil_no">
                     <span class="form-bilgi">Bu kısım Akademik, İdari Personel, Koruma Güvenlik görevlisi ve Yerleşke Kurum Giriş Kartları içindir.</span>
                 </div>
             </div>
 
             <div class="form-grup">
                 <label>Ödemeye Esas Ek Göstergesi</label>
-                <input type="text">
+                <input type="text" name="ek_gosterge">
                 <span class="form-bilgi">Personelin ödemeye esas ek göstergesi yemek ücretinin belirlenmesinde baz alınacağı için doğruluğundan ilgili birim sorumlu olacaktır.</span>
             </div>
 
             <div class="form-satir">
-                <div class="form-grup"><label>Hizmet Yeri</label><input type="text"><span class="form-bilgi">Sadece Yerleşke Hizmet, Firma, Kurum Giriş Kartları içindir.</span></div>
-                <div class="form-grup"><label>Firma Adı</label><input type="text"><span class="form-bilgi">Sadece Yerleşke Firma Giriş Kartları içindir.</span></div>
+                <div class="form-grup"><label>Hizmet Yeri</label><input type="text" name="hizmet_yeri"><span class="form-bilgi">Sadece Yerleşke Hizmet, Firma, Kurum Giriş Kartları içindir.</span></div>
+                <div class="form-grup"><label>Firma Adı</label><input type="text" name="firma_adi"><span class="form-bilgi">Sadece Yerleşke Firma Giriş Kartları içindir.</span></div>
             </div>
 
             <div class="form-satir">
-                <div class="form-grup"><label>Kurumu</label><input type="text"><span class="form-bilgi">Yerleşke Kurum Giriş Kartları içindir.</span></div>
-                <div class="form-grup"><label>Kan Grubu</label><input type="text"><span class="form-bilgi">Sadece Koruma Güvenlik veya Özel Güvenlik kartı alacak personel doldurmalıdır.</span></div>
+                <div class="form-grup"><label>Kurumu</label><input type="text" name="kurumu"><span class="form-bilgi">Yerleşke Kurum Giriş Kartları içindir.</span></div>
+                <div class="form-grup"><label>Kan Grubu</label><input type="text" name="kan_grubu"><span class="form-bilgi">Sadece Koruma Güvenlik veya Özel Güvenlik kartı alacak personel doldurmalıdır.</span></div>
             </div>
             
             <div class="form-grup">
                 <label>Görev</label>
-                <input type="text">
+                <input type="text" name="gorev">
                 <span class="form-bilgi">Bu kısmı sadece Yerleşke Misafir Giriş Kartı alacak personel doldurmalıdır.</span>
             </div>
 
@@ -236,27 +247,27 @@
                 <label style="color:#1b656e; font-weight:bold; font-size:14px; margin-bottom:10px; display:block;">Hatalı Basılan Kart veya Bilgi Değişikliği Yapılacaksa Düzeltilecek / Değişecek Kısmı Seçiniz:</label>
                 
                 <div class="checkbox-grid">
-                    <label><input type="checkbox"> Ad, Soyad</label>
-                    <label><input type="checkbox"> Unvan</label>
-                    <label><input type="checkbox"> Görev</label>
-                    <label><input type="checkbox"> Birim</label>
-                    <label><input type="checkbox"> Bölüm</label>
-                    <label><input type="checkbox"> Kurum Sicil No</label>
-                    <label><input type="checkbox"> TC Kimlik No</label>
-                    <label><input type="checkbox"> Hizmet Yeri</label>
-                    <label><input type="checkbox"> Firma Adı</label>
-                    <label><input type="checkbox"> Kurum Adı</label>
-                    <label><input type="checkbox"> Kan Grubu</label>
-                    <label><input type="checkbox"> Fotoğraf</label>
-                    <label style="grid-column: span 2;"><input type="checkbox"> Ödemeye Esas Ek Göstergesi</label>
+                    <label><input type="checkbox" name="degisecek_alanlar[]" value="Ad, Soyad"> Ad, Soyad</label>
+                    <label><input type="checkbox" name="degisecek_alanlar[]" value="Unvan"> Unvan</label>
+                    <label><input type="checkbox" name="degisecek_alanlar[]" value="Görev"> Görev</label>
+                    <label><input type="checkbox" name="degisecek_alanlar[]" value="Birim"> Birim</label>
+                    <label><input type="checkbox" name="degisecek_alanlar[]" value="Bölüm"> Bölüm</label>
+                    <label><input type="checkbox" name="degisecek_alanlar[]" value="Kurum Sicil No"> Kurum Sicil No</label>
+                    <label><input type="checkbox" name="degisecek_alanlar[]" value="TC Kimlik No"> TC Kimlik No</label>
+                    <label><input type="checkbox" name="degisecek_alanlar[]" value="Hizmet Yeri"> Hizmet Yeri</label>
+                    <label><input type="checkbox" name="degisecek_alanlar[]" value="Firma Adı"> Firma Adı</label>
+                    <label><input type="checkbox" name="degisecek_alanlar[]" value="Kurum Adı"> Kurum Adı</label>
+                    <label><input type="checkbox" name="degisecek_alanlar[]" value="Kan Grubu"> Kan Grubu</label>
+                    <label><input type="checkbox" name="degisecek_alanlar[]" value="Fotoğraf"> Fotoğraf</label>
+                    <label style="grid-column: span 2;"><input type="checkbox" name="degisecek_alanlar[]" value="Ödemeye Esas Ek Göstergesi"> Ödemeye Esas Ek Göstergesi</label>
                     <label style="grid-column: span 3; display: flex; gap: 10px;">
-                        <input type="checkbox"> Diğer: 
-                        <input type="text" style="width: 250px; padding: 4px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+                        <input type="checkbox" name="degisecek_alanlar[]" value="Diğer"> Diğer: 
+                        <input type="text" name="digeralan_metin" style="width: 250px; padding: 4px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
                     </label>
                 </div>
 
                 <label style="color:#1b656e; font-weight:bold; font-size:13px; margin-bottom:5px; margin-top: 15px; display:block;">Yeni Bilgi (Seçtiğiniz alanın doğru halini aşağıya yazınız):</label>
-                <textarea rows="2" style="width:100%; border:1px solid #ccc; border-radius:4px; padding:5px;"></textarea>
+                <textarea name="yeni_bilgi" rows="2" style="width:100%; border:1px solid #ccc; border-radius:4px; padding:5px;"></textarea>
             </div>
 
             <!-- Form AÇIKLAMA Listesi -->
@@ -275,7 +286,7 @@
 
             <div class="form-grup">
                 <label>Fotoğraf Yükle</label>
-                <input type="file" accept=".jpg, .jpeg">
+                <input type="file" name="fotograf" accept=".jpg, .jpeg">
                 <span class="form-bilgi"><b>Fotoğraflar için önemli not:</b> Gönderilecek fotoğraflar; yakın tarihli, vesikalık standardında, dijital olarak çekilmiş veya iyi taranmış (en az 300dpi) olmalıdır. Fotoğraf bilgileri; T.C kimlik no, dosya adı olmak üzere; jpg dosyası biçiminde (örnek: 12345678901.jpg) olmalıdır. Uygun Fotoğraf bilgisi olmayan kişiler için kart basımı yapılamamaktadır.</span>
             </div>
             
@@ -283,31 +294,34 @@
                 <b>Önemli not:</b> Hatalı basılan veya değişecek kart bu form ile birlikte bir üst yazı ekinde Bilgi işlem Dairesi Başkanlığına gönderilecektir. BAUN akıllı merkezine gönderilmeyen veya getirilmeyen hatalı basılan veya değişecek kartlar ile ilgili herhangi bir işlem yapılmayacaktır. Ödemeye esas ek göstergenin değişimi için akıllı kart gönderilmeyecektir.
             </div>
 
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
         </form>
     </div>
 
     <!-- F-53 FORMU (ÖĞRENCİ) -->
     <div id="form_f53.php" class="gizli-form">
         <h2>Akıllı Kart Öğrenci İşlem Formu (F-53)</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="F-53">
+            <input type="hidden" name="form_adi" value="Akıllı Kart Öğrenci İşlem Formu (F-53)">
+
             <div class="form-satir">
-                <div class="form-grup"><label>AD SOYAD</label><input type="text" required></div>
-                <div class="form-grup"><label>OKUL NO</label><input type="text" required></div>
-                <div class="form-grup"><label>TC Kimlik No</label><input type="text" maxlength="11" required></div>
+                <div class="form-grup"><label>AD SOYAD</label><input type="text" name="ad_soyad" required></div>
+                <div class="form-grup"><label>OKUL NO</label><input type="text" name="okul_no" required></div>
+                <div class="form-grup"><label>TC Kimlik No</label><input type="text" name="tc_no" maxlength="11" required></div>
             </div>
             
             <div class="form-satir">
-                <div class="form-grup"><label>Fakülte/Yüksekokul/MYO/Enstitü</label><input type="text"></div>
-                <div class="form-grup"><label>BÖLÜM</label><input type="text"></div>
-                <div class="form-grup"><label>PROGRAM</label><input type="text"></div>
+                <div class="form-grup"><label>Fakülte/Yüksekokul/MYO/Enstitü</label><input type="text" name="fakulte_birim"></div>
+                <div class="form-grup"><label>BÖLÜM</label><input type="text" name="bolum"></div>
+                <div class="form-grup"><label>PROGRAM</label><input type="text" name="program"></div>
             </div>
             
             <div class="form-grup">
                 <label title="Yeni kayıt (kart), lisans, yüksek lisans, yaz okulu, düzeltme, fotoğraf, mezun, kayıt dondurmuş, uzaklaştırma vb.">
                     AÇIKLAMA (Öğrencinin son durumu ile ilgili bilgiyi yazınız)
                 </label>
-                <textarea rows="3"></textarea>
+                <textarea name="aciklama" rows="3"></textarea>
                 <span class="form-bilgi">Fare imlecini 'AÇIKLAMA' başlığının üzerinde bekleterek açıklama örneklerini görebilirsiniz.</span>
             </div>
             
@@ -315,98 +329,107 @@
                 <b>Önemli Not:</b> Hatalı basılan veya değişecek kartlar bu form ile birlikte bir üst yazı ekinde Bilgi işlem Dairesi Başkanlığına gönderilecektir. BAUN akıllı merkezine gönderilmeyen veya getirilmeyen hatalı basılan veya değişecek kartlar ile ilgili herhangi bir işlem yapılmayacaktır.
             </div>
 
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
         </form>
     </div>
 
     <!-- F-54 FORMU (KAYIP KART) -->
     <div id="form_f54.php" class="gizli-form">
         <h2>Kayıp Akıllı Kart Müracaat Formu (F-54)</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="F-54">
+            <input type="hidden" name="form_adi" value="Kayıp Akıllı Kart Müracaat Formu (F-54)">
+
             <div class="resmi-yazi">
                 Aşağıda belirttiğim adıma kayıtlı olan akıllı kimlik kartımı kaybettim. Eski kimlik kartımın AKS sisteminden iptal edilmesini ve bedeli karşılığında yeni kimlik kartımın tanzim edilerek tarafıma verilmesini rica ederim.
             </div>
             
-            <div class="form-grup"><label>Görev Yapılan / Öğrenim Görülen Yer</label><input type="text" required></div>
+            <div class="form-grup"><label>Görev Yapılan / Öğrenim Görülen Yer</label><input type="text" name="gorev_ogrenim_yeri" required></div>
             
             <div class="form-satir">
-                <div class="form-grup"><label>TC Kimlik Numarası</label><input type="text" maxlength="11" required></div>
-                <div class="form-grup"><label>Ad Soyad (Adıma Kayıtlı Olan)</label><input type="text" required></div>
+                <div class="form-grup"><label>TC Kimlik Numarası</label><input type="text" name="tc_no" maxlength="11" required></div>
+                <div class="form-grup"><label>Ad Soyad (Adıma Kayıtlı Olan)</label><input type="text" name="ad_soyad" required></div>
             </div>
             
             <div class="form-satir">
-                <div class="form-grup"><label>Kart Seri No</label><input type="text"></div>
-                <div class="form-grup"><label>Kayıp Tarihi</label><input type="date"></div>
-                <div class="form-grup"><label>İrtibat Telefonu</label><input type="text"></div>
+                <div class="form-grup"><label>Kart Seri No</label><input type="text" name="kart_seri_no"></div>
+                <div class="form-grup"><label>Kayıp Tarihi</label><input type="date" name="kayip_tarihi"></div>
+                <div class="form-grup"><label>İrtibat Telefonu</label><input type="text" name="telefon"></div>
             </div>
 
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
         </form>
     </div>
 
     <!-- F-55 FORMU (ARIZALI KART) -->
     <div id="form_f55.php" class="gizli-form">
         <h2>Arızalı Akıllı Kart Müracaat Formu (F-55)</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="F-55">
+            <input type="hidden" name="form_adi" value="Arızalı Akıllı Kart Müracaat Formu (F-55)">
+
             <div class="resmi-yazi">
                 Eski kimlik kartımın AKS sisteminden iptal edilmesi ve akıllı kart merkezince yapılan teknik inceleme sonucunda, kart arızasının tarafımdan kaynakladığı takdirde bedeli karşılığında yeni akıllı kimlik kartımın tanzim edilerek tarafıma verilmesini rica ederim.
             </div>
 
-            <div class="form-grup"><label>Görev Yapılan / Öğrenim Görülen Yer</label><input type="text" required></div>
+            <div class="form-grup"><label>Görev Yapılan / Öğrenim Görülen Yer</label><input type="text" name="gorev_ogrenim_yeri" required></div>
             
             <div class="form-satir">
-                <div class="form-grup"><label>TC Kimlik Numarası</label><input type="text" maxlength="11" required></div>
-                <div class="form-grup"><label>Ad Soyad (Adıma Kayıtlı Olan)</label><input type="text" required></div>
+                <div class="form-grup"><label>TC Kimlik Numarası</label><input type="text" name="tc_no" maxlength="11" required></div>
+                <div class="form-grup"><label>Ad Soyad (Adıma Kayıtlı Olan)</label><input type="text" name="ad_soyad" required></div>
             </div>
             
             <div class="form-satir">
-                <div class="form-grup"><label>Kart Seri No</label><input type="text"></div>
-                <div class="form-grup"><label>Arızalanma Tarihi</label><input type="date"></div>
-                <div class="form-grup"><label>İrtibat Telefonu</label><input type="text"></div>
+                <div class="form-grup"><label>Kart Seri No</label><input type="text" name="kart_seri_no"></div>
+                <div class="form-grup"><label>Arızalanma Tarihi</label><input type="date" name="ariza_tarihi"></div>
+                <div class="form-grup"><label>İrtibat Telefonu</label><input type="text" name="telefon"></div>
             </div>
             
             <div class="form-bilgi" style="margin-bottom:15px; font-size:12px;">
                 <b>Uyarı:</b> Arızalı kart bu form ile birlikte Bilgi işlem Dairesi Başkanlığına gönderilecektir. BAUN akıllı merkezine gönderilmeyen veya getirilmeyen, hatalı basılan veya değişecek kartlar ile ilgili herhangi bir işlem yapılmayacaktır.
             </div>
 
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
         </form>
     </div>
 
     <!-- KDYS.FR.0071 - Bilgi İşlem DB Bakım Onarım Takip Formu -->
     <div id="form_0071.php" class="gizli-form">
         <h2>KDYS.FR.0071 - Bilgi İşlem DB Bakım Onarım Takip Formu</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0071">
+            <input type="hidden" name="form_adi" value="Bilgi İşlem DB Bakım Onarım Takip Formu">
+
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Birim Adı</label>
-                    <input type="text" value="BALIKESİR ÜNİVERSİTESİ-" required>
+                    <input type="text" name="birim_adi" value="BALIKESİR ÜNİVERSİTESİ-" required>
                 </div>
                 <div class="form-grup">
                     <label>Talebi İleten Personelin Adı-Soyadı</label>
-                    <input type="text" required>
+                    <input type="text" name="personel_ad_soyad" required>
                 </div>
             </div>
 
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Telefonu</label>
-                    <input type="text">
+                    <input type="text" name="telefon">
                 </div>
                 <div class="form-grup">
                     <label>Cihazın Marka/Modeli ve Seri No</label>
-                    <input type="text" placeholder="Marka/Model - Seri No: ...">
+                    <input type="text" name="cihaz_marka_model" placeholder="Marka/Model - Seri No: ...">
                 </div>
             </div>
 
             <div class="form-grup">
                 <label>Arıza / Bakım / Tesis Tanımı (Şikâyet sebebi)</label>
-                <textarea rows="3" required></textarea>
+                <textarea name="ariza_tanimi" rows="3" required></textarea>
             </div>
 
             <div class="form-grup">
                 <label>Donanım Destek Grubuna İletmeniz Gereken Bir Durum Var mı?</label>
-                <textarea rows="2"></textarea>
+                <textarea name="donanim_destek_notu" rows="2"></textarea>
             </div>
 
             <div class="form-bilgi-liste" style="background: #f9f9f9; border-left-color: #1b656e; color: #333;">
@@ -414,20 +437,20 @@
                 <p style="margin: 0 0 8px 0;">* Formatlanması için teslim edilen cihazdaki tüm veriler cihazın sahibi tarafından yedeklenmelidir (Donanım destek biriminde yedek alınmayacaktır).</p>
                 <p style="margin: 0 0 10px 0;">* Donanım destek birimi personeli tarafından cihazdaki verinin kopyalanmayacağı ve hiçbir şekilde paylaşılmayacağı taahhüt edilir.</p>
                 <label style="display: flex; align-items: center; gap: 8px; font-weight: bold; cursor: pointer;">
-                    <input type="checkbox" required> Açıklamaları okudum, onaylıyorum.
+                    <input type="checkbox" name="onay_checkbox" value="Onaylandı" required> Açıklamaları okudum, onaylıyorum.
                 </label>
             </div>
 
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Bildirimde Bulunan Ad-Soyad</label>
-                    <input type="text" required>
+                    <input type="text" name="bildiren_ad_soyad" required>
                 </div>
                 <div class="form-grup">
                     <label>Tarih ve Saat</label>
                     <div style="display: flex; gap: 5px;">
-                        <input type="date" required>
-                        <input type="time" required>
+                        <input type="date" name="bildirim_tarihi" required>
+                        <input type="time" name="bildirim_saati" required>
                     </div>
                 </div>
             </div>
@@ -436,27 +459,27 @@
             <table class="teknik-tablo">
                 <tr>
                     <td class="baslik-gri">Tespit Edilen Durum</td>
-                    <td><textarea rows="2"></textarea></td>
+                    <td><textarea name="tespit_durum" rows="2"></textarea></td>
                     <td class="secenek-kutusu">
                         <label>Antivirüs Var</label>
-                        <input type="checkbox">
+                        <input type="checkbox" name="antivirus_var" value="Evet">
                     </td>
                     <td class="secenek-kutusu">
                         <label>Garanti Var</label>
-                        <input type="checkbox">
+                        <input type="checkbox" name="garanti_var" value="Evet">
                     </td>
                 </tr>
                 <tr>
                     <td class="baslik-gri">Arıza Bakım Tesis Sebebi</td>
-                    <td colspan="3"><input type="text"></td>
+                    <td colspan="3"><input type="text" name="ariza_sebebi"></td>
                 </tr>
                 <tr>
                     <td class="baslik-gri">Yapılan İşlemler</td>
-                    <td colspan="3"><textarea rows="2"></textarea></td>
+                    <td colspan="3"><textarea name="yapilan_islemler" rows="2"></textarea></td>
                 </tr>
                 <tr>
                     <td class="baslik-gri">Kullanılan Malzemeler</td>
-                    <td colspan="3"><input type="text"></td>
+                    <td colspan="3"><input type="text" name="kullanilan_malzemeler"></td>
                 </tr>
                 <tr>
                     <td colspan="2" class="imza-baslik">İş Bitirme</td>
@@ -465,64 +488,67 @@
                 <tr>
                     <td colspan="2" class="imza-alani">
                         <strong>İşlemi Yapan Personel</strong><br><br>
-                        <input type="text" placeholder="Ad Soyad / Tarih">
+                        <input type="text" name="islem_yapan" placeholder="Ad Soyad / Tarih">
                     </td>
                     <td class="imza-alani">
                         <strong>Teslim Eden Personel</strong><br><br>
-                        <input type="text" placeholder="Ad Soyad / Tarih">
+                        <input type="text" name="teslim_eden" placeholder="Ad Soyad / Tarih">
                     </td>
                     <td class="imza-alani">
                         <strong>Teslim Alan Personel</strong><br><br>
-                        <input type="text" placeholder="Ad Soyad / Tarih">
+                        <input type="text" name="teslim_alan" placeholder="Ad Soyad / Tarih">
                     </td>
                 </tr>
             </table>
 
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
         </form>
     </div>
 
     <!-- KDYS.FR.0072 - Bilgi İşlem DB Kurumsal E-Posta Talep Formu -->
     <div id="form_0072.php" class="gizli-form">
         <h2>KDYS.FR.0072 - Bilgi İşlem DB Kurumsal E-Posta Talep Formu</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0072">
+            <input type="hidden" name="form_adi" value="Bilgi İşlem DB Kurumsal E-Posta Talep Formu">
+
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Birim Adı</label>
-                    <input type="text" value="BALIKESİR ÜNİVERSİTESİ-" required>
+                    <input type="text" name="birim_adi" value="BALIKESİR ÜNİVERSİTESİ-" required>
                 </div>
                 <div class="form-grup">
                     <label>Sorumlu Personelin Adı Soyadı</label>
-                    <input type="text" required>
+                    <input type="text" name="sorumlu_ad_soyad" required>
                 </div>
             </div>
 
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Unvanı</label>
-                    <input type="text">
+                    <input type="text" name="unvan">
                 </div>
                 <div class="form-grup">
                     <label>T.C. Kimlik Numarası</label>
-                    <input type="text" maxlength="11" required>
+                    <input type="text" name="tc_no" maxlength="11" required>
                 </div>
             </div>
 
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Telefonu</label>
-                    <input type="text">
+                    <input type="text" name="telefon">
                 </div>
                 <div class="form-grup">
                     <label>E-posta adresi (Hesap bilgileri gönderilecek)</label>
-                    <input type="text" required>
+                    <input type="text" name="eposta" required>
                 </div>
             </div>
 
             <div class="form-grup">
                 <label>Talep Edilen E-posta Adresi</label>
                 <div style="display: flex; align-items: center; gap: 5px;">
-                    <input type="text" style="flex: 1;" placeholder="örnek" required>
+                    <input type="text" name="talep_eposta" style="flex: 1;" placeholder="örnek" required>
                     <span>@balikesir.edu.tr</span>
                 </div>
             </div>
@@ -530,14 +556,14 @@
             <div class="form-grup">
                 <label>Kurumsal E-posta Kullanım Amacı</label>
                 <div class="checkbox-grid">
-                    <label><input type="checkbox"> Fakülte/YO Adına</label>
-                    <label><input type="checkbox"> Bölüm/Birim Adına</label>
-                    <label><input type="checkbox"> Topluluk/Dernek</label>
-                    <label><input type="checkbox"> Proje Grubu</label>
-                    <label><input type="checkbox"> Konferans/Kongre/Sempozyum</label>
-                    <label><input type="checkbox"> Diğer</label>
+                    <label><input type="checkbox" name="kullanim_amaci[]" value="Fakülte/YO Adına"> Fakülte/YO Adına</label>
+                    <label><input type="checkbox" name="kullanim_amaci[]" value="Bölüm/Birim Adına"> Bölüm/Birim Adına</label>
+                    <label><input type="checkbox" name="kullanim_amaci[]" value="Topluluk/Dernek"> Topluluk/Dernek</label>
+                    <label><input type="checkbox" name="kullanim_amaci[]" value="Proje Grubu"> Proje Grubu</label>
+                    <label><input type="checkbox" name="kullanim_amaci[]" value="Konferans/Kongre/Sempozyum"> Konferans/Kongre/Sempozyum</label>
+                    <label><input type="checkbox" name="kullanim_amaci[]" value="Diğer"> Diğer</label>
                 </div>
-                <textarea rows="2" placeholder="Diğer veya ek açıklamalarınız..."></textarea>
+                <textarea name="aciklama" rows="2" placeholder="Diğer veya ek açıklamalarınız..."></textarea>
             </div>
 
             <!-- AÇILIR / KAPANIR E-POSTA KULLANIM KURALLARI BUTONU -->
@@ -595,18 +621,17 @@
                 Birimimiz adına kullanılmak üzere, sistemde yukarıda belirtilen e-posta hesabının açılmasını talep ediyoruz. Ayrıca yukarıda bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, T.C. Balıkesir Üniversitesi E-posta Kullanım Politikası ve Bilgi İşlem Daire Başkanlığı web sayfasında bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaların okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.
             </div>
 
-        
-
-                
-
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
         </form>
     </div>
 
     <!-- KDYS.FR.0073 - Bilgi İşlem DB E-İmza Mini Kart Okuyucu Teslim Tesellüm Tutanağı -->
     <div id="form_0073.php" class="gizli-form">
         <h2>KDYS.FR.0073 - E-İmza Mini Kart Okuyucu Teslim Tesellüm Tutanağı</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0073">
+            <input type="hidden" name="form_adi" value="E-İmza Mini Kart Okuyucu Teslim Tesellüm Tutanağı">
+
             <div class="resmi-yazi" style="text-align: center; font-weight: bold;">
                 ÜRÜNÜ ALAN KİŞİ BİLGİLERİ
             </div>
@@ -614,44 +639,45 @@
             <div class="form-satir">
                 <div class="form-grup">
                     <label>AD, SOYAD</label>
-                    <input type="text" required>
+                    <input type="text" name="ad_soyad" required>
                 </div>
                 <div class="form-grup">
                     <label>TC KİMLİK NO</label>
-                    <input type="text" maxlength="11" required>
+                    <input type="text" name="tc_no" maxlength="11" required>
                 </div>
             </div>
 
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Fakülte/YO/MYO/Birim</label>
-                    <input type="text" required>
+                    <input type="text" name="birim" required>
                 </div>
                 <div class="form-grup">
                     <label>İrtibat Telefonu</label>
-                    <input type="text">
+                    <input type="text" name="telefon">
                 </div>
             </div>
 
             <div class="form-grup">
                 <label>Talep Tarihi</label>
-                <input type="date" required>
+                <input type="date" name="talep_tarihi" required>
             </div>
 
             <div class="resmi-yazi">
                 Yukarıda belirtilen tarihte talep etmiş olduğum e-imza mini kart okuyucuyu TÜBİTAK Bilişim ve Bilgi Güvenliği İleri Teknolojileri Araştırma Merkezi firmasından tarafımca teslim aldığımı beyan ederim.
             </div>
 
-            
-
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
         </form>
     </div>
 
     <!-- KDYS.FR.0074 - E-İmza Talep Formu -->
     <div id="form_0074.php" class="gizli-form">
         <h2>KDYS.FR.0074 - Bilgi İşlem DB E-İmza Talep Formu</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0074">
+            <input type="hidden" name="form_adi" value="Bilgi İşlem DB E-İmza Talep Formu">
+
             <div class="resmi-yazi" style="text-align: center; font-weight: bold;">
                 E-İMZA BAŞVURU SAHİBİ / PERSONEL BİLGİ LİSTESİ
             </div>
@@ -677,22 +703,22 @@
                     <tbody>
                         <tr>
                             <td class="sn-hucre">1</td>
-                            <td><input type="text" maxlength="11"></td>
-                            <td><input type="date"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
+                            <td><input type="text" name="eimza_tc[]" maxlength="11"></td>
+                            <td><input type="date" name="eimza_dogum[]"></td>
+                            <td><input type="text" name="eimza_ad[]"></td>
+                            <td><input type="text" name="eimza_soyad[]"></td>
+                            <td><input type="text" name="eimza_eposta[]"></td>
+                            <td><input type="text" name="eimza_birim[]"></td>
+                            <td><input type="text" name="eimza_gorev[]"></td>
+                            <td><input type="text" name="eimza_telefon[]"></td>
                             <td>
-                                <select>
+                                <select name="eimza_basvuru_turu[]">
                                     <option value="İlk Sertifika">İlk Sertifika</option>
                                     <option value="Yenileme">Yenileme</option>
                                 </select>
                             </td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
+                            <td><input type="text" name="eimza_odeme[]"></td>
+                            <td><input type="text" name="eimza_aciklama[]"></td>
                             <td></td>
                         </tr>
                     </tbody>
@@ -708,14 +734,17 @@
                 </table>
             </div>
             
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
         </form>
     </div>
 
     <!-- KDYS.FR.0077 - Bilgi İşlem DB Kişisel Web Adı ve Alanı Sözleşmesi -->
     <div id="form_0077.php" class="gizli-form">
         <h2>KDYS.FR.0077 - Bilgi İşlem DB Kişisel Web Adı ve Alanı Sözleşmesi</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0077">
+            <input type="hidden" name="form_adi" value="Bilgi İşlem DB Kişisel Web Adı ve Alanı Sözleşmesi">
+
             <div class="resmi-yazi" style="text-align: center; font-weight: bold; background-color: #e8f4f8; color: #1b656e;">
                 KİŞİSEL WEB ADI VE ALANI TALEP BİLGİLERİ
             </div>
@@ -723,44 +752,44 @@
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Birim Adı *</label>
-                    <input type="text" placeholder="BALIKESİR ÜNİVERSİTESİ - ..." required>
+                    <input type="text" name="birim_adi" placeholder="BALIKESİR ÜNİVERSİTESİ - ..." required>
                 </div>
                 <div class="form-grup">
                     <label>Personelin Adı-Soyadı *</label>
-                    <input type="text" required>
+                    <input type="text" name="personel_ad_soyad" required>
                 </div>
             </div>
 
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Unvanı *</label>
-                    <input type="text" required>
+                    <input type="text" name="unvan" required>
                 </div>
                 <div class="form-grup">
                     <label>T.C. Kimlik Numarası *</label>
-                    <input type="text" maxlength="11" required>
+                    <input type="text" name="tc_no" maxlength="11" required>
                 </div>
             </div>
 
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Telefonu *</label>
-                    <input type="text" required>
+                    <input type="text" name="telefon" required>
                 </div>
                 <div class="form-grup">
                     <label>E-posta Adresi (Hesap bilgileri bu adrese gönderilecektir) *</label>
-                    <input type="email" placeholder="ornek@balikesir.edu.tr" required>
+                    <input type="email" name="eposta" placeholder="ornek@balikesir.edu.tr" required>
                 </div>
             </div>
 
             <div class="form-grup">
                 <label>Talep Edilen Web Adı *</label>
-                <input type="text" placeholder="kullaniciadi.baun.edu.tr" required>
+                <input type="text" name="web_adi" placeholder="kullaniciadi.baun.edu.tr" required>
             </div>
 
             <div class="form-grup">
                 <label>Kullanım Amacı *</label>
-                <textarea rows="3" placeholder="Web alanının kullanım amacını detaylıca açıklayınız..." required></textarea>
+                <textarea name="kullanim_amaci" rows="3" placeholder="Web alanının kullanım amacını detaylıca açıklayınız..." required></textarea>
             </div>
 
             <!-- Taahhüt Metni -->
@@ -814,52 +843,55 @@
                 </ul>
                 <p>Kullanım ve Kullanıcı tanımlarının yetersiz kaldığı ya da “BAÜN Bilişim Kaynakları Kullanım Politikası” belgesi dâhilinde tanımlı olmayan durumlar BAÜN makamlarınca değerlendirilir.</p>
             </div>
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Talebi ve Sözleşmeyi Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Talebi ve Sözleşmeyi Gönder</button>
         </form>
     </div>
     <!-- KDYS.FR.0078 - Bilgi İşlem DB Kurumsal Statik IP Sözleşmesi -->
     <div id="form_0078.php" class="gizli-form">
         <h2>KDYS.FR.0078 - Bilgi İşlem DB Kurumsal Statik IP Sözleşmesi</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0078">
+            <input type="hidden" name="form_adi" value="Bilgi İşlem DB Kurumsal Statik IP Sözleşmesi">
+
             <div class="resmi-yazi" style="text-align: center; font-weight: bold; background-color: #e8f4f8; color: #1b656e;">
                 KURUMSAL STATİK IP TALEP BİLGİLERİ
             </div>
  
             <div class="form-grup">
                 <label>Birim Adı *</label>
-                <input type="text" placeholder="Balıkesir Üniversitesi - ..." required>
+                <input type="text" name="birim_adi" placeholder="Balıkesir Üniversitesi - ..." required>
             </div>
  
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Sorumlu Personelin Adı-Soyadı *</label>
-                    <input type="text" required>
+                    <input type="text" name="sorumlu_ad_soyad" required>
                 </div>
                 <div class="form-grup">
                     <label>Unvanı *</label>
-                    <input type="text" required>
+                    <input type="text" name="unvan" required>
                 </div>
             </div>
  
             <div class="form-satir">
                 <div class="form-grup">
                     <label>T.C. Kimlik Numarası *</label>
-                    <input type="text" maxlength="11" required>
+                    <input type="text" name="tc_no" maxlength="11" required>
                 </div>
                 <div class="form-grup">
                     <label>Telefonu *</label>
-                    <input type="text" required>
+                    <input type="text" name="telefon" required>
                 </div>
             </div>
  
             <div class="form-grup">
                 <label>E-posta (IP bilgileri bu adrese gönderilecektir) *</label>
-                <input type="email" placeholder="ornek@balikesir.edu.tr" required>
+                <input type="email" name="eposta" placeholder="ornek@balikesir.edu.tr" required>
             </div>
  
             <div class="form-grup">
                 <label>Kullanım Amacı *</label>
-                <select required>
+                <select name="kullanim_amaci" required>
                     <option value="">-- Seçiniz --</option>
                     <option value="Fakülte/YO Adına">Fakülte/YO Adına</option>
                     <option value="Bölüm/Birim Adına">Bölüm/Birim Adına</option>
@@ -871,7 +903,7 @@
             </div>
             <div class="form-grup">
                 <label>Açıklama</label>
-                <textarea rows="2" placeholder="Kullanım amacınızı detaylandırınız..."></textarea>
+                <textarea name="aciklama" rows="2" placeholder="Kullanım amacınızı detaylandırınız..."></textarea>
             </div>
  
             <!-- Taahhüt Metni -->
@@ -881,7 +913,7 @@
  
             <div class="form-grup">
                 <label>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı - Onay Tarihi *</label>
-                <input type="date" required>
+                <input type="date" name="onay_tarihi" required>
             </div>
  
             <!-- Açılır/Kapanır Bilişim Politikası Paneli -->
@@ -931,60 +963,62 @@
                 <p>Kullanım ve Kullanıcı tanımlarının yetersiz kaldığı ya da “BAÜN Bilişim Kaynakları Kullanım Politikası” belgesi dâhilinde tanımlı olmayan durumlar BAÜN makamlarınca değerlendirilir.</p>
             </div>
  
-    
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Talebi ve Sözleşmeyi Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Talebi ve Sözleşmeyi Gönder</button>
         </form>
     </div>
  
     <!-- KDYS.FR.0079 - Bilgi İşlem DB Kurumsal Web Adı ve Alanı Sözleşmesi -->
     <div id="form_0079.php" class="gizli-form">
         <h2>KDYS.FR.0079 - Bilgi İşlem DB Kurumsal Web Adı ve Alanı Sözleşmesi</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0079">
+            <input type="hidden" name="form_adi" value="Bilgi İşlem DB Kurumsal Web Adı ve Alanı Sözleşmesi">
+
             <div class="resmi-yazi" style="text-align: center; font-weight: bold; background-color: #e8f4f8; color: #1b656e;">
                 KURUMSAL WEB ADI VE ALANI TALEP BİLGİLERİ
             </div>
  
             <div class="form-grup">
                 <label>Birim Adı *</label>
-                <input type="text" value="BALIKESİR ÜNİVERSİTESİ" required>
+                <input type="text" name="birim_adi" value="BALIKESİR ÜNİVERSİTESİ" required>
             </div>
  
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Sorumlu Personelin Adı-Soyadı *</label>
-                    <input type="text" required>
+                    <input type="text" name="sorumlu_ad_soyad" required>
                 </div>
                 <div class="form-grup">
                     <label>Unvanı *</label>
-                    <input type="text" required>
+                    <input type="text" name="unvan" required>
                 </div>
             </div>
  
             <div class="form-satir">
                 <div class="form-grup">
                     <label>T.C. Kimlik Numarası *</label>
-                    <input type="text" maxlength="11" required>
+                    <input type="text" name="tc_no" maxlength="11" required>
                 </div>
                 <div class="form-grup">
                     <label>Telefonu *</label>
-                    <input type="text" required>
+                    <input type="text" name="telefon" required>
                 </div>
             </div>
  
             <div class="form-satir">
                 <div class="form-grup">
                     <label>E-posta (Hesap bilgileri bu adrese gönderilecektir) *</label>
-                    <input type="email" placeholder="ornek@balikesir.edu.tr" required>
+                    <input type="email" name="eposta" placeholder="ornek@balikesir.edu.tr" required>
                 </div>
                 <div class="form-grup">
                     <label>Talep Edilen Web Adı *</label>
-                    <input type="text" placeholder="birimadi.balikesir.edu.tr" required>
+                    <input type="text" name="web_adi" placeholder="birimadi.balikesir.edu.tr" required>
                 </div>
             </div>
  
             <div class="form-grup">
                 <label>Kullanım Amacı *</label>
-                <select required>
+                <select name="kullanim_amaci" required>
                     <option value="">-- Seçiniz --</option>
                     <option value="Fakülte/YO Adına">Fakülte/YO Adına</option>
                     <option value="Birim/Bölüm Adına">Birim/Bölüm Adına</option>
@@ -996,7 +1030,7 @@
             </div>
             <div class="form-grup">
                 <label>Açıklama</label>
-                <textarea rows="2" placeholder="Kullanım amacınızı detaylandırınız..."></textarea>
+                <textarea name="aciklama" rows="2" placeholder="Kullanım amacınızı detaylandırınız..."></textarea>
             </div>
  
             <!-- Taahhüt Metni -->
@@ -1006,7 +1040,7 @@
  
             <div class="form-grup">
                 <label>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı - Onay Tarihi *</label>
-                <input type="date" required>
+                <input type="date" name="onay_tarihi" required>
             </div>
  
             <!-- Açılır/Kapanır Bilişim Politikası Paneli -->
@@ -1056,15 +1090,17 @@
                 <p>Kullanım ve Kullanıcı tanımlarının yetersiz kaldığı ya da “BAÜN Bilişim Kaynakları Kullanım Politikası” belgesi dâhilinde tanımlı olmayan durumlar BAÜN makamlarınca değerlendirilir.</p>
             </div>
  
-            
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Talebi ve Sözleşmeyi Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Talebi ve Sözleşmeyi Gönder</button>
         </form>
     </div>
  
     <!-- KDYS.FR.0080 - Bilgi İşlem DB Mernis Taahhütnamesi -->
     <div id="form_0080.php" class="gizli-form">
         <h2>KDYS.FR.0080 - Bilgi İşlem DB Mernis Taahhütnamesi</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0080">
+            <input type="hidden" name="form_adi" value="Bilgi İşlem DB Mernis Taahhütnamesi">
+
             <div class="resmi-yazi" style="text-align: center; font-weight: bold; background-color: #e8f4f8; color: #1b656e;">
                 KİMLİK PAYLAŞIM SİSTEMİ (KPS) KULLANICI TAAHHÜTNAMESİ<br>
                 <span style="font-weight: normal; font-style: italic; font-size: 12px;">- Gizlilik Taahhüt Belgesi -</span>
@@ -1080,110 +1116,113 @@
  
             <div class="form-grup">
                 <label>Taahhüt Tarihi *</label>
-                <input type="date" required>
+                <input type="date" name="taahhut_tarihi" required>
             </div>
  
             <h3 style="color:#1b656e; font-size:15px; border-bottom:1px solid #eee; padding-bottom:5px; margin-top:25px;">Personel Bilgisi</h3>
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Adı Soyadı *</label>
-                    <input type="text" required>
+                    <input type="text" name="personel_ad_soyad" required>
                 </div>
                 <div class="form-grup">
                     <label>Kurum Sicili, Unvanı *</label>
-                    <input type="text" required>
+                    <input type="text" name="personel_sicil_unvan" required>
                 </div>
             </div>
             <div class="form-satir">
                 <div class="form-grup">
                     <label>T.C. Kimlik No *</label>
-                    <input type="text" maxlength="11" required>
+                    <input type="text" name="personel_tc_no" maxlength="11" required>
                 </div>
                 <div class="form-grup">
                     <label>E-posta *</label>
-                    <input type="email" required>
+                    <input type="email" name="personel_eposta" required>
                 </div>
             </div>
             <div class="form-grup">
                 <label>Birim *</label>
-                <input type="text" required>
+                <input type="text" name="personel_birim" required>
             </div>
  
             <h3 style="color:#1b656e; font-size:15px; border-bottom:1px solid #eee; padding-bottom:5px; margin-top:25px;">Birim Yetkilisi</h3>
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Adı Soyadı *</label>
-                    <input type="text" required>
+                    <input type="text" name="yetkili_ad_soyad" required>
                 </div>
                 <div class="form-grup">
                     <label>Kurum Sicili, Unvanı *</label>
-                    <input type="text" required>
+                    <input type="text" name="yetkili_sicil_unvan" required>
                 </div>
             </div>
             <div class="form-satir">
                 <div class="form-grup">
                     <label>T.C. Kimlik No *</label>
-                    <input type="text" maxlength="11" required>
+                    <input type="text" name="yetkili_tc_no" maxlength="11" required>
                 </div>
                 <div class="form-grup">
                     <label>E-posta *</label>
-                    <input type="email" required>
+                    <input type="email" name="yetkili_eposta" required>
                 </div>
             </div>
             <div class="form-grup">
                 <label>Birim *</label>
-                <input type="text" required>
+                <input type="text" name="yetkili_birim" required>
             </div>
  
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Taahhütnameyi Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Taahhütnameyi Gönder</button>
         </form>
     </div>
  
     <!-- KDYS.FR.0082 - Bilgi İşlem DB Personel Elektronik Posta Başvuru Formu -->
     <div id="form_0082.php" class="gizli-form">
         <h2>KDYS.FR.0082 - Bilgi İşlem DB Personel Elektronik Posta Başvuru Formu</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0082">
+            <input type="hidden" name="form_adi" value="Bilgi İşlem DB Personel Elektronik Posta Başvuru Formu">
+
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Başvuru Tarihi *</label>
-                    <input type="date" required>
+                    <input type="date" name="basvuru_tarihi" required>
                 </div>
                 <div class="form-grup">
                     <label>Adı Soyadı *</label>
-                    <input type="text" required>
+                    <input type="text" name="ad_soyad" required>
                 </div>
             </div>
  
             <div class="form-satir">
                 <div class="form-grup">
                     <label>T.C. No - Kurum Sicil No *</label>
-                    <input type="text" required>
+                    <input type="text" name="tc_sicil_no" required>
                 </div>
                 <div class="form-grup">
                     <label>Fakülte/Yüksekokul *</label>
-                    <input type="text" required>
+                    <input type="text" name="fakulte_yo" required>
                 </div>
             </div>
  
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Unvanı - Bölümü/Birimi *</label>
-                    <input type="text" required>
+                    <input type="text" name="unvan_bolum" required>
                 </div>
                 <div class="form-grup">
                     <label>Ev / Cep Telefonu *</label>
-                    <input type="text" required>
+                    <input type="text" name="telefon" required>
                 </div>
             </div>
  
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Diğer E-posta *</label>
-                    <input type="email" required>
+                    <input type="email" name="diger_eposta" required>
                 </div>
                 <div class="form-grup">
                     <label>Bölüm Başkanının Adı Soyadı (Onay) *</label>
-                    <input type="text" required>
+                    <input type="text" name="bolum_baskani_onay" required>
                 </div>
             </div>
  
@@ -1236,17 +1275,18 @@
                 <h4>4. Yürürlük</h4>
                 <p>Kullanıcı, adına düzenlenmiş bu formu doldurup imzaladıktan sonra bu sözleşme yürürlüğe girer ve T.C. Balıkesir Üniversitesi personeli olduğu sürece devam eder.</p>
             </div>
- 
-            
- 
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Başvuruyu Gönder</button>
+
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Başvuruyu Gönder</button>
         </form>
     </div>
  
     <!-- KDYS.FR.0087 - Bilgi İşlem UAM Mernis Taahhütnamesi -->
     <div id="form_0087.php" class="gizli-form">
         <h2>KDYS.FR.0087 - Bilgi İşlem UAM Mernis Taahhütnamesi</h2>
-        <form>
+        <form method="POST" action="islem.php">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0087">
+            <input type="hidden" name="form_adi" value="Bilgi İşlem UAM Mernis Taahhütnamesi">
+
             <div class="resmi-yazi" style="text-align: center; font-weight: bold; background-color: #e8f4f8; color: #1b656e;">
                 KİMLİK PAYLAŞIM SİSTEMİ (KPS) KULLANICI TAAHHÜTNAMESİ<br>
                 <span style="font-weight: normal; font-style: italic; font-size: 12px;">- Gizlilik Taahhüt Belgesi -</span>
@@ -1262,62 +1302,62 @@
  
             <div class="form-grup">
                 <label>Taahhüt Tarihi *</label>
-                <input type="date" required>
+                <input type="date" name="taahhut_tarihi" required>
             </div>
  
             <h3 style="color:#1b656e; font-size:15px; border-bottom:1px solid #eee; padding-bottom:5px; margin-top:25px;">Personel Bilgisi</h3>
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Adı Soyadı *</label>
-                    <input type="text" required>
+                    <input type="text" name="personel_ad_soyad" required>
                 </div>
                 <div class="form-grup">
                     <label>Kurum Sicili, Unvanı *</label>
-                    <input type="text" required>
+                    <input type="text" name="personel_sicil_unvan" required>
                 </div>
             </div>
             <div class="form-satir">
                 <div class="form-grup">
                     <label>T.C. Kimlik No *</label>
-                    <input type="text" maxlength="11" required>
+                    <input type="text" name="personel_tc_no" maxlength="11" required>
                 </div>
                 <div class="form-grup">
                     <label>E-posta *</label>
-                    <input type="email" required>
+                    <input type="email" name="personel_eposta" required>
                 </div>
             </div>
             <div class="form-grup">
                 <label>Birim *</label>
-                <input type="text" placeholder="Uzaktan Ağ ve Merkez (UAM) ..." required>
+                <input type="text" name="personel_birim" placeholder="Uzaktan Ağ ve Merkez (UAM) ..." required>
             </div>
  
             <h3 style="color:#1b656e; font-size:15px; border-bottom:1px solid #eee; padding-bottom:5px; margin-top:25px;">Birim Yetkilisi</h3>
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Adı Soyadı *</label>
-                    <input type="text" required>
+                    <input type="text" name="yetkili_ad_soyad" required>
                 </div>
                 <div class="form-grup">
                     <label>Kurum Sicili, Unvanı *</label>
-                    <input type="text" required>
+                    <input type="text" name="yetkili_sicil_unvan" required>
                 </div>
             </div>
             <div class="form-satir">
                 <div class="form-grup">
                     <label>T.C. Kimlik No *</label>
-                    <input type="text" maxlength="11" required>
+                    <input type="text" name="yetkili_tc_no" maxlength="11" required>
                 </div>
                 <div class="form-grup">
                     <label>E-posta *</label>
-                    <input type="email" required>
+                    <input type="email" name="yetkili_eposta" required>
                 </div>
             </div>
             <div class="form-grup">
                 <label>Birim *</label>
-                <input type="text" required>
+                <input type="text" name="yetkili_birim" required>
             </div>
  
-            <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Taahhütnameyi Gönder</button>
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Taahhütnameyi Gönder</button>
         </form>
     </div>
 
@@ -1349,22 +1389,22 @@
             var yeniSatir = document.createElement("tr");
             yeniSatir.innerHTML = `
                 <td class="sn-hucre"></td>
-                <td><input type="text" maxlength="11"></td>
-                <td><input type="date"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
+                <td><input type="text" name="eimza_tc[]" maxlength="11"></td>
+                <td><input type="date" name="eimza_dogum[]"></td>
+                <td><input type="text" name="eimza_ad[]"></td>
+                <td><input type="text" name="eimza_soyad[]"></td>
+                <td><input type="text" name="eimza_eposta[]"></td>
+                <td><input type="text" name="eimza_birim[]"></td>
+                <td><input type="text" name="eimza_gorev[]"></td>
+                <td><input type="text" name="eimza_telefon[]"></td>
                 <td>
-                    <select>
+                    <select name="eimza_basvuru_turu[]">
                         <option value="İlk Sertifika">İlk Sertifika</option>
                         <option value="Yenileme">Yenileme</option>
                     </select>
                 </td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
+                <td><input type="text" name="eimza_odeme[]"></td>
+                <td><input type="text" name="eimza_aciklama[]"></td>
                 <td>
                     <button type="button" class="btn-satir-sil" onclick="satirSil(this)" title="Satırı Sil">✕</button>
                 </td>
