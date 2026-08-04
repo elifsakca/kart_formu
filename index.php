@@ -51,11 +51,12 @@
         .form-tablosu th { background-color: #1b656e; color: white; font-weight: 600; white-space: nowrap; }
         .form-tablosu td input, .form-tablosu td select { width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px; box-sizing: border-box; font-size: 11px; }
 
-        /* Form 0071 Teknik Detay Tablosu Stilleri */
+        /* Teknik Detay ve İdari Tablo Stilleri (0071 ve 0072 için) */
         .teknik-tablo { width: 100%; border-collapse: collapse; margin-top: 20px; margin-bottom: 20px; font-size: 13px; }
         .teknik-tablo td, .teknik-tablo th { border: 1px solid #333; padding: 8px; vertical-align: middle; }
         .teknik-tablo .baslik-gri { background-color: #e0e0e0; font-weight: bold; color: #000; width: 180px; }
-        .teknik-tablo input[type="text"], .teknik-tablo textarea { width: 100%; border: 1px solid #ccc; padding: 6px; box-sizing: border-box; border-radius: 3px; }
+        .teknik-tablo .baslik-ortali { text-align: center; font-weight: bold; font-size: 14px; text-transform: uppercase; background-color: #f5f5f5; }
+        .teknik-tablo input[type="text"], .teknik-tablo input[type="date"], .teknik-tablo textarea { width: 100%; border: 1px solid #ccc; padding: 6px; box-sizing: border-box; border-radius: 3px; }
         .teknik-tablo .secenek-kutusu { text-align: center; width: 110px; background-color: #fff; }
         .teknik-tablo .secenek-kutusu label { font-weight: bold; font-size: 12px; display: block; margin-bottom: 4px; }
         .teknik-tablo .imza-baslik { background-color: #e0e0e0; font-weight: bold; text-align: center; }
@@ -540,10 +541,55 @@
                     <input type="text" required>
                 </div>
                 <div class="form-grup">
-                    <label>Tarih</label>
-                    <input type="date" required>
+                    <label>Tarih ve İmza</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="date" required style="flex: 1;">
+                        <span style="color: #888; font-size: 12px; white-space: nowrap;">(İmza)</span>
+                    </div>
                 </div>
             </div>
+
+            <!-- GÖRSELDEKİ BİLGİ İŞLEM DAİRESİ İŞLEMLERİ BÖLÜMÜ -->
+            <table class="teknik-tablo">
+                <tr>
+                    <td colspan="2" class="baslik-ortali">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ</td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">İşlem Tarihi *</td>
+                    <td><input type="date" style="max-width: 200px;"></td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">E-posta Adresi *</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <input type="text" style="flex: 1;" placeholder="........................">
+                            <strong>@balikesir.edu.tr</strong>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">E-posta adresinin geçerlilik süresi *</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                <input type="checkbox"> Süresiz
+                            </label>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <input type="text" style="width: 150px;" placeholder="____">
+                                <span>ay/gün/yıl</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">Kullanıcı Şifresi *</td>
+                    <td><input type="text"></td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">İşlemi Yapan Personel ve İmzası *</td>
+                    <td><input type="text" placeholder="Ad Soyad / İmza"></td>
+                </tr>
+            </table>
 
             <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
         </form>
