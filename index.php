@@ -44,12 +44,23 @@
         .form-satir { display: flex; gap: 15px; }
         .form-satir .form-grup { flex: 1; }
 
-        /* Tablo Stil Ayarları (Yeni Eklenen Form İçin) */
+        /* Tablo Stil Ayarları */
         .form-tablosu-wrapper { overflow-x: auto; margin-bottom: 20px; }
         .form-tablosu { width: 100%; border-collapse: collapse; font-size: 12px; }
         .form-tablosu th, .form-tablosu td { border: 1px solid #ddd; padding: 8px 5px; text-align: center; }
         .form-tablosu th { background-color: #1b656e; color: white; font-weight: 600; white-space: nowrap; }
         .form-tablosu td input, .form-tablosu td select { width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px; box-sizing: border-box; font-size: 11px; }
+
+        /* Form 0071 Teknik Detay Tablosu Stilleri */
+        .teknik-tablo { width: 100%; border-collapse: collapse; margin-top: 20px; margin-bottom: 20px; font-size: 13px; }
+        .teknik-tablo td, .teknik-tablo th { border: 1px solid #333; padding: 8px; vertical-align: middle; }
+        .teknik-tablo .baslik-gri { background-color: #e0e0e0; font-weight: bold; color: #000; width: 180px; }
+        .teknik-tablo input[type="text"], .teknik-tablo textarea { width: 100%; border: 1px solid #ccc; padding: 6px; box-sizing: border-box; border-radius: 3px; }
+        .teknik-tablo .secenek-kutusu { text-align: center; width: 110px; background-color: #fff; }
+        .teknik-tablo .secenek-kutusu label { font-weight: bold; font-size: 12px; display: block; margin-bottom: 4px; }
+        .teknik-tablo .imza-baslik { background-color: #e0e0e0; font-weight: bold; text-align: center; }
+        .teknik-tablo .imza-alani { text-align: center; padding: 15px 8px; vertical-align: top; }
+        .teknik-tablo .imza-alani input { width: 90%; margin-bottom: 8px; text-align: center; }
     </style>
 </head>
 <body>
@@ -408,6 +419,55 @@
                 </div>
             </div>
 
+            <!-- GÖRSELDEKİ TEKNİK DEĞERLENDİRME VE TESLİM BÖLÜMÜ -->
+            <table class="teknik-tablo">
+                <tr>
+                    <td class="baslik-gri">Tespit Edilen Durum</td>
+                    <td><textarea rows="2"></textarea></td>
+                    <td class="secenek-kutusu">
+                        <label>Antivirüs Var</label>
+                        <input type="checkbox">
+                    </td>
+                    <td class="secenek-kutusu">
+                        <label>Garanti Var</label>
+                        <input type="checkbox">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">Arıza Bakım Tesis Sebebi</td>
+                    <td colspan="3"><input type="text"></td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">Yapılan İşlemler</td>
+                    <td colspan="3"><textarea rows="2"></textarea></td>
+                </tr>
+                <tr>
+                    <td class="baslik-gri">Kullanılan Malzemeler</td>
+                    <td colspan="3"><input type="text"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="imza-baslik">İş Bitirme</td>
+                    <td colspan="2" class="imza-baslik">Teslim<br><span style="font-size:11px; font-weight:normal;">(Cihaz Donanım Destek Grubuna Bırakıldıysa)</span></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="imza-alani">
+                        <strong>İşlemi Yapan Personel</strong><br><br>
+                        <input type="text" placeholder="Ad Soyad / Tarih"><br>
+                        <span style="color:#aaa; font-size:11px;">İmza</span>
+                    </td>
+                    <td class="imza-alani">
+                        <strong>Teslim Eden Personel</strong><br><br>
+                        <input type="text" placeholder="Ad Soyad / Tarih"><br>
+                        <span style="color:#aaa; font-size:11px;">İmza</span>
+                    </td>
+                    <td class="imza-alani">
+                        <strong>Teslim Alan Personel</strong><br><br>
+                        <input type="text" placeholder="Ad Soyad / Tarih"><br>
+                        <span style="color:#aaa; font-size:11px;">İmza</span>
+                    </td>
+                </tr>
+            </table>
+
             <button type="button" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
         </form>
     </div>
@@ -545,7 +605,7 @@
         </form>
     </div>
 
-    <!-- KDYS.FR.0074 - Bilgi İşlem DB E-İmza Talep Formu (YENİ EKLENEN FORM) -->
+    <!-- KDYS.FR.0074 - Bilgi İşlem DB E-İmza Talep Formu -->
     <div id="form_0074.php" class="gizli-form">
         <h2>KDYS.FR.0074 - Bilgi İşlem DB E-İmza Talep Formu</h2>
         <form>
