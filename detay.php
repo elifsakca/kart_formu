@@ -46,13 +46,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
     header("Location: detay.php?id={$id}&kaydedildi=1");
     exit;
 }
+
+$bugun = date('Y-m-d');
 ?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Başvuru Detayı #<?php echo $basvuru['id']; ?> - BAÜN</title>
+    <title>Başvuru Detayı #<?php echo $basvuru['takip_no'] ?: $basvuru['id']; ?> - BAÜN</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; color: #333; }
         .noprint { display: flex; justify-content: space-between; align-items: center; background: #1b656e; color: white; padding: 15px 30px; }
@@ -142,7 +144,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
             <div>
                 <h2>BALIKESİR ÜNİVERSİTESİ</h2>
                 <p><strong>Form Kodu / Adı:</strong> <?php echo htmlspecialchars($basvuru['form_kodu'] . ' - ' . $basvuru['form_adi']); ?></p>
-                <p><strong>Başvuru No:</strong> #<?php echo $basvuru['id']; ?> | <strong>Tarih:</strong> <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?></p>
+                <p>
+                    <strong>Takip No:</strong> <span style="font-size:15px; font-weight:bold; color:#1b656e;">#<?php echo htmlspecialchars($basvuru['takip_no'] ?: $basvuru['id']); ?></span> | 
+                    <strong>Tarih:</strong> <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?>
+                </p>
             </div>
             <div>
                 <?php if(!empty($basvuru['fotograf_yolu']) && file_exists($basvuru['fotograf_yolu'])): ?>
@@ -155,13 +160,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
             </div>
         </div>
 
+        <?php if ($basvuru['durum'] == 'Reddedildi' && !empty($basvuru['red_sebebi'])): ?>
+            <div style="background:#fce8e6; border-left:5px solid #d93025; padding:12px 18px; border-radius:6px; margin-bottom:20px; color:#d93025;">
+                <strong style="font-size:15px;">❌ Bu Başvuru Reddedilmiştir</strong><br>
+                <strong>Red Gerekçesi:</strong> <?php echo htmlspecialchars($basvuru['red_sebebi']); ?>
+            </div>
+        <?php endif; ?>
+
         <h3 style="color:#1b656e; border-bottom:1px solid #ddd; padding-bottom:5px;">Forma Girilen Tüm Detaylar</h3>
         <table class="grid-table">
             <tbody>
                 <?php 
                 if (is_array($veriler)) {
                     foreach ($veriler as $anahtar => $deger) {
-                        if ($anahtar == 'form_kodu' || $anahtar == 'form_adi') continue;
+                        if ($anahtar == 'form_kodu' || $anahtar == 'form_adi' || $anahtar == 'id') continue;
                         
                         $etiket = ucwords(str_replace(['_', '[]'], [' ', ''], $anahtar));
                         
@@ -185,88 +197,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
             <p><strong>Yüklenen Fotoğraf / Ek Belge:</strong> <a href="<?php echo htmlspecialchars($basvuru['fotograf_yolu']); ?>" target="_blank">Görüntüle / İndir</a></p>
         <?php endif; ?>
 
-        <!-- FORMA ÖZEL İMZA VE YÖNETİCİ DOLDURMA ALANLARI -->
+        <?php if(!empty($basvuru['dekont_yolu'])): ?>
+            <p style="background:#e8f4f8; padding:10px 15px; border-radius:5px; border-left:4px solid #1b656e;">
+                <strong>💳 Ödeme Dekontu:</strong> <a href="<?php echo htmlspecialchars($basvuru['dekont_yolu']); ?>" target="_blank" style="color:#1b656e; font-weight:bold;">Banka Dekontunu Görüntüle / İndir →</a>
+            </p>
+        <?php endif; ?>
 
-        <?php if ($basvuru['form_kodu'] == 'F-52'): ?>
-            <!-- F-52 İMZA ALANI -->
-            <div style="margin-top: 40px; border: 1px solid #000;">
-                <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 12px;">
-                    <tr>
-                        <td style="width: 50%; border-right: 1px solid #000; padding: 15px; vertical-align: top;">
-                            <strong>Formu hazırlayan</strong><br><br><br>
-                            ____ / ____ / ________<br>
-                            <span style="font-size: 10px; color: #777;">İmza / Kaşe</span>
-                        </td>
-                        <td style="width: 50%; padding: 15px; vertical-align: top;">
-                            <strong>Fakülte/Yüksekokul/Meslek Yüksekokul Sekreteri/<br>Müdür/Daire Başkanı/Birim Amiri/Firma Sorumlusu</strong><br><br>
-                            ____ / ____ / ________<br>
-                            <span style="font-size: 10px; color: #777;">İmza / Kaşe</span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+        <!-- FORMA ÖZEL ONLINE YÖNETİCİ DOLDURMA ALANLARI (FİZİKİ İMZA KUTULARI TAMAMEN REMOVED) -->
 
-        <?php elseif ($basvuru['form_kodu'] == 'F-53'): ?>
-            <!-- F-53 İMZA ALANI -->
-            <div style="margin-top: 40px; border: 1px solid #000;">
-                <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 12px;">
-                    <tr>
-                        <td style="width: 50%; border-right: 1px solid #000; padding: 15px; vertical-align: top;">
-                            <strong>Kart İşlem Formunu Hazırlayan</strong><br><br>
-                            ____ / ____ / ________<br><br>
-                            Ad Soyad: ___________________<br>
-                            <span style="font-size: 10px; color: #777;">İmza / Kaşe</span>
-                        </td>
-                        <td style="width: 50%; padding: 15px; vertical-align: top;">
-                            <strong>Fakülte/Enstitü/Yüksekokul/Meslek Yüksekokul<br>Sekreteri / Müdürü</strong><br><br>
-                            ____ / ____ / ________<br><br>
-                            Ad Soyad: ___________________<br>
-                            <span style="font-size: 10px; color: #777;">İmza / Kaşe</span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-        <?php elseif ($basvuru['form_kodu'] == 'F-54'): ?>
-            <!-- F-54 BEYAN VE İMZA ALANI -->
-            <div style="margin-top: 25px; font-size: 13px; line-height: 1.6; background: #fafafa; padding: 15px; border: 1px solid #ddd; text-align: justify;">
-                Aşağıda belirttiğim adıma kayıtlı olan akıllı kimlik kartımı kaybettim. Eski kimlik kartımın AKS sisteminden iptal edilmesini ve bedeli karşılığında yeni kimlik kartımın tanzim edilerek tarafıma verilmesini rica ederim.
-            </div>
-            <div style="margin-top: 30px; border: 1px solid #ccc; padding: 20px; text-align: right; font-size: 13px;">
-                <p><strong>Başvuru Sahibi:</strong> <?php echo htmlspecialchars($basvuru['ad_soyad'] ?? ''); ?></p>
-                <p><strong>Tarih:</strong> ____ / ____ / ________</p>
-                <br>
-                <p><strong>İmza:</strong> ______________________</p>
-            </div>
-
-        <?php elseif ($basvuru['form_kodu'] == 'F-55'): ?>
-            <!-- F-55 BEYAN VE İMZA ALANI -->
-            <div style="margin-top: 25px; font-size: 13px; line-height: 1.6; background: #fafafa; padding: 15px; border: 1px solid #ddd; text-align: justify;">
-                Eski kimlik kartımın AKS sisteminden iptal edilmesi ve akıllı kart merkezince yapılan teknik inceleme sonucunda, kart arızasının tarafımdan kaynakladığı takdirde bedeli karşılığında yeni akıllı kimlik kartımın tanzim edilerek tarafıma verilmesini rica ederim.
-            </div>
-            <div style="margin-top: 30px; border: 1px solid #ccc; padding: 20px; text-align: right; font-size: 13px;">
-                <p><strong>Başvuru Sahibi:</strong> <?php echo htmlspecialchars($basvuru['ad_soyad'] ?? ''); ?></p>
-                <p><strong>Tarih:</strong> ____ / ____ / ________</p>
-                <br>
-                <p><strong>İmza:</strong> ______________________</p>
-            </div>
-
-        <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0072'): ?>
+        <?php if ($basvuru['form_kodu'] == 'KDYS.FR.0072'): ?>
             <!-- FORM 72 YÖNETİCİ BİLGİ İŞLEM İŞLEMLERİ ONLINE DOLDURMA -->
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
-                <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
-                    <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br>
-                    Tarih: ____ / ____ / ________<br><br>
-                    İmza: ______________________
-                </div>
 
                 <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
                     <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
                     <table class="grid-table" style="margin-bottom:0;">
                         <tr>
                             <th style="width:30%;">İşlem Tarihi *</th>
-                            <td><input type="date" class="yonetici-input" name="yonetici[islem_tarihi]" value="<?php echo htmlspecialchars($veriler['islem_tarihi'] ?? ''); ?>"></td>
+                            <td><input type="date" class="yonetici-input" name="yonetici[islem_tarihi]" value="<?php echo htmlspecialchars($veriler['islem_tarihi'] ?? $bugun); ?>"></td>
                         </tr>
                         <tr>
                             <th>E-posta Adresi *</th>
@@ -295,72 +244,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
                 </div>
             </form>
 
-        <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0073'): ?>
-            <!-- FORM 73 TESLİM ALAN BEYANI VE İMZA BOŞLUĞU (FIZIKI ÇIKTI İÇİN BOŞ YER) -->
-            <div style="margin-top: 25px; font-size: 13px; line-height: 1.6; background: #fafafa; padding: 15px; border: 1px solid #ddd; text-align: justify;">
-                Yukarıda belirtilen tarihte talep etmiş olduğum e-imza mini kart okuyucuyu TÜBİTAK Bilişim ve Bilgi Güvenliği İleri Teknolojileri Araştırma Merkezi firmasından tarafımca teslim aldığımı beyan ederim.
-            </div>
-            <div style="margin-top: 25px; border: 1px solid #000; padding: 20px; max-width: 450px; margin-left: auto; font-size: 13px;">
-                <h4 style="margin:0 0 10px 0; border-bottom:1px solid #000; padding-bottom:5px;">TESLİM ALAN BİLGİLERİ</h4>
-                <p style="margin:5px 0;"><strong>Adı Soyadı :</strong> ____________________________________</p>
-                <p style="margin:5px 0;"><strong>Görevi / Unvanı :</strong> ____________________________________</p>
-                <p style="margin:15px 0 5px 0;"><strong>İmzası :</strong> ____________________________________</p>
-            </div>
-
-        <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0074'): ?>
-            <!-- FORM 74 E-İMZA TABLOSUNA İMZA SÜTUNU NOTU -->
-            <div style="margin-top: 25px; border: 1px solid #1b656e; padding: 15px; background:#f9f9f9; border-radius:5px;">
-                <h4 style="margin:0 0 10px 0; color:#1b656e;">E-İmza Teslim / Onay Tablosu (Fiziki Çıktı İçin İmza Sütunlu)</h4>
-                <table class="grid-table" style="font-size:12px;">
-                    <thead>
-                        <tr style="background:#1b656e; color:white;">
-                            <th>TC Kimlik No</th>
-                            <th>Ad Soyad</th>
-                            <th>Birim / Görev</th>
-                            <th>Başvuru Türü</th>
-                            <th style="width:120px; text-align:center;">Fiziki İmza</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                        $eimza_tcler = $veriler['eimza_tc'] ?? [];
-                        $eimza_adlar = $veriler['eimza_ad'] ?? [];
-                        $eimza_soyadlar = $veriler['eimza_soyad'] ?? [];
-                        $eimza_birimler = $veriler['eimza_birim'] ?? [];
-                        $eimza_turler = $veriler['eimza_basvuru_turu'] ?? [];
-
-                        if (is_array($eimza_tcler) && count($eimza_tcler) > 0) {
-                            for ($i = 0; $i < count($eimza_tcler); $i++) {
-                                echo '<tr>';
-                                echo '<td>' . htmlspecialchars($eimza_tcler[$i] ?? '-') . '</td>';
-                                echo '<td><strong>' . htmlspecialchars(($eimza_adlar[$i] ?? '') . ' ' . ($eimza_soyadlar[$i] ?? '')) . '</strong></td>';
-                                echo '<td>' . htmlspecialchars(($eimza_birimler[$i] ?? '-')) . '</td>';
-                                echo '<td>' . htmlspecialchars(($eimza_turler[$i] ?? '-')) . '</td>';
-                                echo '<td style="border:1px solid #000; height:35px;"></td>';
-                                echo '</tr>';
-                            }
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0077'): ?>
-            <!-- FORM 77 KİŞİSEL WEB SÖZLEŞMESİ İMZA VE ONLINE BİLGİ İŞLEM KUTUSU -->
+            <!-- FORM 77 KİŞİSEL WEB SÖZLEŞMESİ ONLINE BİLGİ İŞLEM KUTUSU -->
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
-                <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
-                    <strong>PERSONEL</strong><br><br>
-                    Tarih: ____ / ____ / ________<br><br>
-                    İmza: ______________________
-                </div>
 
                 <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
                     <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
                     <table class="grid-table" style="margin-bottom:0;">
                         <tr>
                             <th style="width:30%;">İşlem Tarihi *</th>
-                            <td><input type="date" class="yonetici-input" name="yonetici[islem_tarihi]" value="<?php echo htmlspecialchars($veriler['islem_tarihi'] ?? ''); ?>"></td>
+                            <td><input type="date" class="yonetici-input" name="yonetici[islem_tarihi]" value="<?php echo htmlspecialchars($veriler['islem_tarihi'] ?? $bugun); ?>"></td>
                         </tr>
                         <tr>
                             <th>Web Alanı Adı *</th>
@@ -407,21 +301,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
             </form>
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0078'): ?>
-            <!-- FORM 78 STATİK IP SÖZLEŞMESİ İMZA VE ONLINE BİLGİ İŞLEM KUTUSU -->
+            <!-- FORM 78 STATİK IP SÖZLEŞMESİ ONLINE BİLGİ İŞLEM KUTUSU -->
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
-                <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
-                    <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br>
-                    Tarih: ____ / ____ / ________<br><br>
-                    İmza: ______________________
-                </div>
 
                 <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
                     <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
                     <table class="grid-table" style="margin-bottom:0;">
                         <tr>
                             <th style="width:30%;">İşlem Tarihi *</th>
-                            <td><input type="date" class="yonetici-input" name="yonetici[islem_tarihi]" value="<?php echo htmlspecialchars($veriler['islem_tarihi'] ?? ''); ?>"></td>
+                            <td><input type="date" class="yonetici-input" name="yonetici[islem_tarihi]" value="<?php echo htmlspecialchars($veriler['islem_tarihi'] ?? $bugun); ?>"></td>
                         </tr>
                         <tr>
                             <th>Statik IP *</th>
@@ -451,21 +340,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
             </form>
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0079'): ?>
-            <!-- FORM 79 KURUMSAL WEB ADI SÖZLEŞMESİ İMZA VE ONLINE BİLGİ İŞLEM KUTUSU -->
+            <!-- FORM 79 KURUMSAL WEB ADI SÖZLEŞMESİ ONLINE BİLGİ İŞLEM KUTUSU -->
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
-                <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
-                    <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br>
-                    Tarih: ____ / ____ / ________<br><br>
-                    İmza: ______________________
-                </div>
 
                 <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
                     <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
                     <table class="grid-table" style="margin-bottom:0;">
                         <tr>
                             <th style="width:30%;">İşlem Tarihi *</th>
-                            <td><input type="date" class="yonetici-input" name="yonetici[islem_tarihi]" value="<?php echo htmlspecialchars($veriler['islem_tarihi'] ?? ''); ?>"></td>
+                            <td><input type="date" class="yonetici-input" name="yonetici[islem_tarihi]" value="<?php echo htmlspecialchars($veriler['islem_tarihi'] ?? $bugun); ?>"></td>
                         </tr>
                         <tr>
                             <th>Web Alanı Adı *</th>
@@ -515,22 +399,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
             <!-- FORM 80 MERNİS TAAHHÜTNAMESİ ONLINE BİRİM YETKİLİSİ DOLDURMA -->
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
-                <div style="text-align: center; font-weight: bold; background-color: #e8f4f8; color: #1b656e; padding: 10px; border-radius: 4px; margin-top: 25px;">
-                    KİMLİK PAYLAŞIM SİSTEMİ (KPS) KULLANICI TAAHHÜTNAMESİ<br>
-                    <span style="font-weight: normal; font-style: italic; font-size: 12px;">- Gizlilik Taahhüt Belgesi -</span>
-                </div>
-
-                <div style="font-size: 12.5px; line-height: 1.5; margin-top: 15px; text-align: justify; background: #fafafa; padding: 12px; border: 1px solid #eee;">
-                    <strong>AÇIKLAMA:</strong> 10/07/2005 tarih ve 25871 sayılı Resmi Gazete'de yayımlanan T.C. Nüfus ve Vatandaşlık İşleri Genel Müdürlüğüne ait Kimlik Paylaşım Sistemi (KPS) Uygulama Yönetmeliği kapsamında Bakanlığımız ile ilgili iş ve işlem süreçlerindeki vatandaşlarımızın nüfus ve adres bilgilerinin paylaşımı hakkında "ikili anlaşma" imzalanmıştır. İlgili Yönetmeliğe ilişkin usul ve esaslar içerisinde yer alan "Özel Hayatın Gizliliği" ve "Kişisel Verilerin Korunması" hükümleriyle Balıkesir Üniversitesine ve görevli personele bazı sorumluluklar getirilmiştir. Bu sorumlulukların paylaşımı çerçevesinde iş süreçlerinde KPS üzerinden nüfus ve adres bilgilerine erişen çalışanlarımız için aşağıdaki taahhütname hazırlanmıştır.
-                </div>
-
-                <div style="font-size: 12.5px; line-height: 1.5; margin-top: 15px; text-align: justify; background: #fafafa; padding: 12px; border: 1px solid #eee; font-weight: bold;">
-                    TAAHHÜTNAME: Anayasamızın 20. maddesinde "Herkes, özel hayatına ve aile hayatına saygı gösterilmesini isteme hakkına sahiptir. Özel hayatın ve aile hayatının gizliliğine dokunulamaz." denilmektedir. Bu kapsamda KPS'den elde edilen tüm nüfus ve adres bilgilerini sadece T.C. Balıkesir Üniversitesi ve bağlı birimlerdeki iş süreçleri içerisinde kullanacağımı, kullanıcı parolamın güvenliğini sağlayacağımı, aksi takdirde idari, hukuki ve mali sorumluluğun tarafıma ait olduğunu beyan ve taahhüt ederim.
-                </div>
-
-                <div style="text-align: right; margin-top: 15px; font-size: 13px; font-weight: bold;">
-                    Tarih: <?php echo date('d.m.Y', strtotime($veriler['taahhut_tarihi'] ?? $basvuru['kayit_tarihi'])); ?>
-                </div>
 
                 <div style="margin-top: 15px; border: 1px solid #000;">
                     <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px;">
@@ -542,14 +410,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
                             <td style="width: 50%; border-right: 1px solid #000; padding: 12px; vertical-align: top;">
                                 <p style="margin: 4px 0;"><strong>Adı Soyadı:</strong> <?php echo htmlspecialchars($veriler['personel_ad_soyad'] ?? $basvuru['ad_soyad']); ?></p>
                                 <p style="margin: 4px 0;"><strong>Kurum Sicili, Unvanı:</strong> <?php echo htmlspecialchars($veriler['personel_sicil_unvan'] ?? '-'); ?></p>
-                                <br><br>
-                                <p style="margin: 4px 0; text-align: center;"><strong>(İmza):</strong> ________________________</p>
                             </td>
                             <td style="width: 50%; padding: 12px; vertical-align: top;">
                                 <p style="margin: 4px 0;"><strong>Adı Soyadı:</strong> <input type="text" class="yonetici-input" name="yonetici[yetkili_ad_soyad]" value="<?php echo htmlspecialchars($veriler['yetkili_ad_soyad'] ?? ''); ?>" placeholder="Ad Soyad"></p>
                                 <p style="margin: 4px 0;"><strong>Kurum Sicili, Unvanı:</strong> <input type="text" class="yonetici-input" name="yonetici[yetkili_sicil_unvan]" value="<?php echo htmlspecialchars($veriler['yetkili_sicil_unvan'] ?? ''); ?>" placeholder="Sicil No / Unvan"></p>
-                                <br>
-                                <p style="margin: 4px 0; text-align: center;"><strong>(İmza):</strong> ________________________</p>
                             </td>
                         </tr>
                         <tr style="background:#f5f5f5; font-weight:bold;">
@@ -572,16 +436,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
             </form>
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0082'): ?>
-            <!-- FORM 82 E-POSTA KULLANIM ONAYI VE BİLGİ İŞLEM DAİRESİNCE DOLDURULACAK ONLINE ALAN -->
+            <!-- FORM 82 E-POSTA ONLINE BİLGİ İŞLEM KUTUSU -->
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
-                <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; font-size: 12px;">
-                    <p><strong>Yukarıda açıklanan e-posta kullanım kurallarının tümünü okudum ve kabul ediyorum.</strong></p>
-                    <br>
-                    <p><strong>Adı Soyadı :</strong> <?php echo htmlspecialchars($basvuru['ad_soyad']); ?></p>
-                    <br>
-                    <p><strong>İmzası :</strong> ___________________________________</p>
-                </div>
 
                 <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
                     <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">Aşağıdaki Bölümü Boş Bırakınız (Bilgi İşlem Dairesince Doldurulacaktır)</h4>
@@ -592,7 +449,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
                         </tr>
                         <tr>
                             <th>Veriliş Tarihi :</th>
-                            <td><input type="date" class="yonetici-input" name="yonetici[verilis_tarihi]" value="<?php echo htmlspecialchars($veriler['verilis_tarihi'] ?? ''); ?>"></td>
+                            <td><input type="date" class="yonetici-input" name="yonetici[verilis_tarihi]" value="<?php echo htmlspecialchars($veriler['verilis_tarihi'] ?? $bugun); ?>"></td>
                         </tr>
                         <tr>
                             <th>E-posta Hesabı Açan Personelin Onayı :</th>

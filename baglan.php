@@ -18,12 +18,12 @@ try {
         rol ENUM('superadmin', 'admin') DEFAULT 'admin'
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-    // Eğer yoneticiler tablosu önceden kalmaysa eksik sütunları (ad_soyad ve rol) otomatik ekle
-    $columns = $db->query("SHOW COLUMNS FROM yoneticiler")->fetchAll(PDO::FETCH_COLUMN);
-    if (!in_array('ad_soyad', $columns)) {
+    // Sütun Kontrolü ve Güncellemesi (yoneticiler)
+    $columnsYonetici = $db->query("SHOW COLUMNS FROM yoneticiler")->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('ad_soyad', $columnsYonetici)) {
         $db->exec("ALTER TABLE yoneticiler ADD COLUMN ad_soyad VARCHAR(100) NOT NULL DEFAULT ''");
     }
-    if (!in_array('rol', $columns)) {
+    if (!in_array('rol', $columnsYonetici)) {
         $db->exec("ALTER TABLE yoneticiler ADD COLUMN rol ENUM('superadmin', 'admin') DEFAULT 'admin'");
     }
 
@@ -35,10 +35,42 @@ try {
         FOREIGN KEY (yonetici_id) REFERENCES yoneticiler(id) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-    // Eski 'admin' veya gereksiz hesapları otomatik temizle
-    $db->exec("DELETE FROM yoneticiler WHERE kullanici_adi NOT IN ('superadmin', 'admin1', 'admin2')");
+    // Sütun Kontrolü ve Güncellemesi (basvurular)
+    $columnsBasvuru = $db->query("SHOW COLUMNS FROM basvurular")->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('takip_no', $columnsBasvuru)) {
+        $db->exec("ALTER TABLE basvurular ADD COLUMN takip_no VARCHAR(20) NULL UNIQUE");
+    }
+    if (!in_array('red_sebebi', $columnsBasvuru)) {
+        $db->exec("ALTER TABLE basvurular ADD COLUMN red_sebebi TEXT NULL");
+    }
+    if (!in_array('dekont_yolu', $columnsBasvuru)) {
+        $db->exec("ALTER TABLE basvurular ADD COLUMN dekont_yolu VARCHAR(255) NULL");
+    }
 
-    // Varsayılan Yöneticilerin Oluşturulması (superadmin, admin1, admin2)
+    // İşlem Günlüğü (Log) Tablosu
+    $db->exec("CREATE TABLE IF NOT EXISTS islem_loglari (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        yonetici_adi VARCHAR(100) NOT NULL,
+        basvuru_id INT NOT NULL,
+        takip_no VARCHAR(20) NOT NULL,
+        islem_detayi TEXT NOT NULL,
+        tarih DATETIME DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+    // Mevcut takipsiz başvurulara takip no atama
+    $takipsizler = $db->query("SELECT id FROM basvurular WHERE takip_no IS NULL OR takip_no = ''")->fetchAll();
+    if ($takipsizler) {
+        $upStmt = $db->prepare("UPDATE basvurular SET takip_no = :tno WHERE id = :id");
+        foreach ($takipsizler as $row) {
+            $yeni_tno = date('Y') . random_int(100000, 999999);
+            $upStmt->execute([':tno' => $yeni_tno, ':id' => $row['id']]);
+        }
+    }
+
+    // Eski 'admin' veya gereksiz hesapları temizleme
+    $db->exec("DELETE FROM yoneticiler WHERE kullanici_adi NOT IN ('superadmin', 'admin1', 'admin2') AND rol != 'admin'");
+
+    // Varsayılan Yöneticilerin Oluşturulması
     $varsayilan_yoneticiler = [
         ['kullanici_adi' => 'superadmin', 'sifre' => '123456', 'ad_soyad' => 'Süper Yönetici', 'rol' => 'superadmin'],
         ['kullanici_adi' => 'admin1',      'sifre' => '123456', 'ad_soyad' => 'Yönetici 1',     'rol' => 'admin'],

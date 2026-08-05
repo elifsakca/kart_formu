@@ -71,8 +71,9 @@
             BALIKESİR ÜNİVERSİTESİ
         </a>
         <div>
-            <a href="login.php" class="navbar-link" style="font-weight:bold; color:#1b656e; margin-right:15px;">Yönetici Girişi</a>
-            <a href="https://bid.balikesir.edu.tr" target="_blank" class="navbar-link">BİLGİ İŞLEM DAİRE BAŞKANLIĞI | Balıkesir Üniversitesi</a>
+            <a href="takip.php" class="navbar-link" style="font-weight:bold; color:#1b656e; margin-right:15px;">🔍 Başvuru Takibi</a>
+            <a href="login.php" class="navbar-link" style="font-weight:bold; color:#555; margin-right:15px;">Yönetici Girişi</a>
+            <a href="https://bid.balikesir.edu.tr" target="_blank" class="navbar-link">BİLGİ İŞLEM DAİRE BAŞKANLIĞI</a>
         </div>
     </div>
 
@@ -84,8 +85,14 @@
 
     <!-- Başarılı Başvuru Bildirimi -->
     <?php if(isset($_GET['durum']) && $_GET['durum'] == 'basarili'): ?>
-        <div style="max-width:900px; margin:20px auto; background:#d4edda; color:#155724; padding:15px; border-radius:5px; border-left:5px solid #28a745; text-align:center; font-weight:bold; position:relative; z-index:20;">
-            ✓ Form başvurunuz başarıyla veritabanına kaydedilmiştir. İlgili birim tarafından incelenmektedir.
+        <div style="max-width:900px; margin:20px auto; background:#d4edda; color:#155724; padding:20px; border-radius:8px; border-left:6px solid #28a745; text-align:center; position:relative; z-index:20; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+            <h3 style="margin:0 0 10px 0; font-size:20px;">✓ Form Başvurunuz Başarıyla Alınmıştır!</h3>
+            <p style="margin:5px 0; font-size:15px;">Başvurunuzun durumunu sorgulamak için aşağıdaki **Başvuru Takip Numarasını** saklayınız:</p>
+            <div style="font-size:26px; font-weight:bold; color:#1b656e; background:white; display:inline-block; padding:8px 25px; border-radius:5px; margin:10px 0; border:2px dashed #1b656e; letter-spacing:2px;">
+                <?php echo htmlspecialchars($_GET['takip_no'] ?? '-'); ?>
+            </div>
+            <br>
+            <a href="takip.php?takip_no=<?php echo urlencode($_GET['takip_no'] ?? ''); ?>" style="display:inline-block; margin-top:5px; color:#1b656e; font-weight:bold; text-decoration:underline;">Başvuru Durumunu Şimdi Sorgula →</a>
         </div>
     <?php endif; ?>
 
@@ -318,7 +325,7 @@
     <!-- F-54 FORMU (KAYIP KART) -->
     <div id="form_f54.php" class="gizli-form">
         <h2>Kayıp Akıllı Kart Müracaat Formu (F-54)</h2>
-        <form method="POST" action="islem.php">
+        <form method="POST" action="islem.php" enctype="multipart/form-data">
             <input type="hidden" name="form_kodu" value="F-54">
             <input type="hidden" name="form_adi" value="Kayıp Akıllı Kart Müracaat Formu (F-54)">
 
@@ -337,6 +344,12 @@
                 <div class="form-grup"><label>Kart Seri No</label><input type="text" name="kart_seri_no"></div>
                 <div class="form-grup"><label>Kayıp Tarihi</label><input type="date" name="kayip_tarihi"></div>
                 <div class="form-grup"><label>İrtibat Telefonu</label><input type="text" name="telefon"></div>
+            </div>
+
+            <div class="form-grup">
+                <label>Ödeme Dekontu Yükle (Yeni Kart Ücreti İçin)</label>
+                <input type="file" name="dekont" accept=".pdf, .jpg, .jpeg, .png">
+                <span class="form-bilgi">Yeni kart bedelinin yatırıldığına dair banka dekontunu (PDF, JPG veya PNG formatında) yükleyebilirsiniz.</span>
             </div>
 
             <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>

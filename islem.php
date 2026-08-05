@@ -7,6 +7,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_kodu'])) {
     $form_kodu = $_POST['form_kodu'] ?? '';
     $form_adi  = $_POST['form_adi'] ?? '';
     
+    // Rastgele Güvenli Takip Numarası Üretme (Örn: 2026230593)
+    $takip_no = date('Y') . random_int(100000, 999999);
+
     // Ortak alanları otomatik tespit etme
     $tc_no    = $_POST['tc_no'] ?? $_POST['personel_tc_no'] ?? ($_POST['eimza_tc'][0] ?? '');
     $ad_soyad = $_POST['ad_soyad'] ?? $_POST['personel_ad_soyad'] ?? $_POST['sorumlu_ad_soyad'] ?? ($_POST['eimza_ad'][0] ?? '');
@@ -36,6 +39,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_kodu'])) {
         }
     }
 
+    // Dekont Yükleme İşlemi (F-54 Kayıp Kart veya diğerleri için)
+    $dekont_yolu = NULL;
+    if (isset($_FILES['dekont']) && $_FILES['dekont']['error'] === UPLOAD_ERR_OK) {
+        $dosyaTmp   = $_FILES['dekont']['tmp_name'];
+        $dosyaAdi   = $_FILES['dekont']['name'];
+        $uzanti     = strtolower(pathinfo($dosyaAdi, PATHINFO_EXTENSION));
+        
+        $izinVerilenler = ['pdf', 'jpg', 'jpeg', 'png'];
+        if (in_array($uzanti, $izinVerilenler)) {
+            $hedefKlasor = 'uploads/';
+            if (!is_dir($hedefKlasor)) {
+                mkdir($hedefKlasor, 0777, true);
+            }
+            $yeniDosyaAdi = 'dekont_' . ($tc_no != '' ? $tc_no : time()) . '_' . uniqid() . '.' . $uzanti;
+            $hedefYol = $hedefKlasor . $yeniDosyaAdi;
+            
+            if (move_uploaded_file($dosyaTmp, $hedefYol)) {
+                $dekont_yolu = $hedefYol;
+            }
+        }
+    }
+
     // Tüm POST verilerini kaybetmeden JSON olarak saklıyoruz
     $post_verileri = $_POST;
     unset($post_verileri['form_gonder']);
@@ -43,22 +68,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_kodu'])) {
 
     try {
         $query = $db->prepare("INSERT INTO basvurular 
-            (form_kodu, form_adi, tc_no, ad_soyad, telefon, eposta, birim, fotograf_yolu, form_verileri, durum, kayit_tarihi) 
-            VALUES (:form_kodu, :form_adi, :tc_no, :ad_soyad, :telefon, :eposta, :birim, :fotograf_yolu, :form_verileri, 'Beklemede', NOW())");
+            (form_kodu, form_adi, takip_no, tc_no, ad_soyad, telefon, eposta, birim, fotograf_yolu, dekont_yolu, form_verileri, durum, kayit_tarihi) 
+            VALUES (:form_kodu, :form_adi, :takip_no, :tc_no, :ad_soyad, :telefon, :eposta, :birim, :fotograf_yolu, :dekont_yolu, :form_verileri, 'Beklemede', NOW())");
 
         $query->execute([
             ':form_kodu'      => $form_kodu,
             ':form_adi'       => $form_adi,
+            ':takip_no'       => $takip_no,
             ':tc_no'          => $tc_no,
             ':ad_soyad'       => $ad_soyad,
             ':telefon'        => $telefon,
             ':eposta'         => $eposta,
             ':birim'          => $birim,
             ':fotograf_yolu'  => $fotograf_yolu,
+            ':dekont_yolu'    => $dekont_yolu,
             ':form_verileri'  => $form_verileri_json
         ]);
 
-        header("Location: index.php?durum=basarili");
+        header("Location: index.php?durum=basarili&takip_no={$takip_no}");
         exit;
     } catch (PDOException $e) {
         header("Location: index.php?durum=hata&mesaj=" . urlencode($e->getMessage()));

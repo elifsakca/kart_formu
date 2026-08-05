@@ -12,13 +12,13 @@ $admin_id  = $_SESSION['admin_id'] ?? 0;
 $admin_rol = $_SESSION['admin_rol'] ?? 'admin';
 $admin_ad  = $_SESSION['admin_ad_soyad'] ?? $_SESSION['admin_kullanici'] ?? 'Admin';
 
-// Durum Güncelleme
-if (isset($_GET['islem']) && $_GET['islem'] == 'durum_guncelle' && isset($_GET['id']) && isset($_GET['yeni_durum'])) {
-    $id = intval($_GET['id']);
-    $yeni_durum = $_GET['yeni_durum'];
-    
-    // Güvenlik: Normal admin sadece izinli olduğu formun durumunu değiştirebilir
-    $basvuruCheck = $db->prepare("SELECT form_kodu FROM basvurular WHERE id = :id");
+// Durum Güncelleme Ve Red Sebebi Kaydetme
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['islem']) && $_POST['islem'] == 'durum_guncelle') {
+    $id         = intval($_POST['id']);
+    $yeni_durum = $_POST['yeni_durum'] ?? 'Beklemede';
+    $red_sebebi = trim($_POST['red_sebebi'] ?? '');
+
+    $basvuruCheck = $db->prepare("SELECT * FROM basvurular WHERE id = :id");
     $basvuruCheck->execute([':id' => $id]);
     $bRow = $basvuruCheck->fetch();
 
@@ -33,8 +33,22 @@ if (isset($_GET['islem']) && $_GET['islem'] == 'durum_guncelle' && isset($_GET['
         }
 
         if ($izinli) {
-            $guncelle = $db->prepare("UPDATE basvurular SET durum = :durum WHERE id = :id");
-            $guncelle->execute([':durum' => $yeni_durum, ':id' => $id]);
+            $guncelle = $db->prepare("UPDATE basvurular SET durum = :durum, red_sebebi = :rseb WHERE id = :id");
+            $guncelle->execute([':durum' => $yeni_durum, ':rseb' => ($yeni_durum == 'Reddedildi' ? $red_sebebi : NULL), ':id' => $id]);
+
+            // İşlem Logu Kaydetme
+            $logDetay = "Başvuru durumunu '$yeni_durum' olarak güncelledi.";
+            if ($yeni_durum == 'Reddedildi' && !empty($red_sebebi)) {
+                $logDetay .= " (Red Sebebi: $red_sebebi)";
+            }
+            $logStmt = $db->prepare("INSERT INTO islem_loglari (yonetici_adi, basvuru_id, takip_no, islem_detayi) VALUES (:yadi, :bid, :tno, :idetay)");
+            $logStmt->execute([
+                ':yadi'   => $admin_ad,
+                ':bid'    => $id,
+                ':tno'    => $bRow['takip_no'] ?: $id,
+                ':idetay' => $logDetay
+            ]);
+
             header("Location: panel.php?mesaj=guncellendi");
             exit;
         }
@@ -45,7 +59,7 @@ if (isset($_GET['islem']) && $_GET['islem'] == 'durum_guncelle' && isset($_GET['
 if (isset($_GET['islem']) && $_GET['islem'] == 'sil' && isset($_GET['id'])) {
     $id = intval($_GET['id']);
     
-    $basvuruCheck = $db->prepare("SELECT form_kodu FROM basvurular WHERE id = :id");
+    $basvuruCheck = $db->prepare("SELECT * FROM basvurular WHERE id = :id");
     $basvuruCheck->execute([':id' => $id]);
     $bRow = $basvuruCheck->fetch();
 
@@ -62,13 +76,23 @@ if (isset($_GET['islem']) && $_GET['islem'] == 'sil' && isset($_GET['id'])) {
         if ($izinli) {
             $sil = $db->prepare("DELETE FROM basvurular WHERE id = :id");
             $sil->execute([':id' => $id]);
+
+            // Log kaydet
+            $logStmt = $db->prepare("INSERT INTO islem_loglari (yonetici_adi, basvuru_id, takip_no, islem_detayi) VALUES (:yadi, :bid, :tno, :idetay)");
+            $logStmt->execute([
+                ':yadi'   => $admin_ad,
+                ':bid'    => $id,
+                ':tno'    => $bRow['takip_no'] ?: $id,
+                ':idetay' => "Başvuruyu sildi."
+            ]);
+
             header("Location: panel.php?mesaj=silindi");
             exit;
         }
     }
 }
 
-// Tüm Formların Sözlük İsimleri
+// Tüm Form İsimleri
 $tum_form_isimleri = [
     'F-52'         => 'F-52 - Akıllı Kart İşlem Formu',
     'F-53'         => 'F-53 - Öğrenci Akıllı Kart Formu',
@@ -94,7 +118,8 @@ if ($admin_rol === 'superadmin') {
     $izinli_formlar = $iStmt->fetchAll(PDO::FETCH_COLUMN);
 }
 
-// Arama ve Filtreleme
+// Sekme Filtresi (tum, bekleyen, onaylanan, reddedilen)
+$tab = $_GET['tab'] ?? 'tum';
 $arama = $_GET['arama'] ?? '';
 $form_filtre = $_GET['form_filtre'] ?? '';
 
@@ -108,12 +133,22 @@ if ($admin_rol !== 'superadmin') {
         $sql .= " AND form_kodu IN ($inQuery)";
         $params = array_merge($params, $izinli_formlar);
     } else {
-        $sql .= " AND 1=0"; // Hiçbir izin yoksa sonuç dönmesin
+        $sql .= " AND 1=0";
     }
 }
 
+// Sekme Filtreleri
+if ($tab == 'bekleyen') {
+    $sql .= " AND durum = 'Beklemede'";
+} elseif ($tab == 'onaylanan') {
+    $sql .= " AND durum = 'Onaylandı'";
+} elseif ($tab == 'reddedilen') {
+    $sql .= " AND durum = 'Reddedildi'";
+}
+
 if (!empty($arama)) {
-    $sql .= " AND (ad_soyad LIKE ? OR tc_no LIKE ? OR birim LIKE ?)";
+    $sql .= " AND (ad_soyad LIKE ? OR tc_no LIKE ? OR takip_no LIKE ? OR birim LIKE ?)";
+    $params[] = "%$arama%";
     $params[] = "%$arama%";
     $params[] = "%$arama%";
     $params[] = "%$arama%";
@@ -131,9 +166,10 @@ $basvurular = $stmt->fetchAll();
 
 // İstatistikler (İzinli formlara göre)
 if ($admin_rol === 'superadmin') {
-    $toplam_basvuru    = $db->query("SELECT COUNT(*) FROM basvurular")->fetchColumn();
-    $bekleyen_basvuru  = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Beklemede'")->fetchColumn();
-    $onaylanan_basvuru = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Onaylandı'")->fetchColumn();
+    $toplam_basvuru     = $db->query("SELECT COUNT(*) FROM basvurular")->fetchColumn();
+    $bekleyen_basvuru   = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Beklemede'")->fetchColumn();
+    $onaylanan_basvuru  = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Onaylandı'")->fetchColumn();
+    $reddedilen_basvuru = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Reddedildi'")->fetchColumn();
 } else {
     if (count($izinli_formlar) > 0) {
         $inQuery = implode(',', array_fill(0, count($izinli_formlar), '?'));
@@ -149,10 +185,15 @@ if ($admin_rol === 'superadmin') {
         $s3 = $db->prepare("SELECT COUNT(*) FROM basvurular WHERE durum='Onaylandı' AND form_kodu IN ($inQuery)");
         $s3->execute($izinli_formlar);
         $onaylanan_basvuru = $s3->fetchColumn();
+
+        $s4 = $db->prepare("SELECT COUNT(*) FROM basvurular WHERE durum='Reddedildi' AND form_kodu IN ($inQuery)");
+        $s4->execute($izinli_formlar);
+        $reddedilen_basvuru = $s4->fetchColumn();
     } else {
         $toplam_basvuru = 0;
         $bekleyen_basvuru = 0;
         $onaylanan_basvuru = 0;
+        $reddedilen_basvuru = 0;
     }
 }
 ?>
@@ -163,7 +204,7 @@ if ($admin_rol === 'superadmin') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yönetici Paneli - BAÜN Form İşlem Merkezi</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; color:#333; }
         .header { background-color: #1b656e; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .header h1 { font-size: 20px; margin: 0; display: flex; align-items: center; gap: 10px; }
         .header-btn { background: #d93025; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 13px; font-weight: bold; transition: 0.3s; }
@@ -171,16 +212,17 @@ if ($admin_rol === 'superadmin') {
         .header-btn-yetki { background: #f39c12; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 13px; font-weight: bold; transition: 0.3s; margin-right: 10px; }
         .header-btn-yetki:hover { background: #d68910; }
         
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .container { max-width: 1250px; margin: 30px auto; padding: 0 20px; }
         
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px; }
-        .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #1b656e; }
-        .stat-card.warning { border-left-color: #f39c12; }
-        .stat-card.success { border-left-color: #27ae60; }
-        .stat-card h3 { margin: 0 0 5px 0; font-size: 28px; color: #333; }
-        .stat-card p { margin: 0; color: #777; font-size: 13px; font-weight: bold; text-transform: uppercase; }
+        /* Sekme Stilleri */
+        .tab-menu { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 0; }
+        .tab-btn { padding: 12px 22px; font-weight: bold; text-decoration: none; color: #555; background: #e2e8f0; border-radius: 8px 8px 0 0; font-size: 14px; transition: all 0.3s; display: flex; align-items: center; gap: 8px; }
+        .tab-btn:hover { background: #cbd5e1; color: #1b656e; }
+        .tab-btn.active { background: #1b656e; color: white; border-bottom: 3px solid #144d54; }
+        .tab-badge { background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .tab-btn.active .tab-badge { background: white; color: #1b656e; }
 
-        .filter-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 25px; display: flex; gap: 15px; align-items: center; }
+        .filter-card { background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; gap: 15px; align-items: center; }
         .filter-card input, .filter-card select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; outline: none; }
         .filter-card input { flex: 2; }
         .filter-card select { flex: 1; }
@@ -188,8 +230,8 @@ if ($admin_rol === 'superadmin') {
         .btn-sifirla { background: #7f8c8d; color: white; border: none; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-size: 13px; }
 
         .table-card { background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
-        th { background: #e8f4f8; color: #1b656e; padding: 14px 15px; font-weight: bold; border-bottom: 2px solid #ddd; }
+        table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+        th { background: #e8f4f8; color: #1b656e; padding: 12px 15px; font-weight: bold; border-bottom: 2px solid #ddd; }
         td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
         tr:hover { background-color: #f9f9f9; }
 
@@ -198,7 +240,14 @@ if ($admin_rol === 'superadmin') {
         .btn-sil { background: #e74c3c; color: white; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: bold; display: inline-block; margin-left: 5px; }
         .btn-sil:hover { background: #c0392b; }
         
-        .durum-select { padding: 4px 8px; font-size: 12px; border-radius: 4px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
+        .durum-select { padding: 5px 8px; font-size: 12px; font-weight: bold; border-radius: 4px; border: 1px solid #ccc; cursor: pointer; }
+
+        /* Modal Stili (Red Sebebi İçin) */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 25px; border-radius: 8px; width: 450px; max-width: 90%; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .modal-content h3 { margin-top: 0; color: #d93025; }
+        .modal-content textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin: 10px 0; font-family: inherit; box-sizing: border-box; }
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; }
     </style>
 </head>
 <body>
@@ -212,7 +261,7 @@ if ($admin_rol === 'superadmin') {
             <span style="margin-right:15px; font-size:14px;">Hoş geldiniz, <strong><?php echo htmlspecialchars($admin_ad); ?></strong> (<?php echo $admin_rol === 'superadmin' ? 'Süper Admin' : 'Admin'; ?>)</span>
             
             <?php if($admin_rol === 'superadmin'): ?>
-                <a href="yetki.php" class="header-btn-yetki">🔑 Admin İzin Yönetimi (Görev Atama)</a>
+                <a href="yetki.php" class="header-btn-yetki">🔑 Admin & İzin Yönetimi</a>
             <?php endif; ?>
             
             <a href="cikis.php" class="header-btn">Güvenli Çıkış</a>
@@ -220,29 +269,25 @@ if ($admin_rol === 'superadmin') {
     </div>
 
     <div class="container">
-        <?php if($admin_rol !== 'superadmin' && count($izinli_formlar) == 0): ?>
-            <div style="background:#fff3cd; color:#856404; padding:15px 20px; border-radius:8px; border-left:5px solid #ffeba2; margin-bottom:20px; font-weight:bold;">
-                ⚠️ Dikkat: Henüz Süper Admin tarafından tarafınıza herhangi bir form inceleme görevi/izni atanmamıştır. Lütfen Süper Admin ile iletişime geçiniz.
-            </div>
-        <?php endif; ?>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3><?php echo $toplam_basvuru; ?></h3>
-                <p>İzinli Toplam Başvuru</p>
-            </div>
-            <div class="stat-card warning">
-                <h3><?php echo $bekleyen_basvuru; ?></h3>
-                <p>Bekleyen Başvurular</p>
-            </div>
-            <div class="stat-card success">
-                <h3><?php echo $onaylanan_basvuru; ?></h3>
-                <p>Onaylanan Başvurular</p>
-            </div>
+        <!-- SEKME MENÜSÜ -->
+        <div class="tab-menu">
+            <a href="panel.php?tab=tum" class="tab-btn <?php echo $tab=='tum'?'active':''; ?>">
+                📁 Tüm Başvurular <span class="tab-badge"><?php echo $toplam_basvuru; ?></span>
+            </a>
+            <a href="panel.php?tab=bekleyen" class="tab-btn <?php echo $tab=='bekleyen'?'active':''; ?>">
+                ⏳ Bekleyenler <span class="tab-badge"><?php echo $bekleyen_basvuru; ?></span>
+            </a>
+            <a href="panel.php?tab=onaylanan" class="tab-btn <?php echo $tab=='onaylanan'?'active':''; ?>">
+                ✅ Onaylananlar <span class="tab-badge"><?php echo $onaylanan_basvuru; ?></span>
+            </a>
+            <a href="panel.php?tab=reddedilen" class="tab-btn <?php echo $tab=='reddedilen'?'active':''; ?>">
+                ❌ Reddedilenler <span class="tab-badge"><?php echo $reddedilen_basvuru; ?></span>
+            </a>
         </div>
 
         <form method="GET" class="filter-card">
-            <input type="text" name="arama" value="<?php echo htmlspecialchars($arama); ?>" placeholder="Ad Soyad, TC Kimlik No veya Birim ara...">
+            <input type="hidden" name="tab" value="<?php echo htmlspecialchars($tab); ?>">
+            <input type="text" name="arama" value="<?php echo htmlspecialchars($arama); ?>" placeholder="Takip No, Ad Soyad, TC No veya Birim ara...">
             <select name="form_filtre">
                 <option value="">-- Tüm İzinli Formlar --</option>
                 <?php foreach($tum_form_isimleri as $f_kodu => $f_adi): ?>
@@ -253,7 +298,7 @@ if ($admin_rol === 'superadmin') {
             </select>
             <button type="submit" class="btn-ara">Filtrele</button>
             <?php if(!empty($arama) || !empty($form_filtre)): ?>
-                <a href="panel.php" class="btn-sifirla">Filtreyi Temizle</a>
+                <a href="panel.php?tab=<?php echo $tab; ?>" class="btn-sifirla">Filtreyi Temizle</a>
             <?php endif; ?>
         </form>
 
@@ -261,7 +306,7 @@ if ($admin_rol === 'superadmin') {
             <table>
                 <thead>
                     <tr>
-                        <th>#ID</th>
+                        <th>Takip No</th>
                         <th>Form Kodu / İsmi</th>
                         <th>Başvuran Ad Soyad</th>
                         <th>T.C. Kimlik No</th>
@@ -275,10 +320,14 @@ if ($admin_rol === 'superadmin') {
                     <?php if(count($basvurular) > 0): ?>
                         <?php foreach($basvurular as $b): ?>
                             <tr>
-                                <td><strong>#<?php echo $b['id']; ?></strong></td>
+                                <td>
+                                    <span style="font-weight:bold; color:#1b656e; font-size:14px; font-family:monospace;">
+                                        #<?php echo htmlspecialchars($b['takip_no'] ?: $b['id']); ?>
+                                    </span>
+                                </td>
                                 <td>
                                     <span style="font-weight:bold; color:#1b656e; display:block;"><?php echo htmlspecialchars($b['form_kodu']); ?></span>
-                                    <span style="font-size:12px; color:#666;"><?php echo htmlspecialchars($b['form_adi']); ?></span>
+                                    <span style="font-size:11.5px; color:#666;"><?php echo htmlspecialchars($b['form_adi']); ?></span>
                                 </td>
                                 <td><strong><?php echo htmlspecialchars($b['ad_soyad'] ?: '-'); ?></strong></td>
                                 <td><?php echo htmlspecialchars($b['tc_no'] ?: '-'); ?></td>
@@ -290,16 +339,22 @@ if ($admin_rol === 'superadmin') {
                                         <option value="Onaylandı" <?php echo $b['durum']=='Onaylandı'?'selected':''; ?>>Onaylandı</option>
                                         <option value="Reddedildi" <?php echo $b['durum']=='Reddedildi'?'selected':''; ?>>Reddedildi</option>
                                     </select>
+
+                                    <?php if($b['durum'] == 'Reddedildi' && !empty($b['red_sebebi'])): ?>
+                                        <div style="font-size:11px; color:#d93025; margin-top:3px; max-width:180px; word-wrap:break-word;">
+                                            <strong>Red Sebebi:</strong> <?php echo htmlspecialchars($b['red_sebebi']); ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </td>
                                 <td style="text-align:center;">
-                                    <a href="detay.php?id=<?php echo $b['id']; ?>" class="btn-detay">Detayları Gör</a>
+                                    <a href="detay.php?id=<?php echo $b['id']; ?>" class="btn-detay">Detay Gör</a>
                                     <a href="panel.php?islem=sil&id=<?php echo $b['id']; ?>" class="btn-sil" onclick="return confirm('Bu başvuruyu silmek istediğinize emin misiniz?');">Sil</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="8" style="text-align:center; padding:30px; color:#999;">Görüntüleme izninizin bulunduğu kayıtlı bir başvuru bulunmamaktadır.</td>
+                            <td colspan="8" style="text-align:center; padding:30px; color:#999;">Bu sekmede gösterilecek kayıtlı bir başvuru bulunmamaktadır.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -307,9 +362,61 @@ if ($admin_rol === 'superadmin') {
         </div>
     </div>
 
+    <!-- RED SEBEBİ GİRME MODAL (POPUP) -->
+    <div id="redModal" class="modal">
+        <div class="modal-content">
+            <h3>❌ Başvuru Red Sebebi</h3>
+            <p style="font-size:13px; color:#666; margin-bottom:10px;">Başvuran kişinin takip ekranında görebilmesi için lütfen red gerekçesini yazınız:</p>
+            <form id="redForm" method="POST">
+                <input type="hidden" name="islem" value="durum_guncelle">
+                <input type="hidden" name="id" id="modalBasvuruId">
+                <input type="hidden" name="yeni_durum" value="Reddedildi">
+                
+                <textarea name="red_sebebi" rows="4" placeholder="Örn: Fotoğraf vesikalık formatına uygun değil / Eksik ödeme dekontu..." required></textarea>
+                
+                <div class="modal-buttons">
+                    <button type="button" onclick="modalKapat()" style="background:#ccc; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">İptal</button>
+                    <button type="submit" style="background:#d93025; color:white; border:none; padding:8px 18px; border-radius:4px; font-weight:bold; cursor:pointer;">Reddet ve Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         function durumDegistir(id, yeniDurum) {
-            window.location.href = 'panel.php?islem=durum_guncelle&id=' + id + '&yeni_durum=' + encodeURIComponent(yeniDurum);
+            if (yeniDurum === 'Reddedildi') {
+                document.getElementById('modalBasvuruId').value = id;
+                document.getElementById('redModal').style.display = 'flex';
+            } else {
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'panel.php';
+
+                var inputIslem = document.createElement('input');
+                inputIslem.type = 'hidden';
+                inputIslem.name = 'islem';
+                inputIslem.value = 'durum_guncelle';
+                form.appendChild(inputIslem);
+
+                var inputId = document.createElement('input');
+                inputId.type = 'hidden';
+                inputId.name = 'id';
+                inputId.value = id;
+                form.appendChild(inputId);
+
+                var inputDurum = document.createElement('input');
+                inputDurum.type = 'hidden';
+                inputDurum.name = 'yeni_durum';
+                inputDurum.value = yeniDurum;
+                form.appendChild(inputDurum);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function modalKapat() {
+            document.getElementById('redModal').style.display = 'none';
         }
     </script>
 </body>
