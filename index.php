@@ -102,7 +102,6 @@
             </optgroup>
 
             <optgroup label="Bilgi İşlem Daire Başkanlığı Formları">
-                <option value="form_0071.php">KDYS.FR.0071 - Bilgi İşlem DB Bakım Onarım Takip Formu</option>
                 <option value="form_0072.php">KDYS.FR.0072 - Bilgi İşlem DB Kurumsal E-Posta Talep Formu</option>
                 <option value="form_0073.php">KDYS.FR.0073 - Bilgi İşlem DB E-İmza Mini Kart Okuyucu Teslim Tesellüm Tutanağı</option>
                 <option value="form_0074.php">KDYS.FR.0074 - Bilgi İşlem DB E-İmza Talep Formu</option>
@@ -373,72 +372,6 @@
             </div>
 
             <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center;">Formu Gönder</button>
-        </form>
-    </div>
-
-    <!-- KDYS.FR.0071 - Bilgi İşlem DB Bakım Onarım Takip Formu -->
-    <div id="form_0071.php" class="gizli-form">
-        <h2>KDYS.FR.0071 - Bilgi İşlem DB Bakım Onarım Takip Formu</h2>
-        <form method="POST" action="islem.php">
-            <input type="hidden" name="form_kodu" value="KDYS.FR.0071">
-            <input type="hidden" name="form_adi" value="Bilgi İşlem DB Bakım Onarım Takip Formu">
-
-            <div class="form-satir">
-                <div class="form-grup">
-                    <label>Birim Adı</label>
-                    <input type="text" name="birim_adi" value="BALIKESİR ÜNİVERSİTESİ-" required>
-                </div>
-                <div class="form-grup">
-                    <label>Talebi İleten Personelin Adı-Soyadı</label>
-                    <input type="text" name="personel_ad_soyad" required>
-                </div>
-            </div>
-
-            <div class="form-satir">
-                <div class="form-grup">
-                    <label>Telefonu</label>
-                    <input type="text" name="telefon">
-                </div>
-                <div class="form-grup">
-                    <label>Cihazın Marka/Modeli ve Seri No</label>
-                    <input type="text" name="cihaz_marka_model" placeholder="Marka/Model - Seri No: ...">
-                </div>
-            </div>
-
-            <div class="form-grup">
-                <label>Arıza / Bakım / Tesis Tanımı (Şikâyet sebebi)</label>
-                <textarea name="ariza_tanimi" rows="3" required></textarea>
-            </div>
-
-            <div class="form-grup">
-                <label>Donanım Destek Grubuna İletmeniz Gereken Bir Durum Var mı?</label>
-                <textarea name="donanim_destek_notu" rows="2"></textarea>
-            </div>
-
-            <div class="form-bilgi-liste" style="background: #f9f9f9; border-left-color: #1b656e; color: #333;">
-                <p style="margin: 0 0 8px 0;">* Donanım destek birimine teslim edilen cihaz içerisinde destek personelinin görmesinde sakınca olan hiçbir veri bulunmamalıdır.</p>
-                <p style="margin: 0 0 8px 0;">* Formatlanması için teslim edilen cihazdaki tüm veriler cihazın sahibi tarafından yedeklenmelidir (Donanım destek biriminde yedek alınmayacaktır).</p>
-                <p style="margin: 0 0 10px 0;">* Donanım destek birimi personeli tarafından cihazdaki verinin kopyalanmayacağı ve hiçbir şekilde paylaşılmayacağı taahhüt edilir.</p>
-                <label style="display: flex; align-items: center; gap: 8px; font-weight: bold; cursor: pointer;">
-                    <input type="checkbox" name="onay_checkbox" value="Onaylandı" required> Açıklamaları okudum, onaylıyorum.
-                </label>
-            </div>
-
-            <div class="form-satir">
-                <div class="form-grup">
-                    <label>Bildirimde Bulunan Ad-Soyad</label>
-                    <input type="text" name="bildiren_ad_soyad" required>
-                </div>
-                <div class="form-grup">
-                    <label>Tarih ve Saat</label>
-                    <div style="display: flex; gap: 5px;">
-                        <input type="date" name="bildirim_tarihi" required>
-                        <input type="time" name="bildirim_saati" required>
-                    </div>
-                </div>
-            </div>
-
-            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
         </form>
     </div>
 

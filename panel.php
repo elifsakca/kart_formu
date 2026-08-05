@@ -74,7 +74,6 @@ $tum_form_isimleri = [
     'F-53'         => 'F-53 - Öğrenci Akıllı Kart Formu',
     'F-54'         => 'F-54 - Kayıp Kart Müracaat Formu',
     'F-55'         => 'F-55 - Arızalı Kart Müracaat Formu',
-    'KDYS.FR.0071' => 'KDYS.FR.0071 - Bakım Onarım Takip',
     'KDYS.FR.0072' => 'KDYS.FR.0072 - Kurumsal E-Posta Talep',
     'KDYS.FR.0073' => 'KDYS.FR.0073 - E-İmza Okuyucu Tutanağı',
     'KDYS.FR.0074' => 'KDYS.FR.0074 - E-İmza Talep Formu',
