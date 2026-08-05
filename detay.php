@@ -17,6 +17,18 @@ if (!$basvuru) {
     die("Başvuru bulunamadı!");
 }
 
+$admin_id  = $_SESSION['admin_id'] ?? 0;
+$admin_rol = $_SESSION['admin_rol'] ?? 'admin';
+
+// Güvenlik: Normal admin sadece izinli olduğu formu görebilir
+if ($admin_rol !== 'superadmin') {
+    $permStmt = $db->prepare("SELECT COUNT(*) FROM yonetici_izinleri WHERE yonetici_id = :yid AND form_kodu = :fkodu");
+    $permStmt->execute([':yid' => $admin_id, ':fkodu' => $basvuru['form_kodu']]);
+    if ($permStmt->fetchColumn() == 0) {
+        die("<div style='font-family:sans-serif; padding:50px; text-align:center;'><h2>⚠️ Erişim Engellendi</h2><p>Bu başvuru formunu (".htmlspecialchars($basvuru['form_kodu']).") görüntüleme yetkiniz bulunmamaktadır.</p><br><a href='panel.php' style='color:#1b656e; font-weight:bold;'>Panele Dön</a></div>");
+    }
+}
+
 $veriler = json_decode($basvuru['form_verileri'], true) ?? [];
 
 // YÖNETİCİ TARAFINDAN GİRİLEN BİLGİLERİ KAYDETME İŞLEMİ

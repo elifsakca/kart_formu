@@ -1,18 +1,33 @@
 <?php
 session_start();
+require_once 'baglan.php';
+
 $hata = "";
 
-// Yönetici Giriş Kontrolü (Giriş bilgileri: Kullanıcı Adı: admin | Şifre: 123456)
+// Yönetici Giriş Kontrolü (Veritabanından)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $kullanici = $_POST['kullanici_adi'] ?? '';
-    $sifre = $_POST['sifre'] ?? '';
+    $kullanici = trim($_POST['kullanici_adi'] ?? '');
+    $sifre = trim($_POST['sifre'] ?? '');
 
-    if ($kullanici == 'admin' && $sifre == '123456') {
-        $_SESSION['admin_giris'] = true;
-        header("Location: panel.php"); // Giriş başarılıysa panel.php'ye yönlendir
-        exit;
+    if (!empty($kullanici) && !empty($sifre)) {
+        $stmt = $db->prepare("SELECT * FROM yoneticiler WHERE kullanici_adi = :kadi");
+        $stmt->execute([':kadi' => $kullanici]);
+        $user = $stmt->fetch();
+
+        if ($user && (password_verify($sifre, $user['sifre']) || $sifre === $user['sifre'])) {
+            $_SESSION['admin_giris']     = true;
+            $_SESSION['admin_id']        = $user['id'];
+            $_SESSION['admin_kullanici'] = $user['kullanici_adi'];
+            $_SESSION['admin_ad_soyad']   = $user['ad_soyad'];
+            $_SESSION['admin_rol']        = $user['rol'];
+
+            header("Location: panel.php");
+            exit;
+        } else {
+            $hata = "Hatalı kullanıcı adı veya şifre girdiniz!";
+        }
     } else {
-        $hata = "Hatalı kullanıcı adı veya şifre girdiniz!";
+        $hata = "Lütfen kullanıcı adı ve şifrenizi giriniz!";
     }
 }
 ?>
@@ -96,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form method="POST" action="">
             <div class="form-grup">
                 <label>Kullanıcı Adı</label>
-                <input type="text" name="kullanici_adi" placeholder="Kullanıcı adınızı giriniz" required autocomplete="off">
+                <input type="text" name="kullanici_adi" placeholder="Kullanıcı adınızı giriniz (superadmin, admin1, admin2)" required autocomplete="off">
             </div>
             
             <div class="form-grup">

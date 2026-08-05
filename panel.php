@@ -8,23 +8,91 @@ if (!isset($_SESSION['admin_giris']) || $_SESSION['admin_giris'] !== true) {
     exit;
 }
 
+$admin_id  = $_SESSION['admin_id'] ?? 0;
+$admin_rol = $_SESSION['admin_rol'] ?? 'admin';
+$admin_ad  = $_SESSION['admin_ad_soyad'] ?? $_SESSION['admin_kullanici'] ?? 'Admin';
+
 // Durum Güncelleme
 if (isset($_GET['islem']) && $_GET['islem'] == 'durum_guncelle' && isset($_GET['id']) && isset($_GET['yeni_durum'])) {
     $id = intval($_GET['id']);
     $yeni_durum = $_GET['yeni_durum'];
-    $guncelle = $db->prepare("UPDATE basvurular SET durum = :durum WHERE id = :id");
-    $guncelle->execute([':durum' => $yeni_durum, ':id' => $id]);
-    header("Location: panel.php?mesaj=guncellendi");
-    exit;
+    
+    // Güvenlik: Normal admin sadece izinli olduğu formun durumunu değiştirebilir
+    $basvuruCheck = $db->prepare("SELECT form_kodu FROM basvurular WHERE id = :id");
+    $basvuruCheck->execute([':id' => $id]);
+    $bRow = $basvuruCheck->fetch();
+
+    if ($bRow) {
+        $izinli = true;
+        if ($admin_rol !== 'superadmin') {
+            $permStmt = $db->prepare("SELECT COUNT(*) FROM yonetici_izinleri WHERE yonetici_id = :yid AND form_kodu = :fkodu");
+            $permStmt->execute([':yid' => $admin_id, ':fkodu' => $bRow['form_kodu']]);
+            if ($permStmt->fetchColumn() == 0) {
+                $izinli = false;
+            }
+        }
+
+        if ($izinli) {
+            $guncelle = $db->prepare("UPDATE basvurular SET durum = :durum WHERE id = :id");
+            $guncelle->execute([':durum' => $yeni_durum, ':id' => $id]);
+            header("Location: panel.php?mesaj=guncellendi");
+            exit;
+        }
+    }
 }
 
 // Silme İşlemi
 if (isset($_GET['islem']) && $_GET['islem'] == 'sil' && isset($_GET['id'])) {
     $id = intval($_GET['id']);
-    $sil = $db->prepare("DELETE FROM basvurular WHERE id = :id");
-    $sil->execute([':id' => $id]);
-    header("Location: panel.php?mesaj=silindi");
-    exit;
+    
+    $basvuruCheck = $db->prepare("SELECT form_kodu FROM basvurular WHERE id = :id");
+    $basvuruCheck->execute([':id' => $id]);
+    $bRow = $basvuruCheck->fetch();
+
+    if ($bRow) {
+        $izinli = true;
+        if ($admin_rol !== 'superadmin') {
+            $permStmt = $db->prepare("SELECT COUNT(*) FROM yonetici_izinleri WHERE yonetici_id = :yid AND form_kodu = :fkodu");
+            $permStmt->execute([':yid' => $admin_id, ':fkodu' => $bRow['form_kodu']]);
+            if ($permStmt->fetchColumn() == 0) {
+                $izinli = false;
+            }
+        }
+
+        if ($izinli) {
+            $sil = $db->prepare("DELETE FROM basvurular WHERE id = :id");
+            $sil->execute([':id' => $id]);
+            header("Location: panel.php?mesaj=silindi");
+            exit;
+        }
+    }
+}
+
+// Tüm Formların Sözlük İsimleri
+$tum_form_isimleri = [
+    'F-52'         => 'F-52 - Akıllı Kart İşlem Formu',
+    'F-53'         => 'F-53 - Öğrenci Akıllı Kart Formu',
+    'F-54'         => 'F-54 - Kayıp Kart Müracaat Formu',
+    'F-55'         => 'F-55 - Arızalı Kart Müracaat Formu',
+    'KDYS.FR.0071' => 'KDYS.FR.0071 - Bakım Onarım Takip',
+    'KDYS.FR.0072' => 'KDYS.FR.0072 - Kurumsal E-Posta Talep',
+    'KDYS.FR.0073' => 'KDYS.FR.0073 - E-İmza Okuyucu Tutanağı',
+    'KDYS.FR.0074' => 'KDYS.FR.0074 - E-İmza Talep Formu',
+    'KDYS.FR.0077' => 'KDYS.FR.0077 - Kişisel Web Sözleşmesi',
+    'KDYS.FR.0078' => 'KDYS.FR.0078 - Kurumsal Statik IP Sözleşmesi',
+    'KDYS.FR.0079' => 'KDYS.FR.0079 - Kurumsal Web Sözleşmesi',
+    'KDYS.FR.0080' => 'KDYS.FR.0080 - Mernis Taahhütnamesi',
+    'KDYS.FR.0082' => 'KDYS.FR.0082 - Personel E-Posta Başvuru'
+];
+
+// Admin İzinli Form Kodlarını Çekme
+$izinli_formlar = [];
+if ($admin_rol === 'superadmin') {
+    $izinli_formlar = array_keys($tum_form_isimleri);
+} else {
+    $iStmt = $db->prepare("SELECT form_kodu FROM yonetici_izinleri WHERE yonetici_id = :yid");
+    $iStmt->execute([':yid' => $admin_id]);
+    $izinli_formlar = $iStmt->fetchAll(PDO::FETCH_COLUMN);
 }
 
 // Arama ve Filtreleme
@@ -34,14 +102,27 @@ $form_filtre = $_GET['form_filtre'] ?? '';
 $sql = "SELECT * FROM basvurular WHERE 1=1";
 $params = [];
 
+// Yetki Kısıtlaması Sorgusu
+if ($admin_rol !== 'superadmin') {
+    if (count($izinli_formlar) > 0) {
+        $inQuery = implode(',', array_fill(0, count($izinli_formlar), '?'));
+        $sql .= " AND form_kodu IN ($inQuery)";
+        $params = array_merge($params, $izinli_formlar);
+    } else {
+        $sql .= " AND 1=0"; // Hiçbir izin yoksa sonuç dönmesin
+    }
+}
+
 if (!empty($arama)) {
-    $sql .= " AND (ad_soyad LIKE :arama OR tc_no LIKE :arama OR birim LIKE :arama)";
-    $params[':arama'] = "%$arama%";
+    $sql .= " AND (ad_soyad LIKE ? OR tc_no LIKE ? OR birim LIKE ?)";
+    $params[] = "%$arama%";
+    $params[] = "%$arama%";
+    $params[] = "%$arama%";
 }
 
 if (!empty($form_filtre)) {
-    $sql .= " AND form_kodu = :form_filtre";
-    $params[':form_filtre'] = $form_filtre;
+    $sql .= " AND form_kodu = ?";
+    $params[] = $form_filtre;
 }
 
 $sql .= " ORDER BY kayit_tarihi DESC";
@@ -49,10 +130,32 @@ $stmt = $db->prepare($sql);
 $stmt->execute($params);
 $basvurular = $stmt->fetchAll();
 
-// İstatistikler
-$toplam_basvuru    = $db->query("SELECT COUNT(*) FROM basvurular")->fetchColumn();
-$bekleyen_basvuru  = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Beklemede'")->fetchColumn();
-$onaylanan_basvuru = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Onaylandı'")->fetchColumn();
+// İstatistikler (İzinli formlara göre)
+if ($admin_rol === 'superadmin') {
+    $toplam_basvuru    = $db->query("SELECT COUNT(*) FROM basvurular")->fetchColumn();
+    $bekleyen_basvuru  = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Beklemede'")->fetchColumn();
+    $onaylanan_basvuru = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Onaylandı'")->fetchColumn();
+} else {
+    if (count($izinli_formlar) > 0) {
+        $inQuery = implode(',', array_fill(0, count($izinli_formlar), '?'));
+        
+        $s1 = $db->prepare("SELECT COUNT(*) FROM basvurular WHERE form_kodu IN ($inQuery)");
+        $s1->execute($izinli_formlar);
+        $toplam_basvuru = $s1->fetchColumn();
+
+        $s2 = $db->prepare("SELECT COUNT(*) FROM basvurular WHERE durum='Beklemede' AND form_kodu IN ($inQuery)");
+        $s2->execute($izinli_formlar);
+        $bekleyen_basvuru = $s2->fetchColumn();
+
+        $s3 = $db->prepare("SELECT COUNT(*) FROM basvurular WHERE durum='Onaylandı' AND form_kodu IN ($inQuery)");
+        $s3->execute($izinli_formlar);
+        $onaylanan_basvuru = $s3->fetchColumn();
+    } else {
+        $toplam_basvuru = 0;
+        $bekleyen_basvuru = 0;
+        $onaylanan_basvuru = 0;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -66,6 +169,8 @@ $onaylanan_basvuru = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='On
         .header h1 { font-size: 20px; margin: 0; display: flex; align-items: center; gap: 10px; }
         .header-btn { background: #d93025; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 13px; font-weight: bold; transition: 0.3s; }
         .header-btn:hover { background: #b02319; }
+        .header-btn-yetki { background: #f39c12; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 13px; font-weight: bold; transition: 0.3s; margin-right: 10px; }
+        .header-btn-yetki:hover { background: #d68910; }
         
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
         
@@ -105,16 +210,27 @@ $onaylanan_basvuru = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='On
             BAÜN Form İşlem Merkezi - Yönetici Paneli
         </h1>
         <div>
-            <span style="margin-right:15px; font-size:14px;">Hoş geldiniz, <strong><?php echo htmlspecialchars($_SESSION['admin_kullanici'] ?? 'Admin'); ?></strong></span>
+            <span style="margin-right:15px; font-size:14px;">Hoş geldiniz, <strong><?php echo htmlspecialchars($admin_ad); ?></strong> (<?php echo $admin_rol === 'superadmin' ? 'Süper Admin' : 'Admin'; ?>)</span>
+            
+            <?php if($admin_rol === 'superadmin'): ?>
+                <a href="yetki.php" class="header-btn-yetki">🔑 Admin İzin Yönetimi (Görev Atama)</a>
+            <?php endif; ?>
+            
             <a href="cikis.php" class="header-btn">Güvenli Çıkış</a>
         </div>
     </div>
 
     <div class="container">
+        <?php if($admin_rol !== 'superadmin' && count($izinli_formlar) == 0): ?>
+            <div style="background:#fff3cd; color:#856404; padding:15px 20px; border-radius:8px; border-left:5px solid #ffeba2; margin-bottom:20px; font-weight:bold;">
+                ⚠️ Dikkat: Henüz Süper Admin tarafından tarafınıza herhangi bir form inceleme görevi/izni atanmamıştır. Lütfen Süper Admin ile iletişime geçiniz.
+            </div>
+        <?php endif; ?>
+
         <div class="stats-grid">
             <div class="stat-card">
                 <h3><?php echo $toplam_basvuru; ?></h3>
-                <p>Toplam Başvuru</p>
+                <p>İzinli Toplam Başvuru</p>
             </div>
             <div class="stat-card warning">
                 <h3><?php echo $bekleyen_basvuru; ?></h3>
@@ -129,20 +245,12 @@ $onaylanan_basvuru = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='On
         <form method="GET" class="filter-card">
             <input type="text" name="arama" value="<?php echo htmlspecialchars($arama); ?>" placeholder="Ad Soyad, TC Kimlik No veya Birim ara...">
             <select name="form_filtre">
-                <option value="">-- Tüm Formlar --</option>
-                <option value="F-52" <?php echo $form_filtre=='F-52'?'selected':''; ?>>F-52 - Akıllı Kart İşlem Formu</option>
-                <option value="F-53" <?php echo $form_filtre=='F-53'?'selected':''; ?>>F-53 - Öğrenci Akıllı Kart Formu</option>
-                <option value="F-54" <?php echo $form_filtre=='F-54'?'selected':''; ?>>F-54 - Kayıp Kart Müracaat Formu</option>
-                <option value="F-55" <?php echo $form_filtre=='F-55'?'selected':''; ?>>F-55 - Arızalı Kart Müracaat Formu</option>
-                <option value="KDYS.FR.0071" <?php echo $form_filtre=='KDYS.FR.0071'?'selected':''; ?>>KDYS.FR.0071 - Bakım Onarım Takip</option>
-                <option value="KDYS.FR.0072" <?php echo $form_filtre=='KDYS.FR.0072'?'selected':''; ?>>KDYS.FR.0072 - Kurumsal E-Posta Talep</option>
-                <option value="KDYS.FR.0073" <?php echo $form_filtre=='KDYS.FR.0073'?'selected':''; ?>>KDYS.FR.0073 - E-İmza Okuyucu Tutanağı</option>
-                <option value="KDYS.FR.0074" <?php echo $form_filtre=='KDYS.FR.0074'?'selected':''; ?>>KDYS.FR.0074 - E-İmza Talep Formu</option>
-                <option value="KDYS.FR.0077" <?php echo $form_filtre=='KDYS.FR.0077'?'selected':''; ?>>KDYS.FR.0077 - Kişisel Web Sözleşmesi</option>
-                <option value="KDYS.FR.0078" <?php echo $form_filtre=='KDYS.FR.0078'?'selected':''; ?>>KDYS.FR.0078 - Kurumsal Statik IP Sözleşmesi</option>
-                <option value="KDYS.FR.0079" <?php echo $form_filtre=='KDYS.FR.0079'?'selected':''; ?>>KDYS.FR.0079 - Kurumsal Web Sözleşmesi</option>
-                <option value="KDYS.FR.0080" <?php echo $form_filtre=='KDYS.FR.0080'?'selected':''; ?>>KDYS.FR.0080 - Mernis Taahhütnamesi</option>
-                <option value="KDYS.FR.0082" <?php echo $form_filtre=='KDYS.FR.0082'?'selected':''; ?>>KDYS.FR.0082 - Personel E-Posta Başvuru</option>
+                <option value="">-- Tüm İzinli Formlar --</option>
+                <?php foreach($tum_form_isimleri as $f_kodu => $f_adi): ?>
+                    <?php if(in_array($f_kodu, $izinli_formlar)): ?>
+                        <option value="<?php echo $f_kodu; ?>" <?php echo $form_filtre==$f_kodu?'selected':''; ?>><?php echo htmlspecialchars($f_adi); ?></option>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             </select>
             <button type="submit" class="btn-ara">Filtrele</button>
             <?php if(!empty($arama) || !empty($form_filtre)): ?>
@@ -192,7 +300,7 @@ $onaylanan_basvuru = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='On
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="8" style="text-align:center; padding:30px; color:#999;">Henüz kayıtlı bir başvuru bulunmamaktadır.</td>
+                            <td colspan="8" style="text-align:center; padding:30px; color:#999;">Görüntüleme izninizin bulunduğu kayıtlı bir başvuru bulunmamaktadır.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
