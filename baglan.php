@@ -18,6 +18,15 @@ try {
         rol ENUM('superadmin', 'admin') DEFAULT 'admin'
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
+    // Eğer yoneticiler tablosu önceden kalmaysa eksik sütunları (ad_soyad ve rol) otomatik ekle
+    $columns = $db->query("SHOW COLUMNS FROM yoneticiler")->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('ad_soyad', $columns)) {
+        $db->exec("ALTER TABLE yoneticiler ADD COLUMN ad_soyad VARCHAR(100) NOT NULL DEFAULT ''");
+    }
+    if (!in_array('rol', $columns)) {
+        $db->exec("ALTER TABLE yoneticiler ADD COLUMN rol ENUM('superadmin', 'admin') DEFAULT 'admin'");
+    }
+
     $db->exec("CREATE TABLE IF NOT EXISTS yonetici_izinleri (
         id INT AUTO_INCREMENT PRIMARY KEY,
         yonetici_id INT NOT NULL,
