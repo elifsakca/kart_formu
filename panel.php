@@ -261,7 +261,7 @@ if ($admin_rol === 'superadmin') {
             <span style="margin-right:15px; font-size:14px;">Hoş geldiniz, <strong><?php echo htmlspecialchars($admin_ad); ?></strong> (<?php echo $admin_rol === 'superadmin' ? 'Süper Admin' : 'Admin'; ?>)</span>
             
             <?php if($admin_rol === 'superadmin'): ?>
-                <a href="yetki.php" class="header-btn-yetki">🔑 Admin & İzin Yönetimi</a>
+                <a href="yetki.php" class="header-btn-yetki"> Admin & İzin Yönetimi</a>
             <?php endif; ?>
             
             <a href="cikis.php" class="header-btn">Güvenli Çıkış</a>
@@ -272,16 +272,16 @@ if ($admin_rol === 'superadmin') {
         <!-- SEKME MENÜSÜ -->
         <div class="tab-menu">
             <a href="panel.php?tab=tum" class="tab-btn <?php echo $tab=='tum'?'active':''; ?>">
-                📁 Tüm Başvurular <span class="tab-badge"><?php echo $toplam_basvuru; ?></span>
+                 Tüm Başvurular <span class="tab-badge"><?php echo $toplam_basvuru; ?></span>
             </a>
             <a href="panel.php?tab=bekleyen" class="tab-btn <?php echo $tab=='bekleyen'?'active':''; ?>">
-                ⏳ Bekleyenler <span class="tab-badge"><?php echo $bekleyen_basvuru; ?></span>
+                 Bekleyenler <span class="tab-badge"><?php echo $bekleyen_basvuru; ?></span>
             </a>
             <a href="panel.php?tab=onaylanan" class="tab-btn <?php echo $tab=='onaylanan'?'active':''; ?>">
-                ✅ Onaylananlar <span class="tab-badge"><?php echo $onaylanan_basvuru; ?></span>
+                 Onaylananlar <span class="tab-badge"><?php echo $onaylanan_basvuru; ?></span>
             </a>
             <a href="panel.php?tab=reddedilen" class="tab-btn <?php echo $tab=='reddedilen'?'active':''; ?>">
-                ❌ Reddedilenler <span class="tab-badge"><?php echo $reddedilen_basvuru; ?></span>
+                 Reddedilenler <span class="tab-badge"><?php echo $reddedilen_basvuru; ?></span>
             </a>
         </div>
 
@@ -365,7 +365,7 @@ if ($admin_rol === 'superadmin') {
     <!-- RED SEBEBİ GİRME MODAL (POPUP) -->
     <div id="redModal" class="modal">
         <div class="modal-content">
-            <h3>❌ Başvuru Red Sebebi</h3>
+            <h3> Başvuru Red Sebebi</h3>
             <p style="font-size:13px; color:#666; margin-bottom:10px;">Başvuran kişinin takip ekranında görebilmesi için lütfen red gerekçesini yazınız:</p>
             <form id="redForm" method="POST">
                 <input type="hidden" name="islem" value="durum_guncelle">

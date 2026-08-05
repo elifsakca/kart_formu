@@ -71,7 +71,7 @@
             BALIKESİR ÜNİVERSİTESİ
         </a>
         <div>
-            <a href="takip.php" class="navbar-link" style="font-weight:bold; color:#1b656e; margin-right:15px;">🔍 Başvuru Takibi</a>
+            <a href="takip.php" class="navbar-link" style="font-weight:bold; color:#1b656e; margin-right:15px;"> Başvuru Takibi</a>
             <a href="login.php" class="navbar-link" style="font-weight:bold; color:#555; margin-right:15px;">Yönetici Girişi</a>
             <a href="https://bid.balikesir.edu.tr" target="_blank" class="navbar-link">BİLGİ İŞLEM DAİRE BAŞKANLIĞI</a>
         </div>

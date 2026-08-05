@@ -129,16 +129,16 @@ if (!empty($takip_no)) {
 
                     <?php if ($durum == 'Reddedildi'): ?>
                         <div class="red-kutusu">
-                            <h4>❌ Başvurunuz Reddedilmiştir</h4>
+                            <h4> Başvurunuz Reddedilmiştir</h4>
                             <p><strong>Gerekçe / Red Sebebi:</strong> <?php echo nl2br(htmlspecialchars($basvuru['red_sebebi'] ?: 'Belirtilen gerekçe bulunmamaktadır. Lütfen biriminiz ile iletişime geçiniz.')); ?></p>
                         </div>
                     <?php elseif ($durum == 'Onaylandı'): ?>
                         <div style="background:#e8f8f5; border-left:5px solid #27ae60; padding:15px 20px; border-radius:6px; margin-top:20px; color:#1e8449; text-align:left;">
-                            ✓ <strong>Tebrikler:</strong> Başvurunuz onaylanmış ve gerekli işlemler tamamlanmıştır.
+                             <strong>Tebrikler:</strong> Başvurunuz onaylanmış ve gerekli işlemler tamamlanmıştır.
                         </div>
                     <?php else: ?>
                         <div style="background:#fef9e7; border-left:5px solid #f39c12; padding:15px 20px; border-radius:6px; margin-top:20px; color:#b7950b; text-align:left;">
-                            ⏳ <strong>Bilgi:</strong> Başvurunuz yetkili birim tarafından inceleme aşamasındadır.
+                             <strong>Bilgi:</strong> Başvurunuz yetkili birim tarafından inceleme aşamasındadır.
                         </div>
                     <?php endif; ?>
                 </div>
