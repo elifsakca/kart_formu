@@ -8,7 +8,7 @@ if (!isset($_SESSION['admin_giris']) || $_SESSION['admin_giris'] !== true) {
     exit;
 }
 
-$id = intval($_GET['id'] ?? 0);
+$id = intval($_GET['id'] ?? $_POST['id'] ?? 0);
 $stmt = $db->prepare("SELECT * FROM basvurular WHERE id = :id");
 $stmt->execute([':id' => $id]);
 $basvuru = $stmt->fetch();
@@ -251,68 +251,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
                 <p><strong>İmza:</strong> ______________________</p>
             </div>
 
-        <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0071'): ?>
-            <!-- FORM 71 YÖNETİCİ ONLINE DOLDURULABİLİR TEKNİK DEĞERLENDİRME ALANI -->
-            <form method="POST">
-                <h3 style="color:#1b656e; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Teknik Değerlendirme ve İdare İşlemleri (Yönetici Tarafından Doldurulabilir)</h3>
-                <table class="grid-table" style="margin-top: 10px;">
-                    <tr>
-                        <th style="width:25%;">Tespit Edilen Durum</th>
-                        <td style="width:45%;"><input type="text" class="yonetici-input" name="yonetici[tespit_edilen_durum]" value="<?php echo htmlspecialchars($veriler['tespit_edilen_durum'] ?? ''); ?>" placeholder="Tespit edilen durum..."></td>
-                        <th style="width:15%;">Antivirüs Var</th>
-                        <td>
-                            <select class="yonetici-input" name="yonetici[antivirus_durumu]">
-                                <option value="">Seçiniz</option>
-                                <option value="Evet" <?php echo ($veriler['antivirus_durumu'] ?? '') == 'Evet' ? 'selected' : ''; ?>>Evet</option>
-                                <option value="Hayır" <?php echo ($veriler['antivirus_durumu'] ?? '') == 'Hayır' ? 'selected' : ''; ?>>Hayır</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Arıza Bakım Tesis Sebebi</th>
-                        <td colspan="3"><input type="text" class="yonetici-input" name="yonetici[ariza_bakim_sebebi]" value="<?php echo htmlspecialchars($veriler['ariza_bakim_sebebi'] ?? ''); ?>"></td>
-                    </tr>
-                    <tr>
-                        <th>Yapılan İşlemler</th>
-                        <td colspan="3"><textarea class="yonetici-input" name="yonetici[yapilan_islemler]" rows="2"><?php echo htmlspecialchars($veriler['yapilan_islemler'] ?? ''); ?></textarea></td>
-                    </tr>
-                    <tr>
-                        <th>Kullanılan Malzemeler</th>
-                        <td colspan="3"><input type="text" class="yonetici-input" name="yonetici[kullanilan_malzemeler]" value="<?php echo htmlspecialchars($veriler['kullanilan_malzemeler'] ?? ''); ?>"></td>
-                    </tr>
-                </table>
-
-                <div style="margin-top: 20px; border: 1px solid #000;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
-                        <tr style="background:#f5f5f5; font-weight:bold;">
-                            <td colspan="2" style="border-right: 1px solid #000; padding: 6px;">İş Bitirme</td>
-                            <td colspan="2" style="padding: 6px;">Teslim (Cihaz Donanım Destek Grubuna Bırakıldıysa)</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" style="border-right: 1px solid #000; padding: 15px; vertical-align: top; width:50%;">
-                                <strong>İşlemi Yapan Personel</strong><br><br>
-                                Ad Soyad / Tarih: <input type="text" class="yonetici-input" style="width:70%;" name="yonetici[islem_yapan_personel]" value="<?php echo htmlspecialchars($veriler['islem_yapan_personel'] ?? ''); ?>"><br><br>
-                                <span style="font-size: 10px; color: #777;">(İmza)</span>
-                            </td>
-                            <td style="border-right: 1px solid #000; padding: 15px; vertical-align: top; width:25%;">
-                                <strong>Teslim Eden Personel</strong><br><br>
-                                Ad Soyad: <input type="text" class="yonetici-input" style="width:80%;" name="yonetici[teslim_eden_personel]" value="<?php echo htmlspecialchars($veriler['teslim_eden_personel'] ?? ''); ?>"><br><br>
-                                <span style="font-size: 10px; color: #777;">(İmza)</span>
-                            </td>
-                            <td style="padding: 15px; vertical-align: top; width:25%;">
-                                <strong>Teslim Alan Personel</strong><br><br>
-                                Ad Soyad: <input type="text" class="yonetici-input" style="width:80%;" name="yonetici[teslim_alan_personel]" value="<?php echo htmlspecialchars($veriler['teslim_alan_personel'] ?? ''); ?>"><br><br>
-                                <span style="font-size: 10px; color: #777;">(İmza)</span>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Yönetici Bilgilerini Kaydet</button>
-            </form>
-
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0072'): ?>
             <!-- FORM 72 YÖNETİCİ BİLGİ İŞLEM İŞLEMLERİ ONLINE DOLDURMA -->
-            <form method="POST">
+            <form method="POST" action="detay.php?id=<?php echo $id; ?>">
+                <input type="hidden" name="id" value="<?php echo $id; ?>">
                 <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
                     <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br>
                     Tarih: ____ / ____ / ________<br><br>
@@ -405,7 +347,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0077'): ?>
             <!-- FORM 77 KİŞİSEL WEB SÖZLEŞMESİ İMZA VE ONLINE BİLGİ İŞLEM KUTUSU -->
-            <form method="POST">
+            <form method="POST" action="detay.php?id=<?php echo $id; ?>">
+                <input type="hidden" name="id" value="<?php echo $id; ?>">
                 <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
                     <strong>PERSONEL</strong><br><br>
                     Tarih: ____ / ____ / ________<br><br>
@@ -465,7 +408,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0078'): ?>
             <!-- FORM 78 STATİK IP SÖZLEŞMESİ İMZA VE ONLINE BİLGİ İŞLEM KUTUSU -->
-            <form method="POST">
+            <form method="POST" action="detay.php?id=<?php echo $id; ?>">
+                <input type="hidden" name="id" value="<?php echo $id; ?>">
                 <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
                     <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br>
                     Tarih: ____ / ____ / ________<br><br>
@@ -508,7 +452,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0079'): ?>
             <!-- FORM 79 KURUMSAL WEB ADI SÖZLEŞMESİ İMZA VE ONLINE BİLGİ İŞLEM KUTUSU -->
-            <form method="POST">
+            <form method="POST" action="detay.php?id=<?php echo $id; ?>">
+                <input type="hidden" name="id" value="<?php echo $id; ?>">
                 <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
                     <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br>
                     Tarih: ____ / ____ / ________<br><br>
@@ -568,7 +513,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0080'): ?>
             <!-- FORM 80 MERNİS TAAHHÜTNAMESİ ONLINE BİRİM YETKİLİSİ DOLDURMA -->
-            <form method="POST">
+            <form method="POST" action="detay.php?id=<?php echo $id; ?>">
+                <input type="hidden" name="id" value="<?php echo $id; ?>">
                 <div style="text-align: center; font-weight: bold; background-color: #e8f4f8; color: #1b656e; padding: 10px; border-radius: 4px; margin-top: 25px;">
                     KİMLİK PAYLAŞIM SİSTEMİ (KPS) KULLANICI TAAHHÜTNAMESİ<br>
                     <span style="font-weight: normal; font-style: italic; font-size: 12px;">- Gizlilik Taahhüt Belgesi -</span>
@@ -627,7 +573,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0082'): ?>
             <!-- FORM 82 E-POSTA KULLANIM ONAYI VE BİLGİ İŞLEM DAİRESİNCE DOLDURULACAK ONLINE ALAN -->
-            <form method="POST">
+            <form method="POST" action="detay.php?id=<?php echo $id; ?>">
+                <input type="hidden" name="id" value="<?php echo $id; ?>">
                 <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; font-size: 12px;">
                     <p><strong>Yukarıda açıklanan e-posta kullanım kurallarının tümünü okudum ve kabul ediyorum.</strong></p>
                     <br>
