@@ -55,9 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['islem']) && $_POST['is
     }
 }
 
-// Silme İşlemi
-if (isset($_GET['islem']) && $_GET['islem'] == 'sil' && isset($_GET['id'])) {
+// Silme, Geri Yükleme ve Kalıcı Silme İşlemleri
+if (isset($_GET['islem']) && in_array($_GET['islem'], ['sil', 'geri_yukle', 'kalici_sil']) && isset($_GET['id'])) {
     $id = intval($_GET['id']);
+    $islem = $_GET['islem'];
+    $current_tab = $_GET['tab'] ?? 'tum';
     
     $basvuruCheck = $db->prepare("SELECT * FROM basvurular WHERE id = :id");
     $basvuruCheck->execute([':id' => $id]);
@@ -74,8 +76,25 @@ if (isset($_GET['islem']) && $_GET['islem'] == 'sil' && isset($_GET['id'])) {
         }
 
         if ($izinli) {
-            $sil = $db->prepare("DELETE FROM basvurular WHERE id = :id");
-            $sil->execute([':id' => $id]);
+            $yonlendirMesaj = "";
+            $logDetay = "";
+
+            if ($islem == 'sil') {
+                $guncelle = $db->prepare("UPDATE basvurular SET durum = 'Silindi' WHERE id = :id");
+                $guncelle->execute([':id' => $id]);
+                $logDetay = "Başvuruyu silinenlere taşıdı.";
+                $yonlendirMesaj = "silindi";
+            } elseif ($islem == 'geri_yukle') {
+                $guncelle = $db->prepare("UPDATE basvurular SET durum = 'Beklemede' WHERE id = :id");
+                $guncelle->execute([':id' => $id]);
+                $logDetay = "Başvuruyu geri yükledi.";
+                $yonlendirMesaj = "geriyuklendi";
+            } elseif ($islem == 'kalici_sil') {
+                $sil = $db->prepare("DELETE FROM basvurular WHERE id = :id");
+                $sil->execute([':id' => $id]);
+                $logDetay = "Başvuruyu kalıcı olarak sildi.";
+                $yonlendirMesaj = "kalicisilindi";
+            }
 
             // Log kaydet
             $logStmt = $db->prepare("INSERT INTO islem_loglari (yonetici_adi, basvuru_id, takip_no, islem_detayi) VALUES (:yadi, :bid, :tno, :idetay)");
@@ -83,10 +102,10 @@ if (isset($_GET['islem']) && $_GET['islem'] == 'sil' && isset($_GET['id'])) {
                 ':yadi'   => $admin_ad,
                 ':bid'    => $id,
                 ':tno'    => $bRow['takip_no'] ?: $id,
-                ':idetay' => "Başvuruyu sildi."
+                ':idetay' => $logDetay
             ]);
 
-            header("Location: panel.php?mesaj=silindi");
+            header("Location: panel.php?tab={$current_tab}&mesaj={$yonlendirMesaj}");
             exit;
         }
     }
@@ -118,7 +137,7 @@ if ($admin_rol === 'superadmin') {
     $izinli_formlar = $iStmt->fetchAll(PDO::FETCH_COLUMN);
 }
 
-// Sekme Filtresi (tum, bekleyen, onaylanan, reddedilen)
+// Sekme Filtresi (tum, bekleyen, onaylanan, reddedilen, silinenler)
 $tab = $_GET['tab'] ?? 'tum';
 $arama = $_GET['arama'] ?? '';
 $form_filtre = $_GET['form_filtre'] ?? '';
@@ -144,6 +163,11 @@ if ($tab == 'bekleyen') {
     $sql .= " AND durum = 'Onaylandı'";
 } elseif ($tab == 'reddedilen') {
     $sql .= " AND durum = 'Reddedildi'";
+} elseif ($tab == 'silinenler') {
+    $sql .= " AND durum = 'Silindi'";
+} else {
+    // tum
+    $sql .= " AND (durum IS NULL OR durum != 'Silindi')";
 }
 
 if (!empty($arama)) {
@@ -166,15 +190,16 @@ $basvurular = $stmt->fetchAll();
 
 // İstatistikler (İzinli formlara göre)
 if ($admin_rol === 'superadmin') {
-    $toplam_basvuru     = $db->query("SELECT COUNT(*) FROM basvurular")->fetchColumn();
+    $toplam_basvuru     = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum != 'Silindi'")->fetchColumn();
     $bekleyen_basvuru   = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Beklemede'")->fetchColumn();
     $onaylanan_basvuru  = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Onaylandı'")->fetchColumn();
     $reddedilen_basvuru = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Reddedildi'")->fetchColumn();
+    $silinen_basvuru    = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='Silindi'")->fetchColumn();
 } else {
     if (count($izinli_formlar) > 0) {
         $inQuery = implode(',', array_fill(0, count($izinli_formlar), '?'));
         
-        $s1 = $db->prepare("SELECT COUNT(*) FROM basvurular WHERE form_kodu IN ($inQuery)");
+        $s1 = $db->prepare("SELECT COUNT(*) FROM basvurular WHERE durum != 'Silindi' AND form_kodu IN ($inQuery)");
         $s1->execute($izinli_formlar);
         $toplam_basvuru = $s1->fetchColumn();
 
@@ -189,11 +214,16 @@ if ($admin_rol === 'superadmin') {
         $s4 = $db->prepare("SELECT COUNT(*) FROM basvurular WHERE durum='Reddedildi' AND form_kodu IN ($inQuery)");
         $s4->execute($izinli_formlar);
         $reddedilen_basvuru = $s4->fetchColumn();
+
+        $s5 = $db->prepare("SELECT COUNT(*) FROM basvurular WHERE durum='Silindi' AND form_kodu IN ($inQuery)");
+        $s5->execute($izinli_formlar);
+        $silinen_basvuru = $s5->fetchColumn();
     } else {
         $toplam_basvuru = 0;
         $bekleyen_basvuru = 0;
         $onaylanan_basvuru = 0;
         $reddedilen_basvuru = 0;
+        $silinen_basvuru = 0;
     }
 }
 ?>
@@ -269,6 +299,38 @@ if ($admin_rol === 'superadmin') {
     </div>
 
     <div class="container">
+        <!-- BİLDİRİM MESAJLARI -->
+        <?php if (isset($_GET['mesaj'])): ?>
+            <?php 
+                $mesajTip = $_GET['mesaj'];
+                $mesajMetni = "";
+                $mesajRenk = "#27ae60"; 
+                $mesajArkaplan = "#e8f8f5";
+                $mesajKenarlik = "#27ae60";
+
+                if ($mesajTip == 'silindi') {
+                    $mesajMetni = "✓ Başvuru başarıyla silinerek <strong>Silinenler</strong> sekmesine taşındı.";
+                    $mesajRenk = "#d93025"; 
+                    $mesajArkaplan = "#fce8e6";
+                    $mesajKenarlik = "#d93025";
+                } elseif ($mesajTip == 'geriyuklendi') {
+                    $mesajMetni = "✓ Başvuru başarıyla geri yüklendi ve aktif listeye alındı.";
+                } elseif ($mesajTip == 'kalicisilindi') {
+                    $mesajMetni = "✓ Başvuru kalıcı olarak sistemden silindi.";
+                    $mesajRenk = "#d93025";
+                    $mesajArkaplan = "#fce8e6";
+                    $mesajKenarlik = "#d93025";
+                } elseif ($mesajTip == 'guncellendi') {
+                    $mesajMetni = "✓ Başvuru durumu başarıyla güncellendi.";
+                }
+            ?>
+            <?php if (!empty($mesajMetni)): ?>
+                <div style="background: <?php echo $mesajArkaplan; ?>; color: <?php echo $mesajRenk; ?>; border-left: 5px solid <?php echo $mesajKenarlik; ?>; padding: 12px 20px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; font-weight: 500;">
+                    <?php echo $mesajMetni; ?>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+
         <!-- SEKME MENÜSÜ -->
         <div class="tab-menu">
             <a href="panel.php?tab=tum" class="tab-btn <?php echo $tab=='tum'?'active':''; ?>">
@@ -282,6 +344,9 @@ if ($admin_rol === 'superadmin') {
             </a>
             <a href="panel.php?tab=reddedilen" class="tab-btn <?php echo $tab=='reddedilen'?'active':''; ?>">
                  Reddedilenler <span class="tab-badge"><?php echo $reddedilen_basvuru; ?></span>
+            </a>
+            <a href="panel.php?tab=silinenler" class="tab-btn <?php echo $tab=='silinenler'?'active':''; ?>">
+                 Silinenler <span class="tab-badge"><?php echo $silinen_basvuru; ?></span>
             </a>
         </div>
 
@@ -334,11 +399,15 @@ if ($admin_rol === 'superadmin') {
                                 <td><?php echo htmlspecialchars($b['birim'] ?: '-'); ?></td>
                                 <td><?php echo date('d.m.Y H:i', strtotime($b['kayit_tarihi'])); ?></td>
                                 <td>
-                                    <select class="durum-select" onchange="durumDegistir(<?php echo $b['id']; ?>, this.value)">
-                                        <option value="Beklemede" <?php echo $b['durum']=='Beklemede'?'selected':''; ?>>Beklemede</option>
-                                        <option value="Onaylandı" <?php echo $b['durum']=='Onaylandı'?'selected':''; ?>>Onaylandı</option>
-                                        <option value="Reddedildi" <?php echo $b['durum']=='Reddedildi'?'selected':''; ?>>Reddedildi</option>
-                                    </select>
+                                    <?php if ($b['durum'] == 'Silindi'): ?>
+                                        <span class="status-badge" style="background:#fce8e6; color:#d93025; border:1px solid #d93025; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; display: inline-block;">Silindi</span>
+                                    <?php else: ?>
+                                        <select class="durum-select" onchange="durumDegistir(<?php echo $b['id']; ?>, this.value)">
+                                            <option value="Beklemede" <?php echo $b['durum']=='Beklemede'?'selected':''; ?>>Beklemede</option>
+                                            <option value="Onaylandı" <?php echo $b['durum']=='Onaylandı'?'selected':''; ?>>Onaylandı</option>
+                                            <option value="Reddedildi" <?php echo $b['durum']=='Reddedildi'?'selected':''; ?>>Reddedildi</option>
+                                        </select>
+                                    <?php endif; ?>
 
                                     <?php if($b['durum'] == 'Reddedildi' && !empty($b['red_sebebi'])): ?>
                                         <div style="font-size:11px; color:#d93025; margin-top:3px; max-width:180px; word-wrap:break-word;">
@@ -346,9 +415,14 @@ if ($admin_rol === 'superadmin') {
                                         </div>
                                     <?php endif; ?>
                                 </td>
-                                <td style="text-align:center;">
+                                <td style="text-align:center; white-space:nowrap;">
                                     <a href="detay.php?id=<?php echo $b['id']; ?>" class="btn-detay">Detay Gör</a>
-                                    <a href="panel.php?islem=sil&id=<?php echo $b['id']; ?>" class="btn-sil" onclick="return confirm('Bu başvuruyu silmek istediğinize emin misiniz?');">Sil</a>
+                                    <?php if ($b['durum'] == 'Silindi'): ?>
+                                        <a href="panel.php?islem=geri_yukle&id=<?php echo $b['id']; ?>&tab=<?php echo $tab; ?>" class="btn-detay" style="background:#27ae60; margin-left:5px;">Geri Yükle</a>
+                                        <a href="panel.php?islem=kalici_sil&id=<?php echo $b['id']; ?>&tab=<?php echo $tab; ?>" class="btn-sil" onclick="return confirm('Bu başvuruyu kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz!');">Kalıcı Sil</a>
+                                    <?php else: ?>
+                                        <a href="panel.php?islem=sil&id=<?php echo $b['id']; ?>&tab=<?php echo $tab; ?>" class="btn-sil" onclick="return confirm('Bu başvuruyu silmek istediğinize emin misiniz?');">Sil</a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

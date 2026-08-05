@@ -6,7 +6,7 @@ $basvuru = null;
 $hata = "";
 
 if (!empty($takip_no)) {
-    $stmt = $db->prepare("SELECT * FROM basvurular WHERE takip_no = :tno");
+    $stmt = $db->prepare("SELECT * FROM basvurular WHERE takip_no = :tno AND (durum IS NULL OR durum != 'Silindi')");
     $stmt->execute([':tno' => $takip_no]);
     $basvuru = $stmt->fetch();
 
