@@ -443,7 +443,7 @@
         </form>
     </div>
 
-    <!-- KDYS.FR.0072 - Bilgi İşlem DB Kurumsal E-Posta Talep Formu -->
+    <!-- KDYS.FR.0072 - Bilgi İşlem DB Kurumsal E-Posta Talep Form -->
     <div id="form_0072.php" class="gizli-form">
         <h2>KDYS.FR.0072 - Bilgi İşlem DB Kurumsal E-Posta Talep Formu</h2>
         <form method="POST" action="islem.php">
