@@ -2,12 +2,11 @@
 session_start();
 $hata = "";
 
-// Yönetici Giriş Kontrolü (Şimdilik statik, ileride veritabanına bağlanacak)
+// Yönetici Giriş Kontrolü (Giriş bilgileri: Kullanıcı Adı: admin | Şifre: 123456)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $kullanici = $_POST['kullanici_adi'] ?? '';
     $sifre = $_POST['sifre'] ?? '';
 
-    // Geçici test bilgileri (Kullanıcı Adı: admin | Şifre: 123456)
     if ($kullanici == 'admin' && $sifre == '123456') {
         $_SESSION['admin_giris'] = true;
         header("Location: panel.php"); // Giriş başarılıysa panel.php'ye yönlendir
