@@ -35,7 +35,10 @@ try {
         FOREIGN KEY (yonetici_id) REFERENCES yoneticiler(id) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-    // Varsayılan Yöneticilerin Oluşturulması (Varsa eklemez)
+    // Eski 'admin' veya gereksiz hesapları otomatik temizle
+    $db->exec("DELETE FROM yoneticiler WHERE kullanici_adi NOT IN ('superadmin', 'admin1', 'admin2')");
+
+    // Varsayılan Yöneticilerin Oluşturulması (superadmin, admin1, admin2)
     $varsayilan_yoneticiler = [
         ['kullanici_adi' => 'superadmin', 'sifre' => '123456', 'ad_soyad' => 'Süper Yönetici', 'rol' => 'superadmin'],
         ['kullanici_adi' => 'admin1',      'sifre' => '123456', 'ad_soyad' => 'Yönetici 1',     'rol' => 'admin'],
