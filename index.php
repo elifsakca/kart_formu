@@ -111,7 +111,6 @@
                 <option value="form_0079.php">KDYS.FR.0079 - Bilgi İşlem DB Kurumsal Web Adı ve Alanı Sözleşmesi</option>
                 <option value="form_0080.php">KDYS.FR.0080 - Bilgi İşlem DB Mernis Taahhütnamesi</option>
                 <option value="form_0082.php">KDYS.FR.0082 - Bilgi İşlem DB Personel Elektronik Posta Başvuru Formu</option>
-                <option value="form_0087.php">KDYS.FR.0087 - Bilgi İşlem UAM Mernis Taahhütnamesi</option>
             </optgroup>
         </select>
         
@@ -639,9 +638,7 @@
             
             <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
         </form>
-    </div>
-
-    <!-- KDYS.FR.0077 - Bilgi İşlem DB Kişisel Web Adı ve Alanı Sözleşmesi -->
+    </div>    <!-- KDYS.FR.0077 - Bilgi İşlem DB Kişisel Web Adı ve Alanı Sözleşmesi -->
     <div id="form_0077.php" class="gizli-form">
         <h2>KDYS.FR.0077 - Bilgi İşlem DB Kişisel Web Adı ve Alanı Sözleşmesi</h2>
         <form method="POST" action="islem.php">
@@ -979,59 +976,6 @@
         </form>
     </div>
 
-    <!-- KDYS.FR.0087 - Bilgi İşlem UAM Mernis Taahhütnamesi -->
-    <div id="form_0087.php" class="gizli-form">
-        <h2>KDYS.FR.0087 - Bilgi İşlem UAM Mernis Taahhütnamesi</h2>
-        <form method="POST" action="islem.php">
-            <input type="hidden" name="form_kodu" value="KDYS.FR.0087">
-            <input type="hidden" name="form_adi" value="Bilgi İşlem UAM Mernis Taahhütnamesi">
-
-            <div class="resmi-yazi" style="text-align: center; font-weight: bold; background-color: #e8f4f8; color: #1b656e;">
-                KİMLİK PAYLAŞIM SİSTEMİ (KPS) KULLANICI TAAHHÜTNAMESİ<br>
-                <span style="font-weight: normal; font-style: italic; font-size: 12px;">- Gizlilik Taahhüt Belgesi -</span>
-            </div>
-
-            <div class="resmi-yazi">
-                <strong>AÇIKLAMA:</strong> 10/07/2005 tarih ve 25871 sayılı Resmi Gazete'de yayımlanan T.C. Nüfus ve Vatandaşlık İşleri Genel Müdürlüğüne ait Kimlik Paylaşım Sistemi (KPS) Uygulama Yönetmeliği kapsamında Bakanlığımız ile ilgili iş ve işlem süreçlerindeki vatandaşlarımızın nüfus ve adres bilgilerinin paylaşımı hakkında "ikili anlaşma" imzalanmıştır. İlgili Yönetmeliğe ilişkin usul ve esaslar içerisinde yer alan "Özel Hayatın Gizliliği" ve "Kişisel Verilerin Korunması" hükümleriyle Balıkesir Üniversitesine ve görevli personele bazı sorumluluklar getirilmiştir. Bu sorumlulukların paylaşımı çerçevesinde iş süreçlerinde KPS üzerinden nüfus ve adres bilgilerine erişen çalışanlarımız (UAM personeli dahil) için aşağıdaki taahhütname hazırlanmıştır.
-            </div>
-
-            <div class="resmi-yazi" style="font-weight: bold;">
-                TAAHHÜTNAME: Anayasamızın 20. maddesinde "Herkes, özel hayatına ve aile hayatına saygı gösterilmesini isteme hakkına sahiptir. Özel hayatın ve aile hayatının gizliliğine dokunulamaz." denilmektedir. Bu kapsamda KPS'den elde edilen tüm nüfus ve adres bilgilerini sadece T.C. Balıkesir Üniversitesi ve bağlı birimlerdeki iş süreçleri içerisinde kullanacağımı, kullanıcı parolamın güvenliğini sağlayacağımı, aksi takdirde idari, hukuki ve mali sorumluluğun tarafıma ait olduğunu beyan ve taahhüt ederim.
-            </div>
-
-            <div class="form-grup">
-                <label>Taahhüt Tarihi *</label>
-                <input type="date" name="taahhut_tarihi" required>
-            </div>
-
-            <h3 style="color:#1b656e; font-size:15px; border-bottom:1px solid #eee; padding-bottom:5px; margin-top:25px;">Personel Bilgisi</h3>
-            <div class="form-satir">
-                <div class="form-grup">
-                    <label>Adı Soyadı *</label>
-                    <input type="text" name="personel_ad_soyad" required>
-                </div>
-                <div class="form-grup">
-                    <label>Kurum Sicili, Unvanı *</label>
-                    <input type="text" name="personel_sicil_unvan" required>
-                </div>
-            </div>
-            <div class="form-satir">
-                <div class="form-grup">
-                    <label>T.C. Kimlik No *</label>
-                    <input type="text" name="personel_tc_no" maxlength="11" required>
-                </div>
-                <div class="form-grup">
-                    <label>E-posta *</label>
-                    <input type="email" name="personel_eposta" required>
-                </div>
-            </div>
-            <div class="form-grup">
-                <label>Birim *</label>
-                <input type="text" name="personel_birim" placeholder="Uzaktan Ağ ve Merkez (UAM) ..." required>
-            </div>
-
-            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Taahhütnameyi Gönder</button>
-        </form>
     </div>
 
     <!-- JavaScript Kodları -->

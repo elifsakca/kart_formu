@@ -143,7 +143,6 @@ $onaylanan_basvuru = $db->query("SELECT COUNT(*) FROM basvurular WHERE durum='On
                 <option value="KDYS.FR.0079" <?php echo $form_filtre=='KDYS.FR.0079'?'selected':''; ?>>KDYS.FR.0079 - Kurumsal Web Sözleşmesi</option>
                 <option value="KDYS.FR.0080" <?php echo $form_filtre=='KDYS.FR.0080'?'selected':''; ?>>KDYS.FR.0080 - Mernis Taahhütnamesi</option>
                 <option value="KDYS.FR.0082" <?php echo $form_filtre=='KDYS.FR.0082'?'selected':''; ?>>KDYS.FR.0082 - Personel E-Posta Başvuru</option>
-                <option value="KDYS.FR.0087" <?php echo $form_filtre=='KDYS.FR.0087'?'selected':''; ?>>KDYS.FR.0087 - UAM Mernis Taahhütnamesi</option>
             </select>
             <button type="submit" class="btn-ara">Filtrele</button>
             <?php if(!empty($arama) || !empty($form_filtre)): ?>

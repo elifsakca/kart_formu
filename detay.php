@@ -18,6 +18,22 @@ if (!$basvuru) {
 }
 
 $veriler = json_decode($basvuru['form_verileri'], true) ?? [];
+
+// YÖNETİCİ TARAFINDAN GİRİLEN BİLGİLERİ KAYDETME İŞLEMİ
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
+    $yonetici_verileri = $_POST['yonetici'] ?? [];
+    
+    foreach ($yonetici_verileri as $k => $v) {
+        $veriler[$k] = $v;
+    }
+    
+    $yeni_json = json_encode($veriler, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    $updateStmt = $db->prepare("UPDATE basvurular SET form_verileri = :fv WHERE id = :id");
+    $updateStmt->execute([':fv' => $yeni_json, ':id' => $id]);
+    
+    header("Location: detay.php?id={$id}&kaydedildi=1");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -45,10 +61,51 @@ $veriler = json_decode($basvuru['form_verileri'], true) ?? [];
         
         .status-badge { padding: 6px 14px; border-radius: 15px; font-size: 13px; font-weight: bold; display: inline-block; background: #e8f4f8; color: #1b656e; }
 
+        /* Yönetici Online Doldurma Alanı Stilleri */
+        .yonetici-input {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid #1b656e;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 13px;
+            background-color: #fff;
+        }
+        .yonetici-input:focus {
+            outline: none;
+            border-color: #27ae60;
+            box-shadow: 0 0 5px rgba(39, 174, 96, 0.4);
+        }
+        .btn-yonetici-kaydet {
+            background: #1b656e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        .btn-yonetici-kaydet:hover {
+            background: #144d54;
+        }
+
         @media print {
-            .noprint { display: none !important; }
+            .noprint, .btn-yonetici-kaydet, .kayit-bildirimi { display: none !important; }
             body { background: white; }
             .paper { box-shadow: none; margin: 0; width: 100%; max-width: 100%; padding: 0; }
+            .yonetici-input {
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+                font-weight: bold !important;
+                color: #000 !important;
+                appearance: none !important;
+                -webkit-appearance: none !important;
+            }
         }
     </style>
 </head>
@@ -61,6 +118,12 @@ $veriler = json_decode($basvuru['form_verileri'], true) ?? [];
             <button onclick="window.print()">Yazdır / PDF Çıktısı Al</button>
         </div>
     </div>
+
+    <?php if(isset($_GET['kaydedildi']) && $_GET['kaydedildi'] == 1): ?>
+        <div class="kayit-bildirimi" style="max-width:900px; margin:15px auto -15px auto; background:#d4edda; color:#155724; padding:12px 20px; border-radius:5px; border-left:5px solid #28a745; font-weight:bold;">
+            ✓ Yönetici tarafından girilen bilgiler başarıyla veritabanına kaydedildi!
+        </div>
+    <?php endif; ?>
 
     <div class="paper">
         <div class="paper-header">
@@ -110,7 +173,7 @@ $veriler = json_decode($basvuru['form_verileri'], true) ?? [];
             <p><strong>Yüklenen Fotoğraf / Ek Belge:</strong> <a href="<?php echo htmlspecialchars($basvuru['fotograf_yolu']); ?>" target="_blank">Görüntüle / İndir</a></p>
         <?php endif; ?>
 
-        <!-- FORMA ÖZEL İMZA VE YÖNETİCİ DOLDURMA ALANLARI (YAZDIRMA / PDF ÇIKTISI İÇİN) -->
+        <!-- FORMA ÖZEL İMZA VE YÖNETİCİ DOLDURMA ALANLARI -->
 
         <?php if ($basvuru['form_kodu'] == 'F-52'): ?>
             <!-- F-52 İMZA ALANI -->
@@ -177,97 +240,115 @@ $veriler = json_decode($basvuru['form_verileri'], true) ?? [];
             </div>
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0071'): ?>
-            <!-- FORM 71 YÖNETİCİ DEĞERLENDİRME VE İMZA ALANI -->
-            <h3 style="color:#1b656e; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Teknik Değerlendirme ve İdare İşlemleri (Yönetici Tarafından Doldurulacaktır)</h3>
-            <table class="grid-table" style="margin-top: 10px;">
-                <tr>
-                    <th style="width:25%;">Tespit Edilen Durum</th>
-                    <td style="width:45%; height:40px;"></td>
-                    <th style="width:15%;">Antivirüs Var</th>
-                    <td>[ &nbsp; ] Evet &nbsp;&nbsp; [ &nbsp; ] Hayır</td>
-                </tr>
-                <tr>
-                    <th>Arıza Bakım Tesis Sebebi</th>
-                    <td colspan="3" style="height:35px;"></td>
-                </tr>
-                <tr>
-                    <th>Yapılan İşlemler</th>
-                    <td colspan="3" style="height:45px;"></td>
-                </tr>
-                <tr>
-                    <th>Kullanılan Malzemeler</th>
-                    <td colspan="3" style="height:35px;"></td>
-                </tr>
-            </table>
-
-            <div style="margin-top: 20px; border: 1px solid #000;">
-                <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
-                    <tr style="background:#f5f5f5; font-weight:bold;">
-                        <td colspan="2" style="border-right: 1px solid #000; padding: 6px;">İş Bitirme</td>
-                        <td colspan="2" style="padding: 6px;">Teslim (Cihaz Donanım Destek Grubuna Bırakıldıysa)</td>
+            <!-- FORM 71 YÖNETİCİ ONLINE DOLDURULABİLİR TEKNİK DEĞERLENDİRME ALANI -->
+            <form method="POST">
+                <h3 style="color:#1b656e; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Teknik Değerlendirme ve İdare İşlemleri (Yönetici Tarafından Doldurulabilir)</h3>
+                <table class="grid-table" style="margin-top: 10px;">
+                    <tr>
+                        <th style="width:25%;">Tespit Edilen Durum</th>
+                        <td style="width:45%;"><input type="text" class="yonetici-input" name="yonetici[tespit_edilen_durum]" value="<?php echo htmlspecialchars($veriler['tespit_edilen_durum'] ?? ''); ?>" placeholder="Tespit edilen durum..."></td>
+                        <th style="width:15%;">Antivirüs Var</th>
+                        <td>
+                            <select class="yonetici-input" name="yonetici[antivirus_durumu]">
+                                <option value="">Seçiniz</option>
+                                <option value="Evet" <?php echo ($veriler['antivirus_durumu'] ?? '') == 'Evet' ? 'selected' : ''; ?>>Evet</option>
+                                <option value="Hayır" <?php echo ($veriler['antivirus_durumu'] ?? '') == 'Hayır' ? 'selected' : ''; ?>>Hayır</option>
+                            </select>
+                        </td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="border-right: 1px solid #000; padding: 15px; vertical-align: top; width:50%;">
-                            <strong>İşlemi Yapan Personel</strong><br><br>
-                            Ad Soyad / Tarih: ______________________<br><br>
-                            İmza: ______________________
-                        </td>
-                        <td style="border-right: 1px solid #000; padding: 15px; vertical-align: top; width:25%;">
-                            <strong>Teslim Eden Personel</strong><br><br>
-                            Ad Soyad: _______________<br><br>
-                            İmza: _______________
-                        </td>
-                        <td style="padding: 15px; vertical-align: top; width:25%;">
-                            <strong>Teslim Alan Personel</strong><br><br>
-                            Ad Soyad: _______________<br><br>
-                            İmza: _______________
-                        </td>
+                        <th>Arıza Bakım Tesis Sebebi</th>
+                        <td colspan="3"><input type="text" class="yonetici-input" name="yonetici[ariza_bakim_sebebi]" value="<?php echo htmlspecialchars($veriler['ariza_bakim_sebebi'] ?? ''); ?>"></td>
+                    </tr>
+                    <tr>
+                        <th>Yapılan İşlemler</th>
+                        <td colspan="3"><textarea class="yonetici-input" name="yonetici[yapilan_islemler]" rows="2"><?php echo htmlspecialchars($veriler['yapilan_islemler'] ?? ''); ?></textarea></td>
+                    </tr>
+                    <tr>
+                        <th>Kullanılan Malzemeler</th>
+                        <td colspan="3"><input type="text" class="yonetici-input" name="yonetici[kullanilan_malzemeler]" value="<?php echo htmlspecialchars($veriler['kullanilan_malzemeler'] ?? ''); ?>"></td>
                     </tr>
                 </table>
-            </div>
+
+                <div style="margin-top: 20px; border: 1px solid #000;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
+                        <tr style="background:#f5f5f5; font-weight:bold;">
+                            <td colspan="2" style="border-right: 1px solid #000; padding: 6px;">İş Bitirme</td>
+                            <td colspan="2" style="padding: 6px;">Teslim (Cihaz Donanım Destek Grubuna Bırakıldıysa)</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border-right: 1px solid #000; padding: 15px; vertical-align: top; width:50%;">
+                                <strong>İşlemi Yapan Personel</strong><br><br>
+                                Ad Soyad / Tarih: <input type="text" class="yonetici-input" style="width:70%;" name="yonetici[islem_yapan_personel]" value="<?php echo htmlspecialchars($veriler['islem_yapan_personel'] ?? ''); ?>"><br><br>
+                                <span style="font-size: 10px; color: #777;">(İmza)</span>
+                            </td>
+                            <td style="border-right: 1px solid #000; padding: 15px; vertical-align: top; width:25%;">
+                                <strong>Teslim Eden Personel</strong><br><br>
+                                Ad Soyad: <input type="text" class="yonetici-input" style="width:80%;" name="yonetici[teslim_eden_personel]" value="<?php echo htmlspecialchars($veriler['teslim_eden_personel'] ?? ''); ?>"><br><br>
+                                <span style="font-size: 10px; color: #777;">(İmza)</span>
+                            </td>
+                            <td style="padding: 15px; vertical-align: top; width:25%;">
+                                <strong>Teslim Alan Personel</strong><br><br>
+                                Ad Soyad: <input type="text" class="yonetici-input" style="width:80%;" name="yonetici[teslim_alan_personel]" value="<?php echo htmlspecialchars($veriler['teslim_alan_personel'] ?? ''); ?>"><br><br>
+                                <span style="font-size: 10px; color: #777;">(İmza)</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Yönetici Bilgilerini Kaydet</button>
+            </form>
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0072'): ?>
-            <!-- FORM 72 YÖNETİCİ VEYA BİLGİ İŞLEM İŞLEMLERİ -->
-            <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
-                <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br>
-                Tarih: ____ / ____ / ________<br><br>
-                İmza: ______________________
-            </div>
+            <!-- FORM 72 YÖNETİCİ BİLGİ İŞLEM İŞLEMLERİ ONLINE DOLDURMA -->
+            <form method="POST">
+                <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
+                    <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br>
+                    Tarih: ____ / ____ / ________<br><br>
+                    İmza: ______________________
+                </div>
 
-            <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
-                <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Bilgi İşlem Dairesince Doldurulacaktır)</h4>
-                <table class="grid-table" style="margin-bottom:0;">
-                    <tr>
-                        <th>İşlem Tarihi *</th>
-                        <td>____ / ____ / ________</td>
-                    </tr>
-                    <tr>
-                        <th>E-posta Adresi *</th>
-                        <td>.............................................@balikesir.edu.tr</td>
-                    </tr>
-                    <tr>
-                        <th>E-posta Adresinin Geçerlilik Süresi *</th>
-                        <td>[ &nbsp; ] Süresiz &nbsp;&nbsp;&nbsp;&nbsp; ____ / ____ / ________ (ay/gün/yıl)</td>
-                    </tr>
-                    <tr>
-                        <th>Kullanıcı Şifresi *</th>
-                        <td>.............................................</td>
-                    </tr>
-                    <tr>
-                        <th>İşlemi Yapan Personel ve İmzası *</th>
-                        <td>Ad Soyad: ............................................. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; İmza: _______________</td>
-                    </tr>
-                </table>
-            </div>
+                <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
+                    <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
+                    <table class="grid-table" style="margin-bottom:0;">
+                        <tr>
+                            <th style="width:30%;">İşlem Tarihi *</th>
+                            <td><input type="date" class="yonetici-input" name="yonetici[islem_tarihi]" value="<?php echo htmlspecialchars($veriler['islem_tarihi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>E-posta Adresi *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[acilan_eposta]" value="<?php echo htmlspecialchars($veriler['acilan_eposta'] ?? ''); ?>" placeholder="örnek@balikesir.edu.tr"></td>
+                        </tr>
+                        <tr>
+                            <th>E-posta Adresinin Geçerlilik Süresi *</th>
+                            <td>
+                                <select class="yonetici-input" name="yonetici[eposta_gecerlilik]" style="width:30%; display:inline-block;">
+                                    <option value="Süresiz" <?php echo ($veriler['eposta_gecerlilik'] ?? '') == 'Süresiz' ? 'selected' : ''; ?>>Süresiz</option>
+                                    <option value="Süreli" <?php echo ($veriler['eposta_gecerlilik'] ?? '') == 'Süreli' ? 'selected' : ''; ?>>Süreli</option>
+                                </select>
+                                <input type="date" class="yonetici-input" name="yonetici[eposta_gecerlilik_tarihi]" value="<?php echo htmlspecialchars($veriler['eposta_gecerlilik_tarihi'] ?? ''); ?>" style="width:65%; display:inline-block;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Kullanıcı Şifresi *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[kullanici_sifresi]" value="<?php echo htmlspecialchars($veriler['kullanici_sifresi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>İşlemi Yapan Personel ve İmzası *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[islem_yapan_personel]" value="<?php echo htmlspecialchars($veriler['islem_yapan_personel'] ?? ''); ?>" placeholder="Ad Soyad"></td>
+                        </tr>
+                    </table>
+                    <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Yönetici Bilgilerini Kaydet</button>
+                </div>
+            </form>
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0073'): ?>
-            <!-- FORM 73 TESLİM ALAN BEYANI VE İMZA BOŞLUĞU -->
+            <!-- FORM 73 TESLİM ALAN BEYANI VE İMZA BOŞLUĞU (FIZIKI ÇIKTI İÇİN BOŞ YER) -->
             <div style="margin-top: 25px; font-size: 13px; line-height: 1.6; background: #fafafa; padding: 15px; border: 1px solid #ddd; text-align: justify;">
                 Yukarıda belirtilen tarihte talep etmiş olduğum e-imza mini kart okuyucuyu TÜBİTAK Bilişim ve Bilgi Güvenliği İleri Teknolojileri Araştırma Merkezi firmasından tarafımca teslim aldığımı beyan ederim.
             </div>
             <div style="margin-top: 25px; border: 1px solid #000; padding: 20px; max-width: 450px; margin-left: auto; font-size: 13px;">
                 <h4 style="margin:0 0 10px 0; border-bottom:1px solid #000; padding-bottom:5px;">TESLİM ALAN BİLGİLERİ</h4>
-                <p style="margin:5px 0;"><strong>Adı Soyadı :</strong> <?php echo htmlspecialchars($basvuru['ad_soyad']); ?></p>
+                <p style="margin:5px 0;"><strong>Adı Soyadı :</strong> ____________________________________</p>
                 <p style="margin:5px 0;"><strong>Görevi / Unvanı :</strong> ____________________________________</p>
                 <p style="margin:15px 0 5px 0;"><strong>İmzası :</strong> ____________________________________</p>
             </div>
@@ -311,214 +392,257 @@ $veriler = json_decode($basvuru['form_verileri'], true) ?? [];
             </div>
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0077'): ?>
-            <!-- FORM 77 KİŞİSEL WEB SÖZLEŞMESİ İMZA VE BİLGİ İŞLEM KUTUSU -->
-            <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
-                <strong>PERSONEL</strong><br><br>
-                Tarih: ____ / ____ / ________<br><br>
-                İmza: ______________________
-            </div>
+            <!-- FORM 77 KİŞİSEL WEB SÖZLEŞMESİ İMZA VE ONLINE BİLGİ İŞLEM KUTUSU -->
+            <form method="POST">
+                <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
+                    <strong>PERSONEL</strong><br><br>
+                    Tarih: ____ / ____ / ________<br><br>
+                    İmza: ______________________
+                </div>
 
-            <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
-                <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Bilgi İşlem Dairesince Doldurulacaktır)</h4>
-                <table class="grid-table" style="margin-bottom:0;">
-                    <tr>
-                        <th>İşlem Tarihi *</th>
-                        <td>____ / ____ / ________</td>
-                    </tr>
-                    <tr>
-                        <th>Web Alanı Adı *</th>
-                        <td>.............................................baun.edu.tr</td>
-                    </tr>
-                    <tr>
-                        <th>Veri Tabanı Kullanılacak mı? *</th>
-                        <td>[ &nbsp; ] Evet &nbsp;&nbsp;&nbsp;&nbsp; [ &nbsp; ] Hayır</td>
-                    </tr>
-                    <tr>
-                        <th>Sayfanın Geçerlilik Süresi *</th>
-                        <td>[ &nbsp; ] Süresiz &nbsp;&nbsp;&nbsp;&nbsp; ____ / ____ / ________ (Ay/Gün)</td>
-                    </tr>
-                    <tr>
-                        <th>Kullanıcı Adı *</th>
-                        <td>.............................................</td>
-                    </tr>
-                    <tr>
-                        <th>Kullanıcı Şifresi *</th>
-                        <td>.............................................</td>
-                    </tr>
-                    <tr>
-                        <th>DNS Tanımı *</th>
-                        <td>.............................................</td>
-                    </tr>
-                    <tr>
-                        <th>İşlemi Yapan Personel ve İmzası *</th>
-                        <td>Ad Soyad: ............................................. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; İmza: _______________</td>
-                    </tr>
-                </table>
-            </div>
+                <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
+                    <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
+                    <table class="grid-table" style="margin-bottom:0;">
+                        <tr>
+                            <th style="width:30%;">İşlem Tarihi *</th>
+                            <td><input type="date" class="yonetici-input" name="yonetici[islem_tarihi]" value="<?php echo htmlspecialchars($veriler['islem_tarihi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>Web Alanı Adı *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[web_alani_adi]" value="<?php echo htmlspecialchars($veriler['web_alani_adi'] ?? ''); ?>" placeholder="kullanici.baun.edu.tr"></td>
+                        </tr>
+                        <tr>
+                            <th>Veri Tabanı Kullanılacak mı? *</th>
+                            <td>
+                                <select class="yonetici-input" name="yonetici[veritabani_kullanilacak_mi]">
+                                    <option value="Evet" <?php echo ($veriler['veritabani_kullanilacak_mi'] ?? '') == 'Evet' ? 'selected' : ''; ?>>Evet</option>
+                                    <option value="Hayır" <?php echo ($veriler['veritabani_kullanilacak_mi'] ?? '') == 'Hayır' ? 'selected' : ''; ?>>Hayır</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Sayfanın Geçerlilik Süresi *</th>
+                            <td>
+                                <select class="yonetici-input" name="yonetici[sayfa_gecerlilik]" style="width:30%; display:inline-block;">
+                                    <option value="Süresiz" <?php echo ($veriler['sayfa_gecerlilik'] ?? '') == 'Süresiz' ? 'selected' : ''; ?>>Süresiz</option>
+                                    <option value="Süreli" <?php echo ($veriler['sayfa_gecerlilik'] ?? '') == 'Süreli' ? 'selected' : ''; ?>>Süreli</option>
+                                </select>
+                                <input type="date" class="yonetici-input" name="yonetici[sayfa_gecerlilik_tarihi]" value="<?php echo htmlspecialchars($veriler['sayfa_gecerlilik_tarihi'] ?? ''); ?>" style="width:65%; display:inline-block;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Kullanıcı Adı *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[kullanici_adi]" value="<?php echo htmlspecialchars($veriler['kullanici_adi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>Kullanıcı Şifresi *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[kullanici_sifresi]" value="<?php echo htmlspecialchars($veriler['kullanici_sifresi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>DNS Tanımı *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[dns_tanimi]" value="<?php echo htmlspecialchars($veriler['dns_tanimi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>İşlemi Yapan Personel ve İmzası *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[islem_yapan_personel]" value="<?php echo htmlspecialchars($veriler['islem_yapan_personel'] ?? ''); ?>" placeholder="Ad Soyad"></td>
+                        </tr>
+                    </table>
+                    <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Yönetici Bilgilerini Kaydet</button>
+                </div>
+            </form>
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0078'): ?>
-            <!-- FORM 78 STATİK IP SÖZLEŞMESİ İMZA VE BİLGİ İŞLEM KUTUSU -->
-            <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
-                <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br>
-                Tarih: ____ / ____ / ________<br><br>
-                İmza: ______________________
-            </div>
+            <!-- FORM 78 STATİK IP SÖZLEŞMESİ İMZA VE ONLINE BİLGİ İŞLEM KUTUSU -->
+            <form method="POST">
+                <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
+                    <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br>
+                    Tarih: ____ / ____ / ________<br><br>
+                    İmza: ______________________
+                </div>
 
-            <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
-                <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Bilgi İşlem Dairesince Doldurulacaktır)</h4>
-                <table class="grid-table" style="margin-bottom:0;">
-                    <tr>
-                        <th>İşlem Tarihi *</th>
-                        <td>____ / ____ / ________</td>
-                    </tr>
-                    <tr>
-                        <th>Statik IP *</th>
-                        <td>.............................................</td>
-                    </tr>
-                    <tr>
-                        <th>IP Geçerlilik Süresi *</th>
-                        <td>[ &nbsp; ] Süresiz &nbsp;&nbsp;&nbsp;&nbsp; ____ / ____ / ________ (Ay/Gün)</td>
-                    </tr>
-                    <tr>
-                        <th>DNS Tanımı (İstenirse)</th>
-                        <td>.............................................</td>
-                    </tr>
-                    <tr>
-                        <th>İşlemi Yapan Personel ve İmzası *</th>
-                        <td>Ad Soyad: ............................................. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; İmza: _______________</td>
-                    </tr>
-                </table>
-            </div>
+                <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
+                    <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
+                    <table class="grid-table" style="margin-bottom:0;">
+                        <tr>
+                            <th style="width:30%;">İşlem Tarihi *</th>
+                            <td><input type="date" class="yonetici-input" name="yonetici[islem_tarihi]" value="<?php echo htmlspecialchars($veriler['islem_tarihi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>Statik IP *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[statik_ip]" value="<?php echo htmlspecialchars($veriler['statik_ip'] ?? ''); ?>" placeholder="192.168.x.x"></td>
+                        </tr>
+                        <tr>
+                            <th>IP Geçerlilik Süresi *</th>
+                            <td>
+                                <select class="yonetici-input" name="yonetici[ip_gecerlilik]" style="width:30%; display:inline-block;">
+                                    <option value="Süresiz" <?php echo ($veriler['ip_gecerlilik'] ?? '') == 'Süresiz' ? 'selected' : ''; ?>>Süresiz</option>
+                                    <option value="Süreli" <?php echo ($veriler['ip_gecerlilik'] ?? '') == 'Süreli' ? 'selected' : ''; ?>>Süreli</option>
+                                </select>
+                                <input type="date" class="yonetici-input" name="yonetici[ip_gecerlilik_tarihi]" value="<?php echo htmlspecialchars($veriler['ip_gecerlilik_tarihi'] ?? ''); ?>" style="width:65%; display:inline-block;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>DNS Tanımı (İstenirse)</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[dns_tanimi]" value="<?php echo htmlspecialchars($veriler['dns_tanimi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>İşlemi Yapan Personel ve İmzası *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[islem_yapan_personel]" value="<?php echo htmlspecialchars($veriler['islem_yapan_personel'] ?? ''); ?>" placeholder="Ad Soyad"></td>
+                        </tr>
+                    </table>
+                    <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Yönetici Bilgilerini Kaydet</button>
+                </div>
+            </form>
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0079'): ?>
-            <!-- FORM 79 KURUMSAL WEB ADI SÖZLEŞMESİ İMZA VE BİLGİ İŞLEM KUTUSU -->
-            <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
-                <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br>
-                Tarih: ____ / ____ / ________<br><br>
-                İmza: ______________________
-            </div>
+            <!-- FORM 79 KURUMSAL WEB ADI SÖZLEŞMESİ İMZA VE ONLINE BİLGİ İŞLEM KUTUSU -->
+            <form method="POST">
+                <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; text-align: center; font-size: 12px;">
+                    <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br>
+                    Tarih: ____ / ____ / ________<br><br>
+                    İmza: ______________________
+                </div>
 
-            <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
-                <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Bilgi İşlem Dairesince Doldurulacaktır)</h4>
-                <table class="grid-table" style="margin-bottom:0;">
-                    <tr>
-                        <th>İşlem Tarihi *</th>
-                        <td>____ / ____ / ________</td>
-                    </tr>
-                    <tr>
-                        <th>Web Alanı Adı *</th>
-                        <td>.............................................baun.edu.tr</td>
-                    </tr>
-                    <tr>
-                        <th>Veri Tabanı Kullanılacak mı? *</th>
-                        <td>[ &nbsp; ] Evet &nbsp;&nbsp;&nbsp;&nbsp; [ &nbsp; ] Hayır</td>
-                    </tr>
-                    <tr>
-                        <th>Sayfanın Geçerlilik Süresi *</th>
-                        <td>[ &nbsp; ] Süresiz &nbsp;&nbsp;&nbsp;&nbsp; ____ / ____ / ________ (Ay/Gün)</td>
-                    </tr>
-                    <tr>
-                        <th>Kullanıcı Adı *</th>
-                        <td>.............................................</td>
-                    </tr>
-                    <tr>
-                        <th>Kullanıcı Şifresi *</th>
-                        <td>.............................................</td>
-                    </tr>
-                    <tr>
-                        <th>DNS Tanımı *</th>
-                        <td>.............................................</td>
-                    </tr>
-                    <tr>
-                        <th>İşlemi Yapan Personel ve İmzası *</th>
-                        <td>Ad Soyad: ............................................. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; İmza: _______________</td>
-                    </tr>
-                </table>
-            </div>
+                <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
+                    <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
+                    <table class="grid-table" style="margin-bottom:0;">
+                        <tr>
+                            <th style="width:30%;">İşlem Tarihi *</th>
+                            <td><input type="date" class="yonetici-input" name="yonetici[islem_tarihi]" value="<?php echo htmlspecialchars($veriler['islem_tarihi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>Web Alanı Adı *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[web_alani_adi]" value="<?php echo htmlspecialchars($veriler['web_alani_adi'] ?? ''); ?>" placeholder="birimadi.baun.edu.tr"></td>
+                        </tr>
+                        <tr>
+                            <th>Veri Tabanı Kullanılacak mı? *</th>
+                            <td>
+                                <select class="yonetici-input" name="yonetici[veritabani_kullanilacak_mi]">
+                                    <option value="Evet" <?php echo ($veriler['veritabani_kullanilacak_mi'] ?? '') == 'Evet' ? 'selected' : ''; ?>>Evet</option>
+                                    <option value="Hayır" <?php echo ($veriler['veritabani_kullanilacak_mi'] ?? '') == 'Hayır' ? 'selected' : ''; ?>>Hayır</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Sayfanın Geçerlilik Süresi *</th>
+                            <td>
+                                <select class="yonetici-input" name="yonetici[sayfa_gecerlilik]" style="width:30%; display:inline-block;">
+                                    <option value="Süresiz" <?php echo ($veriler['sayfa_gecerlilik'] ?? '') == 'Süresiz' ? 'selected' : ''; ?>>Süresiz</option>
+                                    <option value="Süreli" <?php echo ($veriler['sayfa_gecerlilik'] ?? '') == 'Süreli' ? 'selected' : ''; ?>>Süreli</option>
+                                </select>
+                                <input type="date" class="yonetici-input" name="yonetici[sayfa_gecerlilik_tarihi]" value="<?php echo htmlspecialchars($veriler['sayfa_gecerlilik_tarihi'] ?? ''); ?>" style="width:65%; display:inline-block;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Kullanıcı Adı *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[kullanici_adi]" value="<?php echo htmlspecialchars($veriler['kullanici_adi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>Kullanıcı Şifresi *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[kullanici_sifresi]" value="<?php echo htmlspecialchars($veriler['kullanici_sifresi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>DNS Tanımı *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[dns_tanimi]" value="<?php echo htmlspecialchars($veriler['dns_tanimi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>İşlemi Yapan Personel ve İmzası *</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[islem_yapan_personel]" value="<?php echo htmlspecialchars($veriler['islem_yapan_personel'] ?? ''); ?>" placeholder="Ad Soyad"></td>
+                        </tr>
+                    </table>
+                    <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Yönetici Bilgilerini Kaydet</button>
+                </div>
+            </form>
 
-        <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0080' || $basvuru['form_kodu'] == 'KDYS.FR.0087'): ?>
-            <!-- FORM 80 VE 87 MERNİS TAAHHÜTNAMESİ RESMİ METNİ VE İMZA TABLOSU -->
-            <div style="text-align: center; font-weight: bold; background-color: #e8f4f8; color: #1b656e; padding: 10px; border-radius: 4px; margin-top: 25px;">
-                KİMLİK PAYLAŞIM SİSTEMİ (KPS) KULLANICI TAAHHÜTNAMESİ<br>
-                <span style="font-weight: normal; font-style: italic; font-size: 12px;">- Gizlilik Taahhüt Belgesi -</span>
-            </div>
+        <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0080'): ?>
+            <!-- FORM 80 MERNİS TAAHHÜTNAMESİ ONLINE BİRİM YETKİLİSİ DOLDURMA -->
+            <form method="POST">
+                <div style="text-align: center; font-weight: bold; background-color: #e8f4f8; color: #1b656e; padding: 10px; border-radius: 4px; margin-top: 25px;">
+                    KİMLİK PAYLAŞIM SİSTEMİ (KPS) KULLANICI TAAHHÜTNAMESİ<br>
+                    <span style="font-weight: normal; font-style: italic; font-size: 12px;">- Gizlilik Taahhüt Belgesi -</span>
+                </div>
 
-            <div style="font-size: 12.5px; line-height: 1.5; margin-top: 15px; text-align: justify; background: #fafafa; padding: 12px; border: 1px solid #eee;">
-                <strong>AÇIKLAMA:</strong> 10/07/2005 tarih ve 25871 sayılı Resmi Gazete'de yayımlanan T.C. Nüfus ve Vatandaşlık İşleri Genel Müdürlüğüne ait Kimlik Paylaşım Sistemi (KPS) Uygulama Yönetmeliği kapsamında Bakanlığımız ile ilgili iş ve işlem süreçlerindeki vatandaşlarımızın nüfus ve adres bilgilerinin paylaşımı hakkında "ikili anlaşma" imzalanmıştır. İlgili Yönetmeliğe ilişkin usul ve esaslar içerisinde yer alan "Özel Hayatın Gizliliği" ve "Kişisel Verilerin Korunması" hükümleriyle Balıkesir Üniversitesine ve görevli personele bazı sorumluluklar getirilmiştir. Bu sorumlulukların paylaşımı çerçevesinde iş süreçlerinde KPS üzerinden nüfus ve adres bilgilerine erişen çalışanlarımız için aşağıdaki taahhütname hazırlanmıştır.
-            </div>
+                <div style="font-size: 12.5px; line-height: 1.5; margin-top: 15px; text-align: justify; background: #fafafa; padding: 12px; border: 1px solid #eee;">
+                    <strong>AÇIKLAMA:</strong> 10/07/2005 tarih ve 25871 sayılı Resmi Gazete'de yayımlanan T.C. Nüfus ve Vatandaşlık İşleri Genel Müdürlüğüne ait Kimlik Paylaşım Sistemi (KPS) Uygulama Yönetmeliği kapsamında Bakanlığımız ile ilgili iş ve işlem süreçlerindeki vatandaşlarımızın nüfus ve adres bilgilerinin paylaşımı hakkında "ikili anlaşma" imzalanmıştır. İlgili Yönetmeliğe ilişkin usul ve esaslar içerisinde yer alan "Özel Hayatın Gizliliği" ve "Kişisel Verilerin Korunması" hükümleriyle Balıkesir Üniversitesine ve görevli personele bazı sorumluluklar getirilmiştir. Bu sorumlulukların paylaşımı çerçevesinde iş süreçlerinde KPS üzerinden nüfus ve adres bilgilerine erişen çalışanlarımız için aşağıdaki taahhütname hazırlanmıştır.
+                </div>
 
-            <div style="font-size: 12.5px; line-height: 1.5; margin-top: 15px; text-align: justify; background: #fafafa; padding: 12px; border: 1px solid #eee; font-weight: bold;">
-                TAAHHÜTNAME: Anayasamızın 20. maddesinde "Herkes, özel hayatına ve aile hayatına saygı gösterilmesini isteme hakkına sahiptir. Özel hayatın ve aile hayatının gizliliğine dokunulamaz." denilmektedir. Bu kapsamda KPS'den elde edilen tüm nüfus ve adres bilgilerini sadece T.C. Balıkesir Üniversitesi ve bağlı birimlerdeki iş süreçleri içerisinde kullanacağımı, kullanıcı parolamın güvenliğini sağlayacağımı, aksi takdirde idari, hukuki ve mali sorumluluğun tarafıma ait olduğunu beyan ve taahhüt ederim.
-            </div>
+                <div style="font-size: 12.5px; line-height: 1.5; margin-top: 15px; text-align: justify; background: #fafafa; padding: 12px; border: 1px solid #eee; font-weight: bold;">
+                    TAAHHÜTNAME: Anayasamızın 20. maddesinde "Herkes, özel hayatına ve aile hayatına saygı gösterilmesini isteme hakkına sahiptir. Özel hayatın ve aile hayatının gizliliğine dokunulamaz." denilmektedir. Bu kapsamda KPS'den elde edilen tüm nüfus ve adres bilgilerini sadece T.C. Balıkesir Üniversitesi ve bağlı birimlerdeki iş süreçleri içerisinde kullanacağımı, kullanıcı parolamın güvenliğini sağlayacağımı, aksi takdirde idari, hukuki ve mali sorumluluğun tarafıma ait olduğunu beyan ve taahhüt ederim.
+                </div>
 
-            <div style="text-align: right; margin-top: 15px; font-size: 13px; font-weight: bold;">
-                Tarih: <?php echo date('d.m.Y', strtotime($veriler['taahhut_tarihi'] ?? $basvuru['kayit_tarihi'])); ?>
-            </div>
+                <div style="text-align: right; margin-top: 15px; font-size: 13px; font-weight: bold;">
+                    Tarih: <?php echo date('d.m.Y', strtotime($veriler['taahhut_tarihi'] ?? $basvuru['kayit_tarihi'])); ?>
+                </div>
 
-            <div style="margin-top: 15px; border: 1px solid #000;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px;">
-                    <tr style="background:#f5f5f5; font-weight:bold; text-align:center;">
-                        <td style="width: 50%; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 8px;">Personel Bilgisi</td>
-                        <td style="width: 50%; border-bottom: 1px solid #000; padding: 8px;">Birim Yetkilisi</td>
-                    </tr>
-                    <tr>
-                        <td style="width: 50%; border-right: 1px solid #000; padding: 12px; vertical-align: top;">
-                            <p style="margin: 4px 0;"><strong>Adı Soyadı:</strong> <?php echo htmlspecialchars($veriler['personel_ad_soyad'] ?? $basvuru['ad_soyad']); ?></p>
-                            <p style="margin: 4px 0;"><strong>Kurum Sicili, Unvanı:</strong> <?php echo htmlspecialchars($veriler['personel_sicil_unvan'] ?? '-'); ?></p>
-                            <br><br>
-                            <p style="margin: 4px 0; text-align: center;"><strong>(İmza):</strong> ________________________</p>
-                        </td>
-                        <td style="width: 50%; padding: 12px; vertical-align: top;">
-                            <p style="margin: 4px 0;"><strong>Adı Soyadı:</strong> <?php echo htmlspecialchars($veriler['yetkili_ad_soyad'] ?? '.............................................'); ?></p>
-                            <p style="margin: 4px 0;"><strong>Kurum Sicili, Unvanı:</strong> <?php echo htmlspecialchars($veriler['yetkili_sicil_unvan'] ?? '.............................................'); ?></p>
-                            <br><br>
-                            <p style="margin: 4px 0; text-align: center;"><strong>(İmza):</strong> ________________________</p>
-                        </td>
-                    </tr>
-                    <tr style="background:#f5f5f5; font-weight:bold;">
-                        <td style="border-right: 1px solid #000; border-top: 1px solid #000; padding: 6px;">Personel</td>
-                        <td style="border-top: 1px solid #000; padding: 6px;">Birim Yetkilisi</td>
-                    </tr>
-                    <tr>
-                        <td style="border-right: 1px solid #000; border-top: 1px solid #000; padding: 8px;">
-                            <p style="margin: 2px 0;"><strong>T.C. Kimlik No:</strong> <?php echo htmlspecialchars($veriler['personel_tc_no'] ?? '-'); ?></p>
-                            <p style="margin: 2px 0;"><strong>E-Mail:</strong> <?php echo htmlspecialchars($veriler['personel_eposta'] ?? '-'); ?></p>
-                        </td>
-                        <td style="border-top: 1px solid #000; padding: 8px;">
-                            <p style="margin: 2px 0;"><strong>T.C. Kimlik No:</strong> <?php echo htmlspecialchars($veriler['yetkili_tc_no'] ?? '.............................................'); ?></p>
-                            <p style="margin: 2px 0;"><strong>E-Mail:</strong> <?php echo htmlspecialchars($veriler['yetkili_eposta'] ?? '.............................................'); ?></p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+                <div style="margin-top: 15px; border: 1px solid #000;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px;">
+                        <tr style="background:#f5f5f5; font-weight:bold; text-align:center;">
+                            <td style="width: 50%; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 8px;">Personel Bilgisi</td>
+                            <td style="width: 50%; border-bottom: 1px solid #000; padding: 8px;">Birim Yetkilisi (Yönetici Doldurabilir)</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%; border-right: 1px solid #000; padding: 12px; vertical-align: top;">
+                                <p style="margin: 4px 0;"><strong>Adı Soyadı:</strong> <?php echo htmlspecialchars($veriler['personel_ad_soyad'] ?? $basvuru['ad_soyad']); ?></p>
+                                <p style="margin: 4px 0;"><strong>Kurum Sicili, Unvanı:</strong> <?php echo htmlspecialchars($veriler['personel_sicil_unvan'] ?? '-'); ?></p>
+                                <br><br>
+                                <p style="margin: 4px 0; text-align: center;"><strong>(İmza):</strong> ________________________</p>
+                            </td>
+                            <td style="width: 50%; padding: 12px; vertical-align: top;">
+                                <p style="margin: 4px 0;"><strong>Adı Soyadı:</strong> <input type="text" class="yonetici-input" name="yonetici[yetkili_ad_soyad]" value="<?php echo htmlspecialchars($veriler['yetkili_ad_soyad'] ?? ''); ?>" placeholder="Ad Soyad"></p>
+                                <p style="margin: 4px 0;"><strong>Kurum Sicili, Unvanı:</strong> <input type="text" class="yonetici-input" name="yonetici[yetkili_sicil_unvan]" value="<?php echo htmlspecialchars($veriler['yetkili_sicil_unvan'] ?? ''); ?>" placeholder="Sicil No / Unvan"></p>
+                                <br>
+                                <p style="margin: 4px 0; text-align: center;"><strong>(İmza):</strong> ________________________</p>
+                            </td>
+                        </tr>
+                        <tr style="background:#f5f5f5; font-weight:bold;">
+                            <td style="border-right: 1px solid #000; border-top: 1px solid #000; padding: 6px;">Personel</td>
+                            <td style="border-top: 1px solid #000; padding: 6px;">Birim Yetkilisi</td>
+                        </tr>
+                        <tr>
+                            <td style="border-right: 1px solid #000; border-top: 1px solid #000; padding: 8px;">
+                                <p style="margin: 2px 0;"><strong>T.C. Kimlik No:</strong> <?php echo htmlspecialchars($veriler['personel_tc_no'] ?? '-'); ?></p>
+                                <p style="margin: 2px 0;"><strong>E-Mail:</strong> <?php echo htmlspecialchars($veriler['personel_eposta'] ?? '-'); ?></p>
+                            </td>
+                            <td style="border-top: 1px solid #000; padding: 8px;">
+                                <p style="margin: 2px 0;"><strong>T.C. Kimlik No:</strong> <input type="text" class="yonetici-input" name="yonetici[yetkili_tc_no]" value="<?php echo htmlspecialchars($veriler['yetkili_tc_no'] ?? ''); ?>" placeholder="TC Kimlik No"></p>
+                                <p style="margin: 2px 0;"><strong>E-Mail:</strong> <input type="text" class="yonetici-input" name="yonetici[yetkili_eposta]" value="<?php echo htmlspecialchars($veriler['yetkili_eposta'] ?? ''); ?>" placeholder="ornek@balikesir.edu.tr"></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Birim Yetkilisi Bilgilerini Kaydet</button>
+            </form>
 
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0082'): ?>
-            <!-- FORM 82 E-POSTA KULLANIM ONAYI VE BİLGİ İŞLEM BOŞ KUTUSU -->
-            <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; font-size: 12px;">
-                <p><strong>Yukarıda açıklanan e-posta kullanım kurallarının tümünü okudum ve kabul ediyorum.</strong></p>
-                <br>
-                <p><strong>Adı Soyadı :</strong> <?php echo htmlspecialchars($basvuru['ad_soyad']); ?></p>
-                <br>
-                <p><strong>İmzası :</strong> ___________________________________</p>
-            </div>
+            <!-- FORM 82 E-POSTA KULLANIM ONAYI VE BİLGİ İŞLEM DAİRESİNCE DOLDURULACAK ONLINE ALAN -->
+            <form method="POST">
+                <div style="margin-top: 30px; border: 1px solid #000; padding: 15px; font-size: 12px;">
+                    <p><strong>Yukarıda açıklanan e-posta kullanım kurallarının tümünü okudum ve kabul ediyorum.</strong></p>
+                    <br>
+                    <p><strong>Adı Soyadı :</strong> <?php echo htmlspecialchars($basvuru['ad_soyad']); ?></p>
+                    <br>
+                    <p><strong>İmzası :</strong> ___________________________________</p>
+                </div>
 
-            <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
-                <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">Aşağıdaki Bölümü Boş Bırakınız (Bilgi İşlem Dairesince Doldurulacaktır)</h4>
-                <table class="grid-table" style="margin-bottom:0;">
-                    <tr>
-                        <th style="width:35%;">E-posta Adresi :</th>
-                        <td>.............................................@balikesir.edu.tr</td>
-                    </tr>
-                    <tr>
-                        <th>Veriliş Tarihi :</th>
-                        <td>____ / ____ / ________</td>
-                    </tr>
-                    <tr>
-                        <th>E-posta Hesabı Açan Personelin Onayı :</th>
-                        <td>Ad Soyad: ............................................. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; İmza: _______________</td>
-                    </tr>
-                </table>
-            </div>
+                <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
+                    <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">Aşağıdaki Bölümü Boş Bırakınız (Bilgi İşlem Dairesince Doldurulacaktır)</h4>
+                    <table class="grid-table" style="margin-bottom:0;">
+                        <tr>
+                            <th style="width:35%;">E-posta Adresi :</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[bilgi_islem_eposta]" value="<?php echo htmlspecialchars($veriler['bilgi_islem_eposta'] ?? ''); ?>" placeholder="örnek@balikesir.edu.tr"></td>
+                        </tr>
+                        <tr>
+                            <th>Veriliş Tarihi :</th>
+                            <td><input type="date" class="yonetici-input" name="yonetici[verilis_tarihi]" value="<?php echo htmlspecialchars($veriler['verilis_tarihi'] ?? ''); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>E-posta Hesabı Açan Personelin Onayı :</th>
+                            <td><input type="text" class="yonetici-input" name="yonetici[islem_yapan_personel]" value="<?php echo htmlspecialchars($veriler['islem_yapan_personel'] ?? ''); ?>" placeholder="Ad Soyad"></td>
+                        </tr>
+                    </table>
+                    <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Yönetici Bilgilerini Kaydet</button>
+                </div>
+            </form>
 
         <?php endif; ?>
     </div>
