@@ -25,7 +25,7 @@ if ($admin_rol !== 'superadmin') {
     $permStmt = $db->prepare("SELECT COUNT(*) FROM yonetici_izinleri WHERE yonetici_id = :yid AND form_kodu = :fkodu");
     $permStmt->execute([':yid' => $admin_id, ':fkodu' => $basvuru['form_kodu']]);
     if ($permStmt->fetchColumn() == 0) {
-        die("<div style='font-family:sans-serif; padding:50px; text-align:center;'><h2>⚠️ Erişim Engellendi</h2><p>Bu başvuru formunu (".htmlspecialchars($basvuru['form_kodu']).") görüntüleme yetkiniz bulunmamaktadır.</p><br><a href='panel.php' style='color:#1b656e; font-weight:bold;'>Panele Dön</a></div>");
+        die("<div style='font-family:sans-serif; padding:50px; text-align:center;'><h2> Erişim Engellendi</h2><p>Bu başvuru formunu (".htmlspecialchars($basvuru['form_kodu']).") görüntüleme yetkiniz bulunmamaktadır.</p><br><a href='panel.php' style='color:#1b656e; font-weight:bold;'>Panele Dön</a></div>");
     }
 }
 
@@ -162,7 +162,7 @@ $bugun = date('Y-m-d');
 
         <?php if ($basvuru['durum'] == 'Reddedildi' && !empty($basvuru['red_sebebi'])): ?>
             <div style="background:#fce8e6; border-left:5px solid #d93025; padding:12px 18px; border-radius:6px; margin-bottom:20px; color:#d93025;">
-                <strong style="font-size:15px;">❌ Bu Başvuru Reddedilmiştir</strong><br>
+                <strong style="font-size:15px;"> Bu Başvuru Reddedilmiştir</strong><br>
                 <strong>Red Gerekçesi:</strong> <?php echo htmlspecialchars($basvuru['red_sebebi']); ?>
             </div>
         <?php endif; ?>
@@ -199,7 +199,7 @@ $bugun = date('Y-m-d');
 
         <?php if(!empty($basvuru['dekont_yolu'])): ?>
             <p style="background:#e8f4f8; padding:10px 15px; border-radius:5px; border-left:4px solid #1b656e;">
-                <strong>💳 Ödeme Dekontu:</strong> <a href="<?php echo htmlspecialchars($basvuru['dekont_yolu']); ?>" target="_blank" style="color:#1b656e; font-weight:bold;">Banka Dekontunu Görüntüle / İndir →</a>
+                <strong> Ödeme Dekontu:</strong> <a href="<?php echo htmlspecialchars($basvuru['dekont_yolu']); ?>" target="_blank" style="color:#1b656e; font-weight:bold;">Banka Dekontunu Görüntüle / İndir →</a>
             </p>
         <?php endif; ?>
 

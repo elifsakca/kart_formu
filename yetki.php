@@ -134,22 +134,22 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             BAÜN Form İşlem Merkezi - Yönetici & İzin Yapılandırması
         </h1>
         <div>
-            <a href="panel.php" class="header-btn">← Panele Dön</a>
+            <a href="panel.php" class="header-btn"> Panele Dön</a>
             <a href="cikis.php" class="header-btn" style="background:#d93025; margin-left:10px;">Güvenli Çıkış</a>
         </div>
     </div>
 
     <div class="container">
         <?php if(!empty($mesaj)): ?>
-            <div class="alert-success">✓ <?php echo htmlspecialchars($mesaj); ?></div>
+            <div class="alert-success"> <?php echo htmlspecialchars($mesaj); ?></div>
         <?php endif; ?>
         <?php if(!empty($hata)): ?>
-            <div class="alert-danger">⚠️ <?php echo htmlspecialchars($hata); ?></div>
+            <div class="alert-danger"> <?php echo htmlspecialchars($hata); ?></div>
         <?php endif; ?>
 
         <!-- YENİ ADMİN EKLEME KARTI -->
         <div class="card">
-            <h2>➕ Yeni Yönetici Hesabı Ekle</h2>
+            <h2> Yeni Yönetici Hesabı Ekle</h2>
             <form method="POST">
                 <div class="form-satir">
                     <div class="form-grup">
@@ -171,7 +171,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
 
         <!-- YÖNETİCİ İZİN / GÖREV ATAMA KARTLARI -->
         <div class="card" style="background:#f8fbfd; border:1px solid #d0e4eb;">
-            <h2 style="border-bottom:none; margin:0;">📋 Yönetici Görev & Form İzinleri</h2>
+            <h2 style="border-bottom:none; margin:0;"> Yönetici Görev & Form İzinleri</h2>
             <p style="font-size:13px; color:#555; margin-top:5px;">Aşağıdan <strong>admin1</strong>, <strong>admin2</strong> ve yeni eklediğiniz tüm yöneticilerin inceleyebileceği formları seçip kaydedebilirsiniz.</p>
         </div>
 
@@ -182,7 +182,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             ?>
             <div class="card">
                 <h2>
-                    <span>👤 <?php echo htmlspecialchars($admin['ad_soyad']); ?> (Kullanıcı Adı: <strong><?php echo htmlspecialchars($admin['kullanici_adi']); ?></strong>)</span>
+                    <span> <?php echo htmlspecialchars($admin['ad_soyad']); ?> (Kullanıcı Adı: <strong><?php echo htmlspecialchars($admin['kullanici_adi']); ?></strong>)</span>
                     <button type="button" class="btn-sec-hepsi" onclick="tumunuSec('form_grid_<?php echo $aid; ?>')">Tümünü Seç / Kaldır</button>
                 </h2>
                 
@@ -206,7 +206,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
 
         <!-- İŞLEM GÜNLÜĞÜ (AUDIT LOG) KARTI -->
         <div class="card">
-            <h2>📜 Yöneticilerin İşlem Günlüğü (Audit Log)</h2>
+            <h2> Yöneticilerin İşlem Günlüğü </h2>
             <p style="font-size:13px; color:#666;">Yöneticilerin başvurular üzerinde yaptığı tüm durum güncellemeleri ve red sebepleri aşağıda kronolojik olarak listelenmektedir.</p>
             
             <?php if (count($loglar) > 0): ?>
