@@ -98,7 +98,7 @@
 
     <!-- Form Seçim Kutusu -->
     <div class="secim-kutusu">
-        <select id="formSecici" class="form-select">
+        <select id="formSecici" class="form-select" onchange="formYonetlendir()">
             <option value="">-- Doldurmak İstediğiniz Formu Seçiniz --</option>
             
             <optgroup label="Akıllı Kart Formları">
@@ -119,10 +119,6 @@
                 <option value="form_0082.php">KDYS.FR.0082 - Bilgi İşlem DB Personel Elektronik Posta Başvuru Formu</option>
             </optgroup>
         </select>
-        
-        <button class="btn-tamam" onclick="formYonetlendir()">
-            Tamam
-        </button>
     </div>
     
     <div id="hata-mesaji">Lütfen listeden bir form seçiniz!</div>
