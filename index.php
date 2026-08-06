@@ -102,10 +102,10 @@
             <option value="">-- Doldurmak İstediğiniz Formu Seçiniz --</option>
             
             <optgroup label="Akıllı Kart Formları">
-                <option value="form_f52.php">Akıllı Kart İşlem Formu (F-52)</option>
-                <option value="form_f53.php">Akıllı Kart Öğrenci İşlem Formu (F-53)</option>
-                <option value="form_f54.php">Kayıp Akıllı Kart Müracaat Formu (F-54)</option>
-                <option value="form_f55.php">Arızalı Akıllı Kart Müracaat Formu (F-55)</option>
+                <option value="form_f52.php">KDYS.FR.0553 - Akıllı Kart İşlem Formu</option>
+                <option value="form_f53.php">KDYS.FR.0556 - Akıllı Kart Öğrenci İşlem Formu</option>
+                <option value="form_f54.php">KDYS.FR.0555 - Kayıp Akıllı Kart Müracaat Formu</option>
+                <option value="form_f55.php">KDYS.FR.0554 - Arızalı Akıllı Kart Müracaat Formu</option>
             </optgroup>
 
             <optgroup label="Bilgi İşlem Daire Başkanlığı Formları">
@@ -125,12 +125,12 @@
 
     <!-- GİZLİ FORMLAR -->
 
-    <!-- F-52 FORMU (PERSONEL İŞLEMLERİ) -->
+    <!-- KDYS.FR.0553 FORMU (PERSONEL İŞLEMLERİ) -->
     <div id="form_f52.php" class="gizli-form">
-        <h2>Akıllı Kart İşlem Formu (F-52)</h2>
+        <h2>Akıllı Kart İşlem Formu (KDYS.FR.0553)</h2>
         <form method="POST" action="islem.php" enctype="multipart/form-data">
-            <input type="hidden" name="form_kodu" value="F-52">
-            <input type="hidden" name="form_adi" value="Akıllı Kart İşlem Formu (F-52)">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0553">
+            <input type="hidden" name="form_adi" value="Akıllı Kart İşlem Formu (KDYS.FR.0553)">
 
             <div class="form-satir">
                 <div class="form-grup"><label>Fakülte/YO/MYO/Birim</label><input type="text" name="fakulte_birim"></div>
@@ -157,7 +157,7 @@
 
             <div class="form-grup">
                 <label>Yapılacak İşlem Türü</label>
-                <select name="islem_turu" required>
+                <select name="islem_turu" id="f52_islem_turu" onchange="islemTuruGuncelle(this)" required>
                     <option value="">Seçiniz...</option>
                     <option title="Yeni Başlayan Personel/kişiler için">Akıllı kartın ilk kez verilmesi</option>
                     <option>Hatalı Basılan Kart Bilgisinin Düzeltilmesi</option>
@@ -165,74 +165,77 @@
                     <option title="Sebebi: İstifa, Emeklilik, Tayin, Nakil vb.">Ayrılış</option>
                 </select>
             </div>
-            
+
             <!-- AKILLI KARTIN İLK KEZ VERİLMESİ (YENİ BAŞLAYAN PERSONEL/KİŞİLER İÇİN) -->
-            <div style="background:#e8f4f8; border-left:4px solid #1b656e; padding:12px 15px; border-radius:5px; margin:20px 0 15px 0;">
-                <h3 style="margin:0; color:#1b656e; font-size:16px;">Akıllı Kartın ilk kez verilmesi (Yeni Başlayan Personel/kişiler için)</h3>
-            </div>
-
-            <div class="form-satir">
-                <div class="form-grup">
-                    <label>Adı, Soyadı</label>
-                    <input type="text" name="ad_soyad" required>
-                    <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
+            <div id="sec_ilk_kez" style="display:none;">
+                <div style="background:#e8f4f8; border-left:4px solid #1b656e; padding:12px 15px; border-radius:5px; margin:20px 0 15px 0;">
+                    <h3 style="margin:0; color:#1b656e; font-size:16px;">Akıllı Kartın ilk kez verilmesi (Yeni Başlayan Personel/kişiler için)</h3>
                 </div>
+
+                <div class="form-satir">
+                    <div class="form-grup">
+                        <label>Adı, Soyadı</label>
+                        <input type="text" name="ad_soyad" id="f52_ad_soyad">
+                        <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
+                    </div>
+                    <div class="form-grup">
+                        <label>TC Kimlik No</label>
+                        <input type="text" name="tc_no" id="f52_tc_no" maxlength="11">
+                        <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
+                    </div>
+                </div>
+
+                <div class="form-satir">
+                    <div class="form-grup">
+                        <label>Unvanı</label>
+                        <input type="text" name="unvan">
+                        <span class="form-bilgi">Bu kısım Akademik, İdari Personel Kimlik Kartı ve Yerleşke Onursal, Emekli, Hizmet, Firma, Kurum, Misafir, Kütüphane Giriş Kartları içindir.</span>
+                    </div>
+                    <div class="form-grup">
+                        <label>Birim</label>
+                        <input type="text" name="birim">
+                        <span class="form-bilgi">Akademik ve İdari Personelin kadrosunun olduğu birim, diğer Yerleşke Hizmet, Firma, Misafir Giriş kart tipleri için personelin çalıştığı birim yazılmalıdır.</span>
+                    </div>
+                </div>
+
+                <div class="form-satir">
+                    <div class="form-grup">
+                        <label>Bölüm</label>
+                        <input type="text" name="bolum">
+                        <span class="form-bilgi">Akademik Personelin kadrosunun olduğu bölüm yazılmalıdır.</span>
+                    </div>
+                    <div class="form-grup">
+                        <label>Kurum sicil no ’su</label>
+                        <input type="text" name="sicil_no">
+                        <span class="form-bilgi">Bu kısım Akademik, İdari Personel ve Koruma Güvenlik görevlisi Kimlik Kartı ve Yerleşke Kurum Giriş Kartları içindir.</span>
+                    </div>
+                </div>
+
                 <div class="form-grup">
-                    <label>TC Kimlik No</label>
-                    <input type="text" name="tc_no" maxlength="11" required>
-                    <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
+                    <label>Ödemeye Esas Ek Göstergesi</label>
+                    <input type="text" name="ek_gosterge">
+                    <span class="form-bilgi">Personelin ödemeye esas ek göstergesi yemek ücretinin belirlenmesinde baz alınacağı için doğruluğundan ilgili birim sorumlu olacaktır.</span>
+                </div>
+
+                <div class="form-satir">
+                    <div class="form-grup"><label>Hizmet Yeri</label><input type="text" name="hizmet_yeri"><span class="form-bilgi">Sadece Yerleşke Hizmet, Firma, Kurum Giriş Kartları içindir.</span></div>
+                    <div class="form-grup"><label>Firma Adı</label><input type="text" name="firma_adi"><span class="form-bilgi">Sadece Yerleşke Firma Giriş Kartları içindir.</span></div>
+                </div>
+
+                <div class="form-satir">
+                    <div class="form-grup"><label>Kurumu</label><input type="text" name="kurumu"><span class="form-bilgi">Yerleşke Kurum Giriş Kartları içindir.</span></div>
+                    <div class="form-grup"><label>Kan Grubu</label><input type="text" name="kan_grubu"><span class="form-bilgi">Sadece Koruma Güvenlik veya Özel Güvenlik kartı alacak personel doldurmalıdır.</span></div>
+                </div>
+                
+                <div class="form-grup">
+                    <label>Görev</label>
+                    <input type="text" name="gorev">
+                    <span class="form-bilgi">Bu kısmı sadece Yerleşke Misafir Giriş Kartı alacak personel doldurmalıdır.</span>
                 </div>
             </div>
 
-            <div class="form-satir">
-                <div class="form-grup">
-                    <label>Unvanı</label>
-                    <input type="text" name="unvan">
-                    <span class="form-bilgi">Bu kısım Akademik, İdari Personel Kimlik Kartı ve Yerleşke Onursal, Emekli, Hizmet, Firma, Kurum, Misafir, Kütüphane Giriş Kartları içindir.</span>
-                </div>
-                <div class="form-grup">
-                    <label>Birim</label>
-                    <input type="text" name="birim">
-                    <span class="form-bilgi">Akademik ve İdari Personelin kadrosunun olduğu birim, diğer Yerleşke Hizmet, Firma, Misafir Giriş kart tipleri için personelin çalıştığı birim yazılmalıdır.</span>
-                </div>
-            </div>
-
-            <div class="form-satir">
-                <div class="form-grup">
-                    <label>Bölüm</label>
-                    <input type="text" name="bolum">
-                    <span class="form-bilgi">Akademik Personelin kadrosunun olduğu bölüm yazılmalıdır.</span>
-                </div>
-                <div class="form-grup">
-                    <label>Kurum sicil no ’su</label>
-                    <input type="text" name="sicil_no">
-                    <span class="form-bilgi">Bu kısım Akademik, İdari Personel ve Koruma Güvenlik görevlisi Kimlik Kartı ve Yerleşke Kurum Giriş Kartları içindir.</span>
-                </div>
-            </div>
-
-            <div class="form-grup">
-                <label>Ödemeye Esas Ek Göstergesi</label>
-                <input type="text" name="ek_gosterge">
-                <span class="form-bilgi">Personelin ödemeye esas ek göstergesi yemek ücretinin belirlenmesinde baz alınacağı için doğruluğundan ilgili birim sorumlu olacaktır.</span>
-            </div>
-
-            <div class="form-satir">
-                <div class="form-grup"><label>Hizmet Yeri</label><input type="text" name="hizmet_yeri"><span class="form-bilgi">Sadece Yerleşke Hizmet, Firma, Kurum Giriş Kartları içindir.</span></div>
-                <div class="form-grup"><label>Firma Adı</label><input type="text" name="firma_adi"><span class="form-bilgi">Sadece Yerleşke Firma Giriş Kartları içindir.</span></div>
-            </div>
-
-            <div class="form-satir">
-                <div class="form-grup"><label>Kurumu</label><input type="text" name="kurumu"><span class="form-bilgi">Yerleşke Kurum Giriş Kartları içindir.</span></div>
-                <div class="form-grup"><label>Kan Grubu</label><input type="text" name="kan_grubu"><span class="form-bilgi">Sadece Koruma Güvenlik veya Özel Güvenlik kartı alacak personel doldurmalıdır.</span></div>
-            </div>
-            
-            <div class="form-grup">
-                <label>Görev</label>
-                <input type="text" name="gorev">
-                <span class="form-bilgi">Bu kısmı sadece Yerleşke Misafir Giriş Kartı alacak personel doldurmalıdır.</span>
-            </div>
-
-            <div class="form-bilgi-liste" style="background:#e8f4f8; border-left-color:#1b656e;">
+            <!-- HATALI BASILAN KART VEYA BİLGİ DEĞİŞİKLİĞİ ALANI -->
+            <div id="sec_bilgi_degisikligi" style="display:none;" class="form-bilgi-liste" style="background:#e8f4f8; border-left-color:#1b656e;">
                 <label style="color:#1b656e; font-weight:bold; font-size:14px; margin-bottom:10px; display:block;">Hatalı Basılan Kart veya Bilgi Değişikliği Yapılacaksa Düzeltilecek / Değişecek Kısmı Seçiniz:</label>
                 
                 <div class="checkbox-grid">
@@ -286,12 +289,12 @@
         </form>
     </div>
 
-    <!-- F-53 FORMU (ÖĞRENCİ) -->
+    <!-- KDYS.FR.0556 FORMU (ÖĞRENCİ) -->
     <div id="form_f53.php" class="gizli-form">
-        <h2>Akıllı Kart Öğrenci İşlem Formu (F-53)</h2>
+        <h2>Akıllı Kart Öğrenci İşlem Formu (KDYS.FR.0556)</h2>
         <form method="POST" action="islem.php">
-            <input type="hidden" name="form_kodu" value="F-53">
-            <input type="hidden" name="form_adi" value="Akıllı Kart Öğrenci İşlem Formu (F-53)">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0556">
+            <input type="hidden" name="form_adi" value="Akıllı Kart Öğrenci İşlem Formu (KDYS.FR.0556)">
 
             <div class="form-satir">
                 <div class="form-grup"><label>AD SOYAD</label><input type="text" name="ad_soyad" required></div>
@@ -321,12 +324,12 @@
         </form>
     </div>
 
-    <!-- F-54 FORMU (KAYIP KART) -->
+    <!-- KDYS.FR.0555 FORMU (KAYIP KART) -->
     <div id="form_f54.php" class="gizli-form">
-        <h2>Kayıp Akıllı Kart Müracaat Formu (F-54)</h2>
+        <h2>Kayıp Akıllı Kart Müracaat Formu (KDYS.FR.0555)</h2>
         <form method="POST" action="islem.php" enctype="multipart/form-data">
-            <input type="hidden" name="form_kodu" value="F-54">
-            <input type="hidden" name="form_adi" value="Kayıp Akıllı Kart Müracaat Formu (F-54)">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0555">
+            <input type="hidden" name="form_adi" value="Kayıp Akıllı Kart Müracaat Formu (KDYS.FR.0555)">
 
             <div class="resmi-yazi">
                 Aşağıda belirttiğim adıma kayıtlı olan akıllı kimlik kartımı kaybettim. Eski kimlik kartımın AKS sisteminden iptal edilmesini ve bedeli karşılığında yeni kimlik kartımın tanzim edilerek tarafıma verilmesini rica ederim.
@@ -355,12 +358,12 @@
         </form>
     </div>
 
-    <!-- F-55 FORMU (ARIZALI KART) -->
+    <!-- KDYS.FR.0554 FORMU (ARIZALI KART) -->
     <div id="form_f55.php" class="gizli-form">
-        <h2>Arızalı Akıllı Kart Müracaat Formu (F-55)</h2>
+        <h2>Arızalı Akıllı Kart Müracaat Formu (KDYS.FR.0554)</h2>
         <form method="POST" action="islem.php">
-            <input type="hidden" name="form_kodu" value="F-55">
-            <input type="hidden" name="form_adi" value="Arızalı Akıllı Kart Müracaat Formu (F-55)">
+            <input type="hidden" name="form_kodu" value="KDYS.FR.0554">
+            <input type="hidden" name="form_adi" value="Arızalı Akıllı Kart Müracaat Formu (KDYS.FR.0554)">
 
             <div class="resmi-yazi">
                 Eski kimlik kartımın AKS sisteminden iptal edilmesi ve akıllı kart merkezince yapılan teknik inceleme sonucunda, kart arızasının tarafımdan kaynakladığı takdirde bedeli karşılığında yeni akıllı kimlik kartımın tanzim edilerek tarafıma verilmesini rica ederim.
@@ -986,6 +989,32 @@
             snHucraleri.forEach(function(hucre, index) {
                 hucre.textContent = index + 1;
             });
+        }
+
+        // F-52 (KDYS.FR.0553) Dinamik Alan Gösterimi
+        function islemTuruGuncelle(selectElem) {
+            var val = selectElem.value;
+            var secIlkKez = document.getElementById("sec_ilk_kez");
+            var secBilgiDegisikligi = document.getElementById("sec_bilgi_degisikligi");
+            var reqAdSoyad = document.getElementById("f52_ad_soyad");
+            var reqTcNo = document.getElementById("f52_tc_no");
+
+            if (val === "Akıllı kartın ilk kez verilmesi") {
+                secIlkKez.style.display = "block";
+                secBilgiDegisikligi.style.display = "none";
+                if (reqAdSoyad) reqAdSoyad.setAttribute("required", "required");
+                if (reqTcNo) reqTcNo.setAttribute("required", "required");
+            } else if (val === "Hatalı Basılan Kart Bilgisinin Düzeltilmesi" || val === "Bilgi Değişikliği") {
+                secIlkKez.style.display = "none";
+                secBilgiDegisikligi.style.display = "block";
+                if (reqAdSoyad) reqAdSoyad.removeAttribute("required");
+                if (reqTcNo) reqTcNo.removeAttribute("required");
+            } else {
+                secIlkKez.style.display = "none";
+                secBilgiDegisikligi.style.display = "none";
+                if (reqAdSoyad) reqAdSoyad.removeAttribute("required");
+                if (reqTcNo) reqTcNo.removeAttribute("required");
+            }
         }
 
         // Akordiyon (Açılır / Kapanır Politika Alanı) Fonksiyonu

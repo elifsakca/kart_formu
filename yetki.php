@@ -13,10 +13,10 @@ $hata = "";
 
 // Tüm Sistem Formlarının Listesi
 $tum_formlar = [
-    'F-52'         => 'Akıllı Kart İşlem Formu (F-52)',
-    'F-53'         => 'Akıllı Kart Öğrenci İşlem Formu (F-53)',
-    'F-54'         => 'Kayıp Akıllı Kart Müracaat Formu (F-54)',
-    'F-55'         => 'Arızalı Akıllı Kart Müracaat Formu (F-55)',
+    'KDYS.FR.0553' => 'KDYS.FR.0553 - Akıllı Kart İşlem Formu',
+    'KDYS.FR.0556' => 'KDYS.FR.0556 - Akıllı Kart Öğrenci İşlem Formu',
+    'KDYS.FR.0555' => 'KDYS.FR.0555 - Kayıp Akıllı Kart Müracaat Formu',
+    'KDYS.FR.0554' => 'KDYS.FR.0554 - Arızalı Akıllı Kart Müracaat Formu',
     'KDYS.FR.0072' => 'KDYS.FR.0072 - Kurumsal E-Posta Talep Formu',
     'KDYS.FR.0073' => 'KDYS.FR.0073 - E-İmza Mini Kart Okuyucu Tutanağı',
     'KDYS.FR.0074' => 'KDYS.FR.0074 - E-İmza Talep Formu',

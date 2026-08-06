@@ -113,10 +113,10 @@ if (isset($_GET['islem']) && in_array($_GET['islem'], ['sil', 'geri_yukle', 'kal
 
 // Tüm Form İsimleri
 $tum_form_isimleri = [
-    'F-52'         => 'F-52 - Akıllı Kart İşlem Formu',
-    'F-53'         => 'F-53 - Öğrenci Akıllı Kart Formu',
-    'F-54'         => 'F-54 - Kayıp Kart Müracaat Formu',
-    'F-55'         => 'F-55 - Arızalı Kart Müracaat Formu',
+    'KDYS.FR.0553' => 'KDYS.FR.0553 - Akıllı Kart İşlem Formu',
+    'KDYS.FR.0556' => 'KDYS.FR.0556 - Öğrenci Akıllı Kart Formu',
+    'KDYS.FR.0555' => 'KDYS.FR.0555 - Kayıp Kart Müracaat Formu',
+    'KDYS.FR.0554' => 'KDYS.FR.0554 - Arızalı Kart Müracaat Formu',
     'KDYS.FR.0072' => 'KDYS.FR.0072 - Kurumsal E-Posta Talep',
     'KDYS.FR.0073' => 'KDYS.FR.0073 - E-İmza Okuyucu Tutanağı',
     'KDYS.FR.0074' => 'KDYS.FR.0074 - E-İmza Talep Formu',
