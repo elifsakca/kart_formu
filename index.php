@@ -123,7 +123,8 @@ foreach ($aktif_formlar as $f) {
                     <?php foreach ($formlar as $f): ?>
                         <option value="<?php echo htmlspecialchars($f['dosya_adi']); ?>" 
                                 data-kodu="<?php echo htmlspecialchars($f['form_kodu']); ?>" 
-                                data-adi="<?php echo htmlspecialchars($f['form_adi']); ?>">
+                                data-adi="<?php echo htmlspecialchars($f['form_adi']); ?>"
+                                data-alanlar="<?php echo htmlspecialchars($f['form_alanlari'] ?: ''); ?>">
                             <?php echo htmlspecialchars($f['form_kodu'] . ' - ' . $f['form_adi']); ?>
                         </option>
                     <?php endforeach; ?>
@@ -944,47 +945,8 @@ foreach ($aktif_formlar as $f) {
             <input type="hidden" name="form_kodu" value="">
             <input type="hidden" name="form_adi" value="">
 
-            <div class="form-satir">
-                <div class="form-grup">
-                    <label>Adı Soyadı *</label>
-                    <input type="text" name="ad_soyad" required>
-                </div>
-                <div class="form-grup">
-                    <label>T.C. Kimlik No *</label>
-                    <input type="text" name="tc_no" maxlength="11" required>
-                </div>
-            </div>
-
-            <div class="form-satir">
-                <div class="form-grup">
-                    <label>İrtibat Telefonu *</label>
-                    <input type="text" name="telefon" required>
-                </div>
-                <div class="form-grup">
-                    <label>E-posta Adresi *</label>
-                    <input type="email" name="eposta" required>
-                </div>
-            </div>
-
-            <div class="form-grup">
-                <label>Çalıştığı/Öğrenim Gördüğü Birim *</label>
-                <input type="text" name="birim" required>
-            </div>
-
-            <div class="form-satir">
-                <div class="form-grup">
-                    <label>Fotoğraf (İsteğe Bağlı) (jpg, jpeg, png)</label>
-                    <input type="file" name="fotograf" accept=".jpg,.jpeg,.png">
-                </div>
-                <div class="form-grup">
-                    <label>Varsa Dekont/Ek Dosya (İsteğe Bağlı) (pdf, jpg, jpeg, png)</label>
-                    <input type="file" name="dekont" accept=".pdf,.jpg,.jpeg,.png">
-                </div>
-            </div>
-
-            <div class="form-grup">
-                <label>Talep / Açıklama Detayı *</label>
-                <textarea name="talep_detayi" rows="5" placeholder="Lütfen talebinizin detaylarını buraya yazınız..." required></textarea>
+            <div id="dinamik_alanlar_konteyner">
+                <!-- Javascript ile dinamik bilgi kutucukları buraya eklenecek -->
             </div>
 
             <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Başvuruyu Gönder</button>
@@ -1011,8 +973,20 @@ foreach ($aktif_formlar as $f) {
                 var selectedOption = selectSecici.options[selectSecici.selectedIndex];
                 var formKodu = selectedOption.getAttribute('data-kodu');
                 var formAdi = selectedOption.getAttribute('data-adi');
+                var alanlarJson = selectedOption.getAttribute('data-alanlar');
                 
                 var acilacakForm = document.getElementById(secilenForm);
+                
+                var defaultAlanlar = [
+                    {name: 'ad_soyad', label: 'Adı Soyadı', type: 'text', required: 1, secenekler: ''},
+                    {name: 'tc_no', label: 'T.C. Kimlik No', type: 'text', required: 1, secenekler: ''},
+                    {name: 'telefon', label: 'İrtibat Telefonu', type: 'text', required: 1, secenekler: ''},
+                    {name: 'eposta', label: 'E-posta Adresi', type: 'email', required: 1, secenekler: ''},
+                    {name: 'birim', label: 'Çalıştığı/Öğrenim Gördüğü Birim', type: 'text', required: 1, secenekler: ''},
+                    {name: 'fotograf', label: 'Fotoğraf', type: 'file', required: 0, secenekler: ''},
+                    {name: 'dekont', label: 'Ödeme Dekontu / Ek Belge', type: 'file', required: 0, secenekler: ''},
+                    {name: 'talep_detayi', label: 'Talep / Açıklama Detayı', type: 'textarea', required: 1, secenekler: ''}
+                ];
                 
                 if (secilenForm === "form_genel.php" || !acilacakForm) {
                     var genelForm = document.getElementById("form_genel.php");
@@ -1020,6 +994,17 @@ foreach ($aktif_formlar as $f) {
                         genelForm.querySelector('input[name="form_kodu"]').value = formKodu;
                         genelForm.querySelector('input[name="form_adi"]').value = formAdi;
                         genelForm.querySelector('h2').textContent = formAdi + ' (' + formKodu + ')';
+                        
+                        var alanlar = defaultAlanlar;
+                        if (alanlarJson) {
+                            try {
+                                alanlar = JSON.parse(alanlarJson);
+                            } catch(e) {
+                                console.error("Alanlar JSON parse hatası:", e);
+                            }
+                        }
+                        
+                        dinamikAlanlariCiz("dinamik_alanlar_konteyner", alanlar);
                         genelForm.style.display = "block";
                     } else {
                         alert("Seçtiğiniz form (" + secilenForm + ") henüz hazırlanmaktadır.");
@@ -1028,6 +1013,46 @@ foreach ($aktif_formlar as $f) {
                     acilacakForm.style.display = "block";
                 }
             }
+        }
+
+        function dinamikAlanlariCiz(containerId, alanlar) {
+            var container = document.getElementById(containerId);
+            container.innerHTML = ""; // Temizle
+            
+            alanlar.forEach(function(alan) {
+                var formGrup = document.createElement("div");
+                formGrup.className = "form-grup";
+                
+                var labelHtml = `<label>${alan.label}${alan.required == 1 ? ' *' : ''}</label>`;
+                var inputHtml = "";
+                
+                if (alan.type === 'textarea') {
+                    inputHtml = `<textarea name="${alan.name}" rows="4" ${alan.required == 1 ? 'required' : ''} placeholder="${alan.label} giriniz..."></textarea>`;
+                } else if (alan.type === 'file') {
+                    var acceptAttr = alan.name.includes('fotograf') || alan.label.toLowerCase().includes('foto') ? 'accept=".jpg,.jpeg,.png"' : 'accept=".pdf,.jpg,.jpeg,.png"';
+                    inputHtml = `<input type="file" name="${alan.name}" ${acceptAttr} ${alan.required == 1 ? 'required' : ''}>`;
+                } else if (alan.type === 'select') {
+                    var optionOptions = `<option value="">Seçiniz...</option>`;
+                    if (alan.secenekler) {
+                        var opts = alan.secenekler.split(',');
+                        opts.forEach(function(o) {
+                            var val = o.trim();
+                            if (val) {
+                                optionOptions += `<option value="${val}">${val}</option>`;
+                            }
+                        });
+                    }
+                    inputHtml = `<select name="${alan.name}" ${alan.required == 1 ? 'required' : ''}>${optionOptions}</select>`;
+                } else {
+                    // text, number, email, date
+                    var inputType = alan.type || 'text';
+                    var maxLen = inputType === 'text' && (alan.name.includes('tc') || alan.label.toLowerCase().includes('tc')) ? 'maxlength="11"' : '';
+                    inputHtml = `<input type="${inputType}" name="${alan.name}" ${maxLen} ${alan.required == 1 ? 'required' : ''} placeholder="${alan.label} giriniz...">`;
+                }
+                
+                formGrup.innerHTML = labelHtml + inputHtml;
+                container.appendChild(formGrup);
+            });
         }
 
         // KDYS.FR.0074 Formu İçin Satır Ekleme/Silme İşlemleri

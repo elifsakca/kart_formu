@@ -68,6 +68,12 @@ try {
         }
     }
 
+    // Sütun Kontrolü ve Güncellemesi (formlar)
+    $columnsFormlar = $db->query("SHOW COLUMNS FROM formlar")->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('form_alanlari', $columnsFormlar)) {
+        $db->exec("ALTER TABLE formlar ADD COLUMN form_alanlari LONGTEXT NULL");
+    }
+
     // Sütun Kontrolü ve Güncellemesi (basvurular)
     $columnsBasvuru = $db->query("SHOW COLUMNS FROM basvurular")->fetchAll(PDO::FETCH_COLUMN);
     if (!in_array('takip_no', $columnsBasvuru)) {

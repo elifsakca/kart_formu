@@ -10,12 +10,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_kodu'])) {
     // Rastgele Güvenli Takip Numarası Üretme (Örn: 2026230593)
     $takip_no = date('Y') . random_int(100000, 999999);
 
-    // Ortak alanları otomatik tespit etme
-    $tc_no    = $_POST['tc_no'] ?? $_POST['personel_tc_no'] ?? ($_POST['eimza_tc'][0] ?? '');
-    $ad_soyad = $_POST['ad_soyad'] ?? $_POST['personel_ad_soyad'] ?? $_POST['sorumlu_ad_soyad'] ?? ($_POST['eimza_ad'][0] ?? '');
-    $telefon  = $_POST['telefon'] ?? $_POST['irtibat_telefonu'] ?? '';
-    $eposta   = $_POST['eposta'] ?? $_POST['personel_eposta'] ?? $_POST['diger_eposta'] ?? '';
-    $birim    = $_POST['birim'] ?? $_POST['fakulte_birim'] ?? $_POST['birim_adi'] ?? $_POST['gorev_ogrenim_yeri'] ?? '';
+    // Ortak alanları otomatik tespit etmek için yardımcı fonksiyon
+    function bulOrtakAlan($post, $arananlar, $varsayilan = '') {
+        foreach ($post as $key => $val) {
+            if (is_string($val)) {
+                $lowerKey = strtolower($key);
+                foreach ($arananlar as $term) {
+                    if (strpos($lowerKey, $term) !== false) {
+                        return $val;
+                    }
+                }
+            }
+        }
+        return $varsayilan;
+    }
+
+    $tc_no    = $_POST['tc_no'] ?? bulOrtakAlan($_POST, ['tc', 'kimlik', 't_c'], $_POST['personel_tc_no'] ?? ($_POST['eimza_tc'][0] ?? ''));
+    $ad_soyad = $_POST['ad_soyad'] ?? bulOrtakAlan($_POST, ['ad', 'soyad', 'isim', 'name'], $_POST['personel_ad_soyad'] ?? $_POST['sorumlu_ad_soyad'] ?? ($_POST['eimza_ad'][0] ?? ''));
+    $telefon  = $_POST['telefon'] ?? bulOrtakAlan($_POST, ['tel', 'telefon', 'phone'], $_POST['irtibat_telefonu'] ?? '');
+    $eposta   = $_POST['eposta'] ?? bulOrtakAlan($_POST, ['eposta', 'e_posta', 'email', 'mail'], $_POST['personel_eposta'] ?? $_POST['diger_eposta'] ?? '');
+    $birim    = $_POST['birim'] ?? bulOrtakAlan($_POST, ['birim', 'fakulte', 'bolum', 'departman', 'okul'], $_POST['fakulte_birim'] ?? $_POST['birim_adi'] ?? $_POST['gorev_ogrenim_yeri'] ?? '');
 
     // Fotoğraf Yükleme İşlemi (Varsa)
     $fotograf_yolu = NULL;
