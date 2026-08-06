@@ -308,10 +308,6 @@ $bugun = date('Y-m-d');
                             <th>DNS Tanımı *</th>
                             <td><input type="text" class="yonetici-input" name="yonetici[dns_tanimi]" value="<?php echo htmlspecialchars($veriler['dns_tanimi'] ?? ''); ?>"></td>
                         </tr>
-                        <tr>
-                            <th>İşlemi Yapan Personel *</th>
-                            <td><input type="text" class="yonetici-input" name="yonetici[islem_yapan_personel]" value="<?php echo htmlspecialchars($veriler['islem_yapan_personel'] ?? ''); ?>" placeholder="Ad Soyad"></td>
-                        </tr>
                     </table>
                     <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Yönetici Bilgilerini Kaydet</button>
                 </div>

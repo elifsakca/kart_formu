@@ -309,19 +309,19 @@ if ($admin_rol === 'superadmin') {
                 $mesajKenarlik = "#27ae60";
 
                 if ($mesajTip == 'silindi') {
-                    $mesajMetni = "✓ Başvuru başarıyla silinerek <strong>Silinenler</strong> sekmesine taşındı.";
+                    $mesajMetni = " Başvuru başarıyla silinerek <strong>Silinenler</strong> sekmesine taşındı.";
                     $mesajRenk = "#d93025"; 
                     $mesajArkaplan = "#fce8e6";
                     $mesajKenarlik = "#d93025";
                 } elseif ($mesajTip == 'geriyuklendi') {
-                    $mesajMetni = "✓ Başvuru başarıyla geri yüklendi ve aktif listeye alındı.";
+                    $mesajMetni = " Başvuru başarıyla geri yüklendi ve aktif listeye alındı.";
                 } elseif ($mesajTip == 'kalicisilindi') {
-                    $mesajMetni = "✓ Başvuru kalıcı olarak sistemden silindi.";
+                    $mesajMetni = " Başvuru kalıcı olarak sistemden silindi.";
                     $mesajRenk = "#d93025";
                     $mesajArkaplan = "#fce8e6";
                     $mesajKenarlik = "#d93025";
                 } elseif ($mesajTip == 'guncellendi') {
-                    $mesajMetni = "✓ Başvuru durumu başarıyla güncellendi.";
+                    $mesajMetni = " Başvuru durumu başarıyla güncellendi.";
                 }
             ?>
             <?php if (!empty($mesajMetni)): ?>
