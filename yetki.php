@@ -347,7 +347,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
 
                     <div style="display:flex; gap:10px;">
                         <button type="submit" name="form_revize_et" class="btn-kaydet" style="background:#27ae60;">Değişiklikleri Kaydet</button>
-                        <button type="button" class="btn-kaydet" style="background:#7f8c8d;" onclick="düzenlemeyiKapat()">İptal Et</button>
+                        <button type="button" class="btn-kaydet" style="background:#7f8c8d;" onclick="duzenlemeyiKapat()">İptal Et</button>
                     </div>
                 </form>
             </div>
@@ -395,7 +395,14 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                                     $varsayilan_alanlar_json = json_encode($varsayilan_alanlar, JSON_UNESCAPED_UNICODE);
                                     $alanlar_verisi = $f['form_alanlari'] ?: $varsayilan_alanlar_json;
                                     ?>
-                                    <button type="button" class="btn-sec-hepsi" style="background:#3498db; font-size:11px; padding:4px 8px; cursor:pointer;" onclick="formuDuzenle(<?php echo $f['id']; ?>, '<?php echo addslashes($f['form_kodu']); ?>', '<?php echo addslashes($f['form_adi']); ?>', '<?php echo addslashes($f['kategori']); ?>', '<?php echo addslashes($f['dosya_adi']); ?>', '<?php echo addslashes($alanlar_verisi); ?>')">Revize Et</button>
+                                    <button type="button" class="btn-sec-hepsi" style="background:#3498db; font-size:11px; padding:4px 8px; cursor:pointer;"
+                                        data-id="<?php echo $f['id']; ?>"
+                                        data-kodu="<?php echo htmlspecialchars($f['form_kodu'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-adi="<?php echo htmlspecialchars($f['form_adi'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-kategori="<?php echo htmlspecialchars($f['kategori'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-dosya="<?php echo htmlspecialchars($f['dosya_adi'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-alanlar="<?php echo htmlspecialchars($alanlar_verisi ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                        onclick="formuDuzenleBtn(this)">Revize Et</button>
                                     
                                     <form method="POST" style="margin:0; display:inline;">
                                         <input type="hidden" name="form_id" value="<?php echo $f['id']; ?>">
@@ -490,6 +497,17 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             var checkboxes = document.querySelectorAll('#' + gridId + ' input[type="checkbox"]');
             var tumuSecili = Array.from(checkboxes).every(cb => cb.checked);
             checkboxes.forEach(cb => cb.checked = !tumuSecili);
+        }
+
+        function formuDuzenleBtn(btn) {
+            var id = btn.getAttribute("data-id");
+            var kodu = btn.getAttribute("data-kodu");
+            var adi = btn.getAttribute("data-adi");
+            var kategori = btn.getAttribute("data-kategori");
+            var dosya = btn.getAttribute("data-dosya");
+            var alanlarJson = btn.getAttribute("data-alanlar");
+            
+            formuDuzenle(id, kodu, adi, kategori, dosya, alanlarJson);
         }
 
         function formuDuzenle(id, kodu, adi, kategori, dosya, alanlarJson) {
@@ -606,7 +624,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                 .replace(/'/g, "&#039;");
         }
 
-        function düzenlemeyiKapat() {
+        function duzenlemeyiKapat() {
             document.getElementById("edit_form_container").style.display = "none";
             document.getElementById("edit_form_warning").style.display = "block";
             document.getElementById("edit_form_id").value = "";
