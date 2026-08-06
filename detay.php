@@ -480,5 +480,14 @@ $bugun = date('Y-m-d');
         <?php endif; ?>
     </div>
 
+    <?php if (isset($_GET['print']) && $_GET['print'] == 1): ?>
+        <script>
+            window.addEventListener('DOMContentLoaded', function() {
+                setTimeout(function() {
+                    window.print();
+                }, 300);
+            });
+        </script>
+    <?php endif; ?>
 </body>
 </html>
