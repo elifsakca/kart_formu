@@ -93,6 +93,16 @@ try {
         }
     }
 
+    // Normal yöneticilere varsayılan tüm form izinlerini otomatik tanımla
+    $tum_form_kodlari = ['F-52', 'F-53', 'F-54', 'F-55', 'KDYS.FR.0072', 'KDYS.FR.0073', 'KDYS.FR.0074', 'KDYS.FR.0077', 'KDYS.FR.0078', 'KDYS.FR.0079', 'KDYS.FR.0080', 'KDYS.FR.0082'];
+    $admins = $db->query("SELECT id FROM yoneticiler WHERE rol = 'admin'")->fetchAll();
+    $insPerm = $db->prepare("INSERT IGNORE INTO yonetici_izinleri (yonetici_id, form_kodu) VALUES (:yid, :fkodu)");
+    foreach ($admins as $adm) {
+        foreach ($tum_form_kodlari as $fk) {
+            $insPerm->execute([':yid' => $adm['id'], ':fkodu' => $fk]);
+        }
+    }
+
 } catch(PDOException $e) {
     die("Veritabanı bağlantı hatası: " . $e->getMessage());
 }
