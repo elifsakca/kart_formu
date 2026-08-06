@@ -534,6 +534,7 @@ foreach ($aktif_formlar as $f) {
             <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Formu Gönder</button>
         </form>
     </div>
+    
 
     <!-- KDYS.FR.0074 - E-İmza Talep Formu -->
     <div id="form_0074.php" class="gizli-form">
