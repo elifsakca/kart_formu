@@ -72,7 +72,7 @@ if (!empty($takip_no)) {
         </a>
         <div>
             <a href="index.php" class="navbar-link">Formlar</a>
-            <a href="takip.php" class="navbar-link" style="font-weight:bold; color:#1b656e;">Başvuru Takibi</a>
+            <a href="takip.php" class="navbar-link" >Başvuru Takibi</a>
             <a href="login.php" class="navbar-link">Yönetici Girişi</a>
         </div>
     </div>
