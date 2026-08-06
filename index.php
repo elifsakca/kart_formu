@@ -133,19 +133,6 @@
             <input type="hidden" name="form_adi" value="Akıllı Kart İşlem Formu (F-52)">
 
             <div class="form-satir">
-                <div class="form-grup">
-                    <label>Ad, Soyad</label>
-                    <input type="text" name="ad_soyad" required>
-                    <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
-                </div>
-                <div class="form-grup">
-                    <label>TC Kimlik No</label>
-                    <input type="text" name="tc_no" maxlength="11" required>
-                    <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
-                </div>
-            </div>
-            
-            <div class="form-satir">
                 <div class="form-grup"><label>Fakülte/YO/MYO/Birim</label><input type="text" name="fakulte_birim"></div>
                 <div class="form-grup"><label>İrtibat Telefonu</label><input type="text" name="telefon"></div>
             </div>
@@ -179,18 +166,34 @@
                 </select>
             </div>
             
-            <hr style="border:1px solid #eee; margin: 20px 0;">
+            <!-- AKILLI KARTIN İLK KEZ VERİLMESİ (YENİ BAŞLAYAN PERSONEL/KİŞİLER İÇİN) -->
+            <div style="background:#e8f4f8; border-left:4px solid #1b656e; padding:12px 15px; border-radius:5px; margin:20px 0 15px 0;">
+                <h3 style="margin:0; color:#1b656e; font-size:16px;">Akıllı Kartın ilk kez verilmesi (Yeni Başlayan Personel/kişiler için)</h3>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Adı, Soyadı</label>
+                    <input type="text" name="ad_soyad" required>
+                    <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
+                </div>
+                <div class="form-grup">
+                    <label>TC Kimlik No</label>
+                    <input type="text" name="tc_no" maxlength="11" required>
+                    <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
+                </div>
+            </div>
 
             <div class="form-satir">
                 <div class="form-grup">
                     <label>Unvanı</label>
                     <input type="text" name="unvan">
-                    <span class="form-bilgi">Bu kısım Akademik, İdari Personel ve Yerleşke Onursal, Emekli, Hizmet, Firma, Kurum, Misafir, Kütüphane Giriş Kartları içindir.</span>
+                    <span class="form-bilgi">Bu kısım Akademik, İdari Personel Kimlik Kartı ve Yerleşke Onursal, Emekli, Hizmet, Firma, Kurum, Misafir, Kütüphane Giriş Kartları içindir.</span>
                 </div>
                 <div class="form-grup">
                     <label>Birim</label>
                     <input type="text" name="birim">
-                    <span class="form-bilgi">Akademik ve İdari Personelin kadrosunun olduğu birim, diğer kart tipleri için personelin çalıştığı birim yazılmalıdır.</span>
+                    <span class="form-bilgi">Akademik ve İdari Personelin kadrosunun olduğu birim, diğer Yerleşke Hizmet, Firma, Misafir Giriş kart tipleri için personelin çalıştığı birim yazılmalıdır.</span>
                 </div>
             </div>
 
@@ -201,9 +204,9 @@
                     <span class="form-bilgi">Akademik Personelin kadrosunun olduğu bölüm yazılmalıdır.</span>
                 </div>
                 <div class="form-grup">
-                    <label>Kurum Sicil No'su</label>
+                    <label>Kurum sicil no ’su</label>
                     <input type="text" name="sicil_no">
-                    <span class="form-bilgi">Bu kısım Akademik, İdari Personel, Koruma Güvenlik görevlisi ve Yerleşke Kurum Giriş Kartları içindir.</span>
+                    <span class="form-bilgi">Bu kısım Akademik, İdari Personel ve Koruma Güvenlik görevlisi Kimlik Kartı ve Yerleşke Kurum Giriş Kartları içindir.</span>
                 </div>
             </div>
 
