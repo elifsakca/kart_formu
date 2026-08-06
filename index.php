@@ -1,3 +1,21 @@
+<?php
+require_once 'baglan.php';
+
+// Aktif formları çekelim
+try {
+    $formsStmt = $db->query("SELECT * FROM formlar WHERE durum = 1 ORDER BY kategori ASC, id ASC");
+    $aktif_formlar = $formsStmt->fetchAll();
+} catch (PDOException $e) {
+    $aktif_formlar = [];
+}
+
+// Kategorilere göre gruplayalım
+$grup_formlar = [];
+foreach ($aktif_formlar as $f) {
+    $kategori = $f['kategori'] ?: 'Genel Formlar';
+    $grup_formlar[$kategori][] = $f;
+}
+?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -100,24 +118,17 @@
     <div class="secim-kutusu">
         <select id="formSecici" class="form-select" onchange="formYonetlendir()">
             <option value="">-- Doldurmak İstediğiniz Formu Seçiniz --</option>
-            
-            <optgroup label="Akıllı Kart Formları">
-                <option value="form_f52.php">KDYS.FR.0553 - Akıllı Kart İşlem Formu</option>
-                <option value="form_f53.php">KDYS.FR.0556 - Akıllı Kart Öğrenci İşlem Formu</option>
-                <option value="form_f54.php">KDYS.FR.0555 - Kayıp Akıllı Kart Müracaat Formu</option>
-                <option value="form_f55.php">KDYS.FR.0554 - Arızalı Akıllı Kart Müracaat Formu</option>
-            </optgroup>
-
-            <optgroup label="Bilgi İşlem Daire Başkanlığı Formları">
-                <option value="form_0072.php">KDYS.FR.0072 - Bilgi İşlem DB Kurumsal E-Posta Talep Formu</option>
-                <option value="form_0073.php">KDYS.FR.0073 - Bilgi İşlem DB E-İmza Mini Kart Okuyucu Teslim Tesellüm Tutanağı</option>
-                <option value="form_0074.php">KDYS.FR.0074 - Bilgi İşlem DB E-İmza Talep Formu</option>
-                <option value="form_0077.php">KDYS.FR.0077 - Bilgi İşlem DB Kişisel Web Adı ve Alanı Sözleşmesi</option>
-                <option value="form_0078.php">KDYS.FR.0078 - Bilgi İşlem DB Kurumsal Statik IP Sözleşmesi</option>
-                <option value="form_0079.php">KDYS.FR.0079 - Bilgi İşlem DB Kurumsal Web Adı ve Alanı Sözleşmesi</option>
-                <option value="form_0080.php">KDYS.FR.0080 - Bilgi İşlem DB Mernis Taahhütnamesi</option>
-                <option value="form_0082.php">KDYS.FR.0082 - Bilgi İşlem DB Personel Elektronik Posta Başvuru Formu</option>
-            </optgroup>
+            <?php foreach ($grup_formlar as $kategori => $formlar): ?>
+                <optgroup label="<?php echo htmlspecialchars($kategori); ?>">
+                    <?php foreach ($formlar as $f): ?>
+                        <option value="<?php echo htmlspecialchars($f['dosya_adi']); ?>" 
+                                data-kodu="<?php echo htmlspecialchars($f['form_kodu']); ?>" 
+                                data-adi="<?php echo htmlspecialchars($f['form_adi']); ?>">
+                            <?php echo htmlspecialchars($f['form_kodu'] . ' - ' . $f['form_adi']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </optgroup>
+            <?php endforeach; ?>
         </select>
     </div>
     
@@ -926,12 +937,67 @@
         </form>
     </div>
 
+    <!-- Genel Form (Dinamik/Yeni Formlar İçin Fallback) -->
+    <div id="form_genel.php" class="gizli-form">
+        <h2>Genel Başvuru Formu</h2>
+        <form method="POST" action="islem.php" enctype="multipart/form-data">
+            <input type="hidden" name="form_kodu" value="">
+            <input type="hidden" name="form_adi" value="">
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Adı Soyadı *</label>
+                    <input type="text" name="ad_soyad" required>
+                </div>
+                <div class="form-grup">
+                    <label>T.C. Kimlik No *</label>
+                    <input type="text" name="tc_no" maxlength="11" required>
+                </div>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>İrtibat Telefonu *</label>
+                    <input type="text" name="telefon" required>
+                </div>
+                <div class="form-grup">
+                    <label>E-posta Adresi *</label>
+                    <input type="email" name="eposta" required>
+                </div>
+            </div>
+
+            <div class="form-grup">
+                <label>Çalıştığı/Öğrenim Gördüğü Birim *</label>
+                <input type="text" name="birim" required>
+            </div>
+
+            <div class="form-satir">
+                <div class="form-grup">
+                    <label>Fotoğraf (İsteğe Bağlı) (jpg, jpeg, png)</label>
+                    <input type="file" name="fotograf" accept=".jpg,.jpeg,.png">
+                </div>
+                <div class="form-grup">
+                    <label>Varsa Dekont/Ek Dosya (İsteğe Bağlı) (pdf, jpg, jpeg, png)</label>
+                    <input type="file" name="dekont" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+            </div>
+
+            <div class="form-grup">
+                <label>Talep / Açıklama Detayı *</label>
+                <textarea name="talep_detayi" rows="5" placeholder="Lütfen talebinizin detaylarını buraya yazınız..." required></textarea>
+            </div>
+
+            <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Başvuruyu Gönder</button>
+        </form>
+    </div>
+
     </div>
 
     <!-- JavaScript Kodları -->
     <script>
         function formYonetlendir() {
-            var secilenForm = document.getElementById("formSecici").value;
+            var selectSecici = document.getElementById("formSecici");
+            var secilenForm = selectSecici.value;
             var hataMesaji = document.getElementById("hata-mesaji");
             var tumFormlar = document.querySelectorAll(".gizli-form");
             
@@ -941,11 +1007,25 @@
                 hataMesaji.style.display = "block";
             } else {
                 hataMesaji.style.display = "none";
+                
+                var selectedOption = selectSecici.options[selectSecici.selectedIndex];
+                var formKodu = selectedOption.getAttribute('data-kodu');
+                var formAdi = selectedOption.getAttribute('data-adi');
+                
                 var acilacakForm = document.getElementById(secilenForm);
-                if (acilacakForm) {
-                    acilacakForm.style.display = "block";
+                
+                if (secilenForm === "form_genel.php" || !acilacakForm) {
+                    var genelForm = document.getElementById("form_genel.php");
+                    if (genelForm) {
+                        genelForm.querySelector('input[name="form_kodu"]').value = formKodu;
+                        genelForm.querySelector('input[name="form_adi"]').value = formAdi;
+                        genelForm.querySelector('h2').textContent = formAdi + ' (' + formKodu + ')';
+                        genelForm.style.display = "block";
+                    } else {
+                        alert("Seçtiğiniz form (" + secilenForm + ") henüz hazırlanmaktadır.");
+                    }
                 } else {
-                    alert("Seçtiğiniz form (" + secilenForm + ") henüz hazırlanmaktadır.");
+                    acilacakForm.style.display = "block";
                 }
             }
         }

@@ -35,6 +35,39 @@ try {
         FOREIGN KEY (yonetici_id) REFERENCES yoneticiler(id) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
+    // Formlar Tablosunun Oluşturulması
+    $db->exec("CREATE TABLE IF NOT EXISTS formlar (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        form_kodu VARCHAR(50) NOT NULL UNIQUE,
+        form_adi VARCHAR(255) NOT NULL,
+        kategori VARCHAR(100) NOT NULL DEFAULT 'Bilgi İşlem Daire Başkanlığı Formları',
+        dosya_adi VARCHAR(100) NOT NULL DEFAULT 'form_genel.php',
+        durum TINYINT NOT NULL DEFAULT 1
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+    // Varsayılan formların kontrolü ve eklenmesi
+    $form_kontrol = $db->query("SELECT COUNT(*) FROM formlar")->fetchColumn();
+    if ($form_kontrol == 0) {
+        $varsayilan_formlar = [
+            ['KDYS.FR.0553', 'Akıllı Kart İşlem Formu', 'Akıllı Kart Formları', 'form_f52.php'],
+            ['KDYS.FR.0556', 'Akıllı Kart Öğrenci İşlem Formu', 'Akıllı Kart Formları', 'form_f53.php'],
+            ['KDYS.FR.0555', 'Kayıp Akıllı Kart Müracaat Formu', 'Akıllı Kart Formları', 'form_f54.php'],
+            ['KDYS.FR.0554', 'Arızalı Akıllı Kart Müracaat Formu', 'Akıllı Kart Formları', 'form_f55.php'],
+            ['KDYS.FR.0072', 'Kurumsal E-Posta Talep Formu', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0072.php'],
+            ['KDYS.FR.0073', 'E-İmza Mini Kart Okuyucu Tutanağı', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0073.php'],
+            ['KDYS.FR.0074', 'E-İmza Talep Formu', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0074.php'],
+            ['KDYS.FR.0077', 'Kişisel Web Sözleşmesi', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0077.php'],
+            ['KDYS.FR.0078', 'Kurumsal Statik IP Sözleşmesi', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0078.php'],
+            ['KDYS.FR.0079', 'Kurumsal Web Sözleşmesi', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0079.php'],
+            ['KDYS.FR.0080', 'Mernis Taahhütnamesi', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0080.php'],
+            ['KDYS.FR.0082', 'Personel E-Posta Başvuru Formu', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0082.php']
+        ];
+        $insertFormStmt = $db->prepare("INSERT INTO formlar (form_kodu, form_adi, kategori, dosya_adi, durum) VALUES (?, ?, ?, ?, 1)");
+        foreach ($varsayilan_formlar as $vf) {
+            $insertFormStmt->execute($vf);
+        }
+    }
+
     // Sütun Kontrolü ve Güncellemesi (basvurular)
     $columnsBasvuru = $db->query("SHOW COLUMNS FROM basvurular")->fetchAll(PDO::FETCH_COLUMN);
     if (!in_array('takip_no', $columnsBasvuru)) {
@@ -94,7 +127,7 @@ try {
     }
 
     // Normal yöneticilere varsayılan tüm form izinlerini otomatik tanımla
-    $tum_form_kodlari = ['F-52', 'F-53', 'F-54', 'F-55', 'KDYS.FR.0072', 'KDYS.FR.0073', 'KDYS.FR.0074', 'KDYS.FR.0077', 'KDYS.FR.0078', 'KDYS.FR.0079', 'KDYS.FR.0080', 'KDYS.FR.0082'];
+    $tum_form_kodlari = $db->query("SELECT form_kodu FROM formlar")->fetchAll(PDO::FETCH_COLUMN);
     $admins = $db->query("SELECT id FROM yoneticiler WHERE rol = 'admin'")->fetchAll();
     $insPerm = $db->prepare("INSERT IGNORE INTO yonetici_izinleri (yonetici_id, form_kodu) VALUES (:yid, :fkodu)");
     foreach ($admins as $adm) {

@@ -111,21 +111,30 @@ if (isset($_GET['islem']) && in_array($_GET['islem'], ['sil', 'geri_yukle', 'kal
     }
 }
 
-// Tüm Form İsimleri
-$tum_form_isimleri = [
-    'KDYS.FR.0553' => 'KDYS.FR.0553 - Akıllı Kart İşlem Formu',
-    'KDYS.FR.0556' => 'KDYS.FR.0556 - Öğrenci Akıllı Kart Formu',
-    'KDYS.FR.0555' => 'KDYS.FR.0555 - Kayıp Kart Müracaat Formu',
-    'KDYS.FR.0554' => 'KDYS.FR.0554 - Arızalı Kart Müracaat Formu',
-    'KDYS.FR.0072' => 'KDYS.FR.0072 - Kurumsal E-Posta Talep',
-    'KDYS.FR.0073' => 'KDYS.FR.0073 - E-İmza Okuyucu Tutanağı',
-    'KDYS.FR.0074' => 'KDYS.FR.0074 - E-İmza Talep Formu',
-    'KDYS.FR.0077' => 'KDYS.FR.0077 - Kişisel Web Sözleşmesi',
-    'KDYS.FR.0078' => 'KDYS.FR.0078 - Kurumsal Statik IP Sözleşmesi',
-    'KDYS.FR.0079' => 'KDYS.FR.0079 - Kurumsal Web Sözleşmesi',
-    'KDYS.FR.0080' => 'KDYS.FR.0080 - Mernis Taahhütnamesi',
-    'KDYS.FR.0082' => 'KDYS.FR.0082 - Personel E-Posta Başvuru'
-];
+// Tüm Form İsimleri Veritabanından Dinamik Alınıyor
+$tum_form_isimleri = [];
+try {
+    $form_rows = $db->query("SELECT form_kodu, form_adi FROM formlar")->fetchAll();
+    foreach ($form_rows as $fr) {
+        $tum_form_isimleri[$fr['form_kodu']] = $fr['form_kodu'] . ' - ' . $fr['form_adi'];
+    }
+} catch (PDOException $e) {
+    // Veritabanı hatası durumunda fallback olarak statik olanları tutabiliriz
+    $tum_form_isimleri = [
+        'KDYS.FR.0553' => 'KDYS.FR.0553 - Akıllı Kart İşlem Formu',
+        'KDYS.FR.0556' => 'KDYS.FR.0556 - Öğrenci Akıllı Kart Formu',
+        'KDYS.FR.0555' => 'KDYS.FR.0555 - Kayıp Kart Müracaat Formu',
+        'KDYS.FR.0554' => 'KDYS.FR.0554 - Arızalı Kart Müracaat Formu',
+        'KDYS.FR.0072' => 'KDYS.FR.0072 - Kurumsal E-Posta Talep',
+        'KDYS.FR.0073' => 'KDYS.FR.0073 - E-İmza Okuyucu Tutanağı',
+        'KDYS.FR.0074' => 'KDYS.FR.0074 - E-İmza Talep Formu',
+        'KDYS.FR.0077' => 'KDYS.FR.0077 - Kişisel Web Sözleşmesi',
+        'KDYS.FR.0078' => 'KDYS.FR.0078 - Kurumsal Statik IP Sözleşmesi',
+        'KDYS.FR.0079' => 'KDYS.FR.0079 - Kurumsal Web Sözleşmesi',
+        'KDYS.FR.0080' => 'KDYS.FR.0080 - Mernis Taahhütnamesi',
+        'KDYS.FR.0082' => 'KDYS.FR.0082 - Personel E-Posta Başvuru'
+    ];
+}
 
 // Admin İzinli Form Kodlarını Çekme
 $izinli_formlar = [];

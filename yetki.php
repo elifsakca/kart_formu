@@ -11,21 +11,17 @@ if (!isset($_SESSION['admin_giris']) || $_SESSION['admin_giris'] !== true || ($_
 $mesaj = "";
 $hata = "";
 
-// Tüm Sistem Formlarının Listesi
-$tum_formlar = [
-    'KDYS.FR.0553' => 'KDYS.FR.0553 - Akıllı Kart İşlem Formu',
-    'KDYS.FR.0556' => 'KDYS.FR.0556 - Akıllı Kart Öğrenci İşlem Formu',
-    'KDYS.FR.0555' => 'KDYS.FR.0555 - Kayıp Akıllı Kart Müracaat Formu',
-    'KDYS.FR.0554' => 'KDYS.FR.0554 - Arızalı Akıllı Kart Müracaat Formu',
-    'KDYS.FR.0072' => 'KDYS.FR.0072 - Kurumsal E-Posta Talep Formu',
-    'KDYS.FR.0073' => 'KDYS.FR.0073 - E-İmza Mini Kart Okuyucu Tutanağı',
-    'KDYS.FR.0074' => 'KDYS.FR.0074 - E-İmza Talep Formu',
-    'KDYS.FR.0077' => 'KDYS.FR.0077 - Kişisel Web Sözleşmesi',
-    'KDYS.FR.0078' => 'KDYS.FR.0078 - Kurumsal Statik IP Sözleşmesi',
-    'KDYS.FR.0079' => 'KDYS.FR.0079 - Kurumsal Web Sözleşmesi',
-    'KDYS.FR.0080' => 'KDYS.FR.0080 - Mernis Taahhütnamesi',
-    'KDYS.FR.0082' => 'KDYS.FR.0082 - Personel E-Posta Başvuru Formu'
-];
+// Tüm Sistem Formlarını Veritabanından Çek
+try {
+    $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
+} catch (PDOException $e) {
+    $formlar_query = [];
+}
+
+$tum_formlar = [];
+foreach ($formlar_query as $f) {
+    $tum_formlar[$f['form_kodu']] = $f['form_kodu'] . ' - ' . $f['form_adi'] . ($f['durum'] == 0 ? ' (PASİF)' : '');
+}
 
 // POST İşlemi 1: Yeni Admin Ekleme
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_admin_ekle'])) {
@@ -68,6 +64,111 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['izinleri_kaydet'])) {
         $mesaj = "Görev izinleri başarıyla güncellendi.";
     } catch (PDOException $e) {
         $hata = "Hata oluştu: " . $e->getMessage();
+    }
+}
+
+// POST İşlemi 3: Form Revize Etme (Güncelleme)
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_revize_et'])) {
+    $f_id       = intval($_POST['form_id']);
+    $f_kodu     = trim($_POST['form_kodu'] ?? '');
+    $f_adi      = trim($_POST['form_adi'] ?? '');
+    $f_kategori = trim($_POST['kategori'] ?? '');
+    $f_dosya    = trim($_POST['dosya_adi'] ?? '');
+
+    if ($f_kategori === 'YENI_KAT') {
+        $f_kategori = trim($_POST['yeni_kategori_adi'] ?? '');
+    }
+
+    if (empty($f_dosya)) {
+        $f_dosya = 'form_genel.php';
+    }
+
+    if ($f_id > 0 && !empty($f_kodu) && !empty($f_adi) && !empty($f_kategori)) {
+        try {
+            // Form kodunun benzersiz olup olmadığını kontrol et (kendi ID'si hariç)
+            $chk = $db->prepare("SELECT COUNT(*) FROM formlar WHERE form_kodu = :fkodu AND id != :id");
+            $chk->execute([':fkodu' => $f_kodu, ':id' => $f_id]);
+            
+            if ($chk->fetchColumn() > 0) {
+                $hata = "Bu form kodu ($f_kodu) zaten başka bir form tarafından kullanılmaktadır!";
+            } else {
+                // Eski kodu çekelim ki yetkilerdeki form kodunu da güncelleyebilelim
+                $old_kodu_stmt = $db->prepare("SELECT form_kodu FROM formlar WHERE id = :id");
+                $old_kodu_stmt->execute([':id' => $f_id]);
+                $eski_kodu = $old_kodu_stmt->fetchColumn();
+
+                $up = $db->prepare("UPDATE formlar SET form_kodu = :fkodu, form_adi = :fadi, kategori = :fkat, dosya_adi = :fdosya WHERE id = :id");
+                $up->execute([':fkodu' => $f_kodu, ':fadi' => $f_adi, ':fkat' => $f_kategori, ':fdosya' => $f_dosya, ':id' => $f_id]);
+
+                // Yetkileri de güncelleyelim
+                if ($eski_kodu && $eski_kodu !== $f_kodu) {
+                    $upPerm = $db->prepare("UPDATE yonetici_izinleri SET form_kodu = :yeni WHERE form_kodu = :eski");
+                    $upPerm->execute([':yeni' => $f_kodu, ':eski' => $eski_kodu]);
+                }
+
+                $mesaj = "Form bilgileri başarıyla revize edildi.";
+                
+                // Formlar listesini ve izin tanımlarını yeniden yükleyelim
+                $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
+                $tum_formlar = [];
+                foreach ($formlar_query as $f) {
+                    $tum_formlar[$f['form_kodu']] = $f['form_kodu'] . ' - ' . $f['form_adi'] . ($f['durum'] == 0 ? ' (PASİF)' : '');
+                }
+            }
+        } catch (PDOException $e) {
+            $hata = "Form güncellenirken hata oluştu: " . $e->getMessage();
+        }
+    } else {
+        $hata = "Lütfen form bilgilerini eksiksiz giriniz!";
+    }
+}
+
+// POST İşlemi 4: Form Aktif/Pasif Yapma
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_durum_degistir'])) {
+    $f_id = intval($_POST['form_id']);
+    $yeni_durum = intval($_POST['yeni_durum']);
+
+    try {
+        $up = $db->prepare("UPDATE formlar SET durum = :durum WHERE id = :id");
+        $up->execute([':durum' => $yeni_durum, ':id' => $f_id]);
+        $mesaj = "Form durumu başarıyla güncellendi.";
+        
+        // Formlar listesini ve izin tanımlarını yeniden yükleyelim
+        $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
+        $tum_formlar = [];
+        foreach ($formlar_query as $f) {
+            $tum_formlar[$f['form_kodu']] = $f['form_kodu'] . ' - ' . $f['form_adi'] . ($f['durum'] == 0 ? ' (PASİF)' : '');
+        }
+    } catch (PDOException $e) {
+        $hata = "Form durumu güncellenirken hata oluştu: " . $e->getMessage();
+    }
+}
+
+// POST İşlemi 5: Form Silme
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_sil'])) {
+    $f_id = intval($_POST['form_id']);
+    try {
+        $f_kodu_stmt = $db->prepare("SELECT form_kodu FROM formlar WHERE id = :id");
+        $f_kodu_stmt->execute([':id' => $f_id]);
+        $f_kodu = $f_kodu_stmt->fetchColumn();
+
+        if ($f_kodu) {
+            $delPerm = $db->prepare("DELETE FROM yonetici_izinleri WHERE form_kodu = :fkodu");
+            $delPerm->execute([':fkodu' => $f_kodu]);
+        }
+
+        $del = $db->prepare("DELETE FROM formlar WHERE id = :id");
+        $del->execute([':id' => $f_id]);
+        $mesaj = "Form başarıyla sistemden silindi.";
+        
+        // Formlar listesini ve izin tanımlarını yeniden yükleyelim
+        $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
+        $tum_formlar = [];
+        foreach ($formlar_query as $f) {
+            $tum_formlar[$f['form_kodu']] = $f['form_kodu'] . ' - ' . $f['form_adi'] . ($f['durum'] == 0 ? ' (PASİF)' : '');
+        }
+    } catch (PDOException $e) {
+        $hata = "Form silinirken hata oluştu: " . $e->getMessage();
     }
 }
 
@@ -169,6 +270,104 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             </form>
         </div>
 
+        <!-- FORM YÖNETİM KARTI -->
+        <div class="card">
+            <h2> Sistem Formlarını Yönet (Revize Et / Pasifleştir / Sil)</h2>
+            
+            <!-- Bilgilendirme Uyarısı (Form seçilmediğinde gösterilir) -->
+            <div id="edit_form_warning" class="alert-danger" style="background:#e8f4f8; color:#1b656e; border-left-color:#1b656e; margin-bottom:15px; font-size:13.5px; font-weight:normal;">
+                ℹ Lütfen revize etmek (düzenlemek) istediğiniz formun yanındaki <strong>Revize Et</strong> butonuna tıklayınız.
+            </div>
+
+            <!-- Form Revize Etme Alt Bölümü (Varsayılan olarak gizlidir, Revize Et'e tıklayınca açılır) -->
+            <div id="edit_form_container" style="display:none; margin-bottom: 30px; padding: 15px; background: #fbfcfc; border: 1px solid #dcdde1; border-radius: 6px;">
+                <form method="POST">
+                    <input type="hidden" name="form_id" id="edit_form_id" value="">
+                    <h3 style="color:#1b656e; font-size:16px; margin-top:0;">Başvuru Formu Bilgilerini Revize Et</h3>
+                    <div class="form-satir">
+                        <div class="form-grup">
+                            <label>Form Kodu *</label>
+                            <input type="text" name="form_kodu" id="edit_form_kodu" placeholder="Örn: KDYS.FR.0090" required autocomplete="off">
+                        </div>
+                        <div class="form-grup">
+                            <label>Form Adı *</label>
+                            <input type="text" name="form_adi" id="edit_form_adi" placeholder="Örn: Yemek Kartı Talep Formu" required>
+                        </div>
+                    </div>
+                    <div class="form-satir">
+                        <div class="form-grup">
+                            <label>Kategori *</label>
+                            <select name="kategori" id="edit_form_kategori_sec" onchange="kategoriSecimKontrolEdit(this)" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                                <option value="Bilgi İşlem Daire Başkanlığı Formları">Bilgi İşlem Daire Başkanlığı Formları</option>
+                                <option value="Akıllı Kart Formları">Akıllı Kart Formları</option>
+                                <option value="YENI_KAT">-- Yeni Kategori Ekle --</option>
+                            </select>
+                            <input type="text" name="yeni_kategori_adi" id="edit_yeni_kategori_adi" placeholder="Yeni Kategori Adını Yazınız" style="display:none; margin-top:8px; width:100%; padding:10px; border:1px solid #ddd; border-radius:5px; box-sizing:border-box;">
+                        </div>
+                        <div class="form-grup">
+                            <label>Sayfa / Şablon (Dosya Adı)</label>
+                            <input type="text" name="dosya_adi" id="edit_dosya_adi" placeholder="Boş bırakılırsa genel şablon kullanılır (form_genel.php)">
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button type="submit" name="form_revize_et" class="btn-kaydet" style="background:#27ae60;">Değişiklikleri Kaydet</button>
+                        <button type="button" class="btn-kaydet" style="background:#7f8c8d;" onclick="düzenlemeyiKapat()">İptal Et</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Mevcut Formların Listesi ve Yönetimi -->
+            <h3 style="color:#1b656e; font-size:16px;">Sistemde Kayıtlı Formlar</h3>
+            <table class="log-table" style="width:100%; border-collapse:collapse; margin-top:10px;">
+                <thead>
+                    <tr style="background:#e8f4f8; color:#1b656e;">
+                        <th style="padding:10px; text-align:left;">Form Kodu</th>
+                        <th style="padding:10px; text-align:left;">Form Adı</th>
+                        <th style="padding:10px; text-align:left;">Kategori</th>
+                        <th style="padding:10px; text-align:left;">Şablon / Sayfa</th>
+                        <th style="padding:10px; text-align:center;">Durum</th>
+                        <th style="padding:10px; text-align:center; width:220px;">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($formlar_query as $f): ?>
+                        <tr>
+                            <td style="padding:10px; border-bottom:1px solid #eee;"><strong><?php echo htmlspecialchars($f['form_kodu']); ?></strong></td>
+                            <td style="padding:10px; border-bottom:1px solid #eee;"><?php echo htmlspecialchars($f['form_adi']); ?></td>
+                            <td style="padding:10px; border-bottom:1px solid #eee;"><span style="font-size:11px; background:#e8f4f8; padding:3px 6px; border-radius:3px; color:#1b656e;"><?php echo htmlspecialchars($f['kategori']); ?></span></td>
+                            <td style="padding:10px; border-bottom:1px solid #eee; font-family:monospace; font-size:12px;"><?php echo htmlspecialchars($f['dosya_adi']); ?></td>
+                            <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">
+                                <?php if ($f['durum'] == 1): ?>
+                                    <span style="background:#d4edda; color:#155724; padding:3px 8px; border-radius:12px; font-size:11px; font-weight:bold;">Aktif</span>
+                                <?php else: ?>
+                                    <span style="background:#f8d7da; color:#721c24; padding:3px 8px; border-radius:12px; font-size:11px; font-weight:bold;">Pasif</span>
+                                <?php endif; ?>
+                            </td>
+                            <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">
+                                <div style="display:inline-flex; gap:5px; align-items:center;">
+                                    <button type="button" class="btn-sec-hepsi" style="background:#3498db; font-size:11px; padding:4px 8px; cursor:pointer;" onclick="formuDuzenle(<?php echo $f['id']; ?>, '<?php echo addslashes($f['form_kodu']); ?>', '<?php echo addslashes($f['form_adi']); ?>', '<?php echo addslashes($f['kategori']); ?>', '<?php echo addslashes($f['dosya_adi']); ?>')">Revize Et</button>
+                                    
+                                    <form method="POST" style="margin:0; display:inline;">
+                                        <input type="hidden" name="form_id" value="<?php echo $f['id']; ?>">
+                                        <input type="hidden" name="yeni_durum" value="<?php echo $f['durum'] == 1 ? 0 : 1; ?>">
+                                        <?php if ($f['durum'] == 1): ?>
+                                            <button type="submit" name="form_durum_degistir" class="btn-sec-hepsi" style="background:#f39c12; font-size:11px; padding:4px 8px; cursor:pointer;">Pasif Et</button>
+                                        <?php else: ?>
+                                            <button type="submit" name="form_durum_degistir" class="btn-sec-hepsi" style="background:#27ae60; font-size:11px; padding:4px 8px; cursor:pointer;">Aktif Et</button>
+                                        <?php endif; ?>
+                                    </form>
+                                    <form method="POST" style="margin:0; display:inline;" onsubmit="return confirm('Bu formu silmek istediğinize emin misiniz? İzinler de temizlenecektir.');">
+                                        <input type="hidden" name="form_id" value="<?php echo $f['id']; ?>">
+                                        <button type="submit" name="form_sil" class="btn-sec-hepsi" style="background:#d93025; font-size:11px; padding:4px 8px; cursor:pointer;">Sil</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
         <!-- YÖNETİCİ İZİN / GÖREV ATAMA KARTLARI -->
         <div class="card" style="background:#f8fbfd; border:1px solid #d0e4eb;">
             <h2 style="border-bottom:none; margin:0;"> Yönetici Görev & Form İzinleri</h2>
@@ -241,6 +440,61 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             var checkboxes = document.querySelectorAll('#' + gridId + ' input[type="checkbox"]');
             var tumuSecili = Array.from(checkboxes).every(cb => cb.checked);
             checkboxes.forEach(cb => cb.checked = !tumuSecili);
+        }
+
+        function formuDuzenle(id, kodu, adi, kategori, dosya) {
+            document.getElementById("edit_form_container").style.display = "block";
+            document.getElementById("edit_form_warning").style.display = "none";
+            
+            document.getElementById("edit_form_id").value = id;
+            document.getElementById("edit_form_kodu").value = kodu;
+            document.getElementById("edit_form_adi").value = adi;
+            document.getElementById("edit_dosya_adi").value = dosya;
+            
+            var selectKat = document.getElementById("edit_form_kategori_sec");
+            var found = false;
+            for (var i = 0; i < selectKat.options.length; i++) {
+                if (selectKat.options[i].value === kategori) {
+                    selectKat.selectedIndex = i;
+                    found = true;
+                    break;
+                }
+            }
+            
+            var yeniKatInput = document.getElementById("edit_yeni_kategori_adi");
+            if (!found) {
+                selectKat.value = "YENI_KAT";
+                yeniKatInput.value = kategori;
+                yeniKatInput.style.display = "block";
+                yeniKatInput.required = true;
+            } else {
+                yeniKatInput.value = "";
+                yeniKatInput.style.display = "none";
+                yeniKatInput.required = false;
+            }
+            
+            document.getElementById("edit_form_container").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function düzenlemeyiKapat() {
+            document.getElementById("edit_form_container").style.display = "none";
+            document.getElementById("edit_form_warning").style.display = "block";
+            document.getElementById("edit_form_id").value = "";
+            document.getElementById("edit_form_kodu").value = "";
+            document.getElementById("edit_form_adi").value = "";
+            document.getElementById("edit_dosya_adi").value = "";
+        }
+
+        function kategoriSecimKontrolEdit(selectElem) {
+            var yeniKatInput = document.getElementById("edit_yeni_kategori_adi");
+            if (selectElem.value === "YENI_KAT") {
+                yeniKatInput.style.display = "block";
+                yeniKatInput.required = true;
+                yeniKatInput.focus();
+            } else {
+                yeniKatInput.style.display = "none";
+                yeniKatInput.required = false;
+            }
         }
     </script>
 </body>
