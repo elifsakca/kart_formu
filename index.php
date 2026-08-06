@@ -133,6 +133,19 @@
             <input type="hidden" name="form_adi" value="Akıllı Kart İşlem Formu (KDYS.FR.0553)">
 
             <div class="form-satir">
+                <div class="form-grup">
+                    <label>Adı, Soyadı</label>
+                    <input type="text" name="ad_soyad" required>
+                    <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
+                </div>
+                <div class="form-grup">
+                    <label>TC Kimlik No</label>
+                    <input type="text" name="tc_no" maxlength="11" required>
+                    <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
+                </div>
+            </div>
+
+            <div class="form-satir">
                 <div class="form-grup"><label>Fakülte/YO/MYO/Birim</label><input type="text" name="fakulte_birim"></div>
                 <div class="form-grup"><label>İrtibat Telefonu</label><input type="text" name="telefon"></div>
             </div>
@@ -170,19 +183,6 @@
             <div id="sec_ilk_kez" style="display:none;">
                 <div style="background:#e8f4f8; border-left:4px solid #1b656e; padding:12px 15px; border-radius:5px; margin:20px 0 15px 0;">
                     <h3 style="margin:0; color:#1b656e; font-size:16px;">Akıllı Kartın ilk kez verilmesi (Yeni Başlayan Personel/kişiler için)</h3>
-                </div>
-
-                <div class="form-satir">
-                    <div class="form-grup">
-                        <label>Adı, Soyadı</label>
-                        <input type="text" name="ad_soyad" id="f52_ad_soyad">
-                        <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
-                    </div>
-                    <div class="form-grup">
-                        <label>TC Kimlik No</label>
-                        <input type="text" name="tc_no" id="f52_tc_no" maxlength="11">
-                        <span class="form-bilgi">Bu kısmın tüm kart tipleri için doldurulması zorunludur.</span>
-                    </div>
                 </div>
 
                 <div class="form-satir">
@@ -230,7 +230,7 @@
                 <div class="form-grup">
                     <label>Görev</label>
                     <input type="text" name="gorev">
-                    <span class="form-bilgi">Bu kısmı sadece Yerleşke Misafir Giriş Kartı alacak personel doldurmalıdır.</span>
+                    <span class="form-bilgi">Bu kısmın sadece Yerleşke Misafir Giriş Kartı alacak personel doldurmalıdır.</span>
                 </div>
             </div>
 
@@ -262,7 +262,8 @@
                 <textarea name="yeni_bilgi" rows="2" style="width:100%; border:1px solid #ccc; border-radius:4px; padding:5px;"></textarea>
             </div>
 
-            <div class="form-bilgi-liste">
+            <!-- AÇIKLAMA KUTUSU -->
+            <div id="f52_aciklama_kutusu" class="form-bilgi-liste">
                 <strong>AÇIKLAMA (Lütfen kart tipinize göre zorunlu alanları kontrol ediniz):</strong><br>
                 + <b>Akademik Personel Kimlik Kartı</b> için Ad, Soyad, Unvan, Görev, Birim, Bölüm, Kurum sicil no ve T.C Kimlik No kısımları doldurulacaktır.<br>
                 + <b>İdari Personel Kimlik Kartı</b> için Ad, Soyad, Unvan, Kadrosunun Olduğu Birim/Bölüm, Kurum sicil no ve T.C Kimlik no kısımları doldurulacaktır.<br>
@@ -275,7 +276,8 @@
                 + <b>Özel Güvenlik Görevlisi</b> için Ad, Soyad, Kan Grubu ve T.C Kimlik no doldurulacaktır.
             </div>
 
-            <div class="form-grup">
+            <!-- FOTOĞRAF YÜKLEME KUTUSU -->
+            <div id="f52_fotograf_kutusu" class="form-grup">
                 <label>Fotoğraf Yükle</label>
                 <input type="file" name="fotograf" accept=".jpg, .jpeg">
                 <span class="form-bilgi"><b>Fotoğraflar için önemli not:</b> Gönderilecek fotoğraflar; yakın tarihli, vesikalık standardında, dijital olarak çekilmiş veya iyi taranmış (en az 300dpi) olmalıdır. Fotoğraf bilgileri; T.C kimlik no, dosya adı olmak üzere; jpg dosyası biçiminde (örnek: 12345678901.jpg) olmalıdır. Uygun Fotoğraf bilgisi olmayan kişiler için kart basımı yapılamamaktadır.</span>
@@ -996,24 +998,29 @@
             var val = selectElem.value;
             var secIlkKez = document.getElementById("sec_ilk_kez");
             var secBilgiDegisikligi = document.getElementById("sec_bilgi_degisikligi");
-            var reqAdSoyad = document.getElementById("f52_ad_soyad");
-            var reqTcNo = document.getElementById("f52_tc_no");
+            var secAciklama = document.getElementById("f52_aciklama_kutusu");
+            var secFotograf = document.getElementById("f52_fotograf_kutusu");
 
             if (val === "Akıllı kartın ilk kez verilmesi") {
                 secIlkKez.style.display = "block";
                 secBilgiDegisikligi.style.display = "none";
-                if (reqAdSoyad) reqAdSoyad.setAttribute("required", "required");
-                if (reqTcNo) reqTcNo.setAttribute("required", "required");
+                if (secAciklama) secAciklama.style.display = "block";
+                if (secFotograf) secFotograf.style.display = "block";
             } else if (val === "Hatalı Basılan Kart Bilgisinin Düzeltilmesi" || val === "Bilgi Değişikliği") {
                 secIlkKez.style.display = "none";
                 secBilgiDegisikligi.style.display = "block";
-                if (reqAdSoyad) reqAdSoyad.removeAttribute("required");
-                if (reqTcNo) reqTcNo.removeAttribute("required");
+                if (secAciklama) secAciklama.style.display = "block";
+                if (secFotograf) secFotograf.style.display = "block";
+            } else if (val === "Ayrılış") {
+                secIlkKez.style.display = "none";
+                secBilgiDegisikligi.style.display = "none";
+                if (secAciklama) secAciklama.style.display = "none";
+                if (secFotograf) secFotograf.style.display = "none";
             } else {
                 secIlkKez.style.display = "none";
                 secBilgiDegisikligi.style.display = "none";
-                if (reqAdSoyad) reqAdSoyad.removeAttribute("required");
-                if (reqTcNo) reqTcNo.removeAttribute("required");
+                if (secAciklama) secAciklama.style.display = "block";
+                if (secFotograf) secFotograf.style.display = "block";
             }
         }
 
