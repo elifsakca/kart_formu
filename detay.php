@@ -107,8 +107,11 @@ $bugun = date('Y-m-d');
             background: #144d54;
         }
 
+        .only-print { display: none; }
+
         @media print {
             .noprint, .btn-yonetici-kaydet, .kayit-bildirimi { display: none !important; }
+            .only-print { display: block !important; }
             body { background: white; }
             .paper { box-shadow: none; margin: 0; width: 100%; max-width: 100%; padding: 0; }
             .yonetici-input {
@@ -194,19 +197,33 @@ $bugun = date('Y-m-d');
         </table>
 
         <?php if(!empty($basvuru['fotograf_yolu'])): ?>
-            <p><strong>Yüklenen Fotoğraf / Ek Belge:</strong> <a href="<?php echo htmlspecialchars($basvuru['fotograf_yolu']); ?>" target="_blank">Görüntüle / İndir</a></p>
+            <p class="noprint"><strong>Yüklenen Fotoğraf / Ek Belge:</strong> <a href="<?php echo htmlspecialchars($basvuru['fotograf_yolu']); ?>" target="_blank">Görüntüle / İndir</a></p>
         <?php endif; ?>
 
         <?php if(!empty($basvuru['dekont_yolu'])): ?>
-            <p style="background:#e8f4f8; padding:10px 15px; border-radius:5px; border-left:4px solid #1b656e;">
+            <p class="noprint" style="background:#e8f4f8; padding:10px 15px; border-radius:5px; border-left:4px solid #1b656e;">
                 <strong> Ödeme Dekontu:</strong> <a href="<?php echo htmlspecialchars($basvuru['dekont_yolu']); ?>" target="_blank" style="color:#1b656e; font-weight:bold;">Banka Dekontunu Görüntüle / İndir →</a>
             </p>
+
+            <div class="only-print" style="margin-top:20px;">
+                <h3 style="color:#1b656e; border-bottom:1px solid #ddd; padding-bottom:5px;">Ödeme Dekontu</h3>
+                <?php 
+                $ext = strtolower(pathinfo($basvuru['dekont_yolu'], PATHINFO_EXTENSION));
+                if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])): 
+                ?>
+                    <img src="<?php echo htmlspecialchars($basvuru['dekont_yolu']); ?>" alt="Ödeme Dekontu" style="max-width:100%; max-height:800px; object-fit:contain; border:1px solid #ddd; border-radius:4px; display:block; margin:10px 0;">
+                <?php elseif ($ext === 'pdf'): ?>
+                    <iframe src="<?php echo htmlspecialchars($basvuru['dekont_yolu']); ?>" style="width:100%; height:700px; border:none;"></iframe>
+                <?php else: ?>
+                    <p><strong>Ödeme Dekontu Dosyası:</strong> <?php echo htmlspecialchars($basvuru['dekont_yolu']); ?></p>
+                <?php endif; ?>
+            </div>
         <?php endif; ?>
 
         <!-- FORMA ÖZEL ONLINE YÖNETİCİ DOLDURMA ALANLARI (FİZİKİ İMZA KUTULARI TAMAMEN REMOVED) -->
 
-        <?php if ($basvuru['form_kodu'] == 'KDYS.FR.0072'): ?>
-            <!-- FORM 72 YÖNETİCİ BİLGİ İŞLEM İŞLEMLERİ ONLINE DOLDURMA -->
+        <?php if ($basvuru['form_kodu'] == 'KDYS.FR.0072' || $basvuru['form_kodu'] == 'KDYS.FR.0074'): ?>
+            <!-- FORM 72 / 74 YÖNETİCİ BİLGİ İŞLEM İŞLEMLERİ ONLINE DOLDURMA -->
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
 
@@ -234,10 +251,6 @@ $bugun = date('Y-m-d');
                         <tr>
                             <th>Kullanıcı Şifresi *</th>
                             <td><input type="text" class="yonetici-input" name="yonetici[kullanici_sifresi]" value="<?php echo htmlspecialchars($veriler['kullanici_sifresi'] ?? ''); ?>"></td>
-                        </tr>
-                        <tr>
-                            <th>İşlemi Yapan Personel ve İmzası *</th>
-                            <td><input type="text" class="yonetici-input" name="yonetici[islem_yapan_personel]" value="<?php echo htmlspecialchars($veriler['islem_yapan_personel'] ?? ''); ?>" placeholder="Ad Soyad"></td>
                         </tr>
                     </table>
                     <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Yönetici Bilgilerini Kaydet</button>
@@ -291,10 +304,6 @@ $bugun = date('Y-m-d');
                             <th>DNS Tanımı *</th>
                             <td><input type="text" class="yonetici-input" name="yonetici[dns_tanimi]" value="<?php echo htmlspecialchars($veriler['dns_tanimi'] ?? ''); ?>"></td>
                         </tr>
-                        <tr>
-                            <th>İşlemi Yapan Personel ve İmzası *</th>
-                            <td><input type="text" class="yonetici-input" name="yonetici[islem_yapan_personel]" value="<?php echo htmlspecialchars($veriler['islem_yapan_personel'] ?? ''); ?>" placeholder="Ad Soyad"></td>
-                        </tr>
                     </table>
                     <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Yönetici Bilgilerini Kaydet</button>
                 </div>
@@ -329,10 +338,6 @@ $bugun = date('Y-m-d');
                         <tr>
                             <th>DNS Tanımı (İstenirse)</th>
                             <td><input type="text" class="yonetici-input" name="yonetici[dns_tanimi]" value="<?php echo htmlspecialchars($veriler['dns_tanimi'] ?? ''); ?>"></td>
-                        </tr>
-                        <tr>
-                            <th>İşlemi Yapan Personel ve İmzası *</th>
-                            <td><input type="text" class="yonetici-input" name="yonetici[islem_yapan_personel]" value="<?php echo htmlspecialchars($veriler['islem_yapan_personel'] ?? ''); ?>" placeholder="Ad Soyad"></td>
                         </tr>
                     </table>
                     <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Yönetici Bilgilerini Kaydet</button>
@@ -385,10 +390,6 @@ $bugun = date('Y-m-d');
                         <tr>
                             <th>DNS Tanımı *</th>
                             <td><input type="text" class="yonetici-input" name="yonetici[dns_tanimi]" value="<?php echo htmlspecialchars($veriler['dns_tanimi'] ?? ''); ?>"></td>
-                        </tr>
-                        <tr>
-                            <th>İşlemi Yapan Personel ve İmzası *</th>
-                            <td><input type="text" class="yonetici-input" name="yonetici[islem_yapan_personel]" value="<?php echo htmlspecialchars($veriler['islem_yapan_personel'] ?? ''); ?>" placeholder="Ad Soyad"></td>
                         </tr>
                     </table>
                     <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet">Yönetici Bilgilerini Kaydet</button>
