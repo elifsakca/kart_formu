@@ -18,7 +18,7 @@ try {
         rol ENUM('superadmin', 'admin') DEFAULT 'admin'
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-    // Sütun Kontrolü ve Güncellemesi (yoneticiler)
+    // Sütun Kontrolü ve Güncellemesii (yoneticiler)
     $columnsYonetici = $db->query("SHOW COLUMNS FROM yoneticiler")->fetchAll(PDO::FETCH_COLUMN);
     if (!in_array('ad_soyad', $columnsYonetici)) {
         $db->exec("ALTER TABLE yoneticiler ADD COLUMN ad_soyad VARCHAR(100) NOT NULL DEFAULT ''");
