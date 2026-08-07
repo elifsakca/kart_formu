@@ -989,21 +989,27 @@ foreach ($aktif_formlar as $f) {
                     {name: 'talep_detayi', label: 'Talep / Açıklama Detayı', type: 'textarea', required: 1, secenekler: ''}
                 ];
                 
-                if (secilenForm === "form_genel.php" || !acilacakForm) {
+                var hasCustomAlanlar = false;
+                var parsedAlanlar = null;
+                if (alanlarJson) {
+                    try {
+                        parsedAlanlar = JSON.parse(alanlarJson);
+                        if (Array.isArray(parsedAlanlar) && parsedAlanlar.length > 0) {
+                            hasCustomAlanlar = true;
+                        }
+                    } catch(e) {
+                        console.error("Alanlar JSON parse hatası:", e);
+                    }
+                }
+                
+                if (secilenForm === "form_genel.php" || !acilacakForm || hasCustomAlanlar) {
                     var genelForm = document.getElementById("form_genel.php");
                     if (genelForm) {
                         genelForm.querySelector('input[name="form_kodu"]').value = formKodu;
                         genelForm.querySelector('input[name="form_adi"]').value = formAdi;
                         genelForm.querySelector('h2').textContent = formAdi + ' (' + formKodu + ')';
                         
-                        var alanlar = defaultAlanlar;
-                        if (alanlarJson) {
-                            try {
-                                alanlar = JSON.parse(alanlarJson);
-                            } catch(e) {
-                                console.error("Alanlar JSON parse hatası:", e);
-                            }
-                        }
+                        var alanlar = (hasCustomAlanlar && parsedAlanlar) ? parsedAlanlar : defaultAlanlar;
                         
                         dinamikAlanlariCiz("dinamik_alanlar_konteyner", alanlar);
                         genelForm.style.display = "block";
