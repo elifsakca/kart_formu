@@ -2,10 +2,27 @@
 session_start();
 require_once 'baglan.php';
 
-// Güvenlik Kontrolü: Sadece Süper Admin Erişebilir!
-if (!isset($_SESSION['admin_giris']) || $_SESSION['admin_giris'] !== true || ($_SESSION['admin_rol'] ?? '') !== 'superadmin') {
-    header("Location: panel.php");
+// Güvenlik Kontrolü: Giriş Yapılmış mı?
+if (!isset($_SESSION['admin_giris']) || $_SESSION['admin_giris'] !== true) {
+    header("Location: login.php");
     exit;
+}
+
+$admin_id  = $_SESSION['admin_id'] ?? 0;
+$admin_rol = $_SESSION['admin_rol'] ?? 'admin';
+
+// Normal admin ise revize yetkisi olan formları çekelim
+$my_revize_formlar = [];
+if ($admin_rol !== 'superadmin') {
+    $myRevStmt = $db->prepare("SELECT form_kodu FROM yonetici_izinleri WHERE yonetici_id = :yid AND revize_yetkisi = 1");
+    $myRevStmt->execute([':yid' => $admin_id]);
+    $my_revize_formlar = $myRevStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+
+    // Revize edebileceği hiçbir form yoksa panele yönlendir
+    if (count($my_revize_formlar) === 0) {
+        header("Location: panel.php");
+        exit;
+    }
 }
 
 $mesaj = "";
@@ -50,7 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_form_ekle'])) {
                     'type' => $_POST['alan_tip'][$i] ?? 'text',
                     'required' => intval($_POST['alan_zorunlu'][$i] ?? 0),
                     'secenekler' => trim($_POST['alan_secenekler'][$i] ?? ''),
-                    'target' => $_POST['alan_hedef'][$i] ?? 'user'
+                    'target' => $_POST['alan_hedef'][$i] ?? 'user',
+                    'active' => intval($_POST['alan_aktif'][$i] ?? 1)
                 ];
             }
         }
@@ -81,6 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_form_ekle'])) {
                 }
 
                 $mesaj = "Yeni başvuru formu ($f_kodu - $f_adi) başarıyla sisteme eklendi.";
+                $curAdmin = $_SESSION['admin_ad_soyad'] ?? $_SESSION['admin_kullanici'] ?? 'Yönetici';
+                logEkle($db, $curAdmin, 0, $f_kodu, "Yeni başvuru formu oluşturdu: '{$f_adi}' ({$f_kodu})");
                 
                 // Formlar listesini ve izin tanımlarını yeniden yükle
                 $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
@@ -114,6 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_admin_ekle'])) {
             $hashed = password_hash($y_sifre, PASSWORD_DEFAULT);
             $ins->execute([':kadi' => $y_kadi, ':sifre' => $hashed, ':adsoyad' => $y_adsoyad]);
             $mesaj = "Yeni yönetici ($y_adsoyad - $y_kadi) başarıyla eklendi.";
+            $curAdmin = $_SESSION['admin_ad_soyad'] ?? $_SESSION['admin_kullanici'] ?? 'Yönetici';
+            logEkle($db, $curAdmin, 0, '-', "Yeni yönetici hesabı oluşturdu: {$y_adsoyad} ({$y_kadi})");
         }
     } else {
         $hata = "Lütfen tüm yönetici bilgilerini eksiksiz giriniz!";
@@ -122,20 +144,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_admin_ekle'])) {
 
 // POST İşlemi 2: İzinleri Kaydetme
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['izinleri_kaydet'])) {
+    if ($admin_rol !== 'superadmin') {
+        die("Bu işlemi sadece Süper Admin gerçekleştirebilir!");
+    }
     $yonetici_id = intval($_POST['yonetici_id']);
-    $secilen_formlar = $_POST['izinler'] ?? [];
+    $secilen_izinler = $_POST['izinler'] ?? [];
+    $secilen_revize = $_POST['revize_izinleri'] ?? [];
 
     try {
         $delStmt = $db->prepare("DELETE FROM yonetici_izinleri WHERE yonetici_id = :yid");
         $delStmt->execute([':yid' => $yonetici_id]);
 
-        $insStmt = $db->prepare("INSERT INTO yonetici_izinleri (yonetici_id, form_kodu) VALUES (:yid, :fkodu)");
-        foreach ($secilen_formlar as $fkodu) {
+        $insStmt = $db->prepare("INSERT INTO yonetici_izinleri (yonetici_id, form_kodu, revize_yetkisi) VALUES (:yid, :fkodu, :rev)");
+        foreach ($secilen_izinler as $fkodu) {
             if (array_key_exists($fkodu, $tum_formlar)) {
-                $insStmt->execute([':yid' => $yonetici_id, ':fkodu' => $fkodu]);
+                $rev = in_array($fkodu, $secilen_revize) ? 1 : 0;
+                $insStmt->execute([':yid' => $yonetici_id, ':fkodu' => $fkodu, ':rev' => $rev]);
             }
         }
-        $mesaj = "Görev izinleri başarıyla güncellendi.";
+        $mesaj = "Yönetici görev ve revize izinleri başarıyla güncellendi.";
+        $curAdmin = $_SESSION['admin_ad_soyad'] ?? $_SESSION['admin_kullanici'] ?? 'Yönetici';
+        logEkle($db, $curAdmin, 0, '-', "Yönetici (ID: {$yonetici_id}) görev ve revize izinlerini güncelledi.");
     } catch (PDOException $e) {
         $hata = "Hata oluştu: " . $e->getMessage();
     }
@@ -170,7 +199,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_revize_et'])) {
                     'type' => $_POST['alan_tip'][$i] ?? 'text',
                     'required' => intval($_POST['alan_zorunlu'][$i] ?? 0),
                     'secenekler' => trim($_POST['alan_secenekler'][$i] ?? ''),
-                    'target' => $_POST['alan_hedef'][$i] ?? 'user'
+                    'target' => $_POST['alan_hedef'][$i] ?? 'user',
+                    'active' => intval($_POST['alan_aktif'][$i] ?? 1)
                 ];
             }
         }
@@ -207,7 +237,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_revize_et'])) {
                     $upPerm->execute([':yeni' => $f_kodu, ':eski' => $eski_kodu]);
                 }
 
+                $toplam_alan = count($alanlar);
+                $pasif_alan = 0;
+                foreach ($alanlar as $a) {
+                    if (($a['active'] ?? 1) == 0) $pasif_alan++;
+                }
+
+                $detayMetni = "'{$f_adi}' ({$f_kodu}) isimli formu revize etti. (Toplam {$toplam_alan} bilgi kutucuğu";
+                if ($pasif_alan > 0) {
+                    $detayMetni .= ", {$pasif_alan} tanesi göz simgesiyle pasife alındı/gizlendi";
+                }
+                $detayMetni .= ")";
+
                 $mesaj = "Form bilgileri ve bilgi kutucukları başarıyla revize edildi.";
+                $curAdmin = $_SESSION['admin_ad_soyad'] ?? $_SESSION['admin_kullanici'] ?? 'Yönetici';
+                logEkle($db, $curAdmin, 0, $f_kodu, $detayMetni);
                 
                 // Formlar listesini ve izin tanımlarını yeniden yükleyelim
                 $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
@@ -230,9 +274,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_durum_degistir'])
     $yeni_durum = intval($_POST['yeni_durum']);
 
     try {
+        $f_adi_stmt = $db->prepare("SELECT form_adi, form_kodu FROM formlar WHERE id = :id");
+        $f_adi_stmt->execute([':id' => $f_id]);
+        $fRow = $f_adi_stmt->fetch();
+        $fKoduAdi = ($fRow) ? "{$fRow['form_kodu']} ({$fRow['form_adi']})" : "Form #{$f_id}";
+
         $up = $db->prepare("UPDATE formlar SET durum = :durum WHERE id = :id");
         $up->execute([':durum' => $yeni_durum, ':id' => $f_id]);
+        
+        $durumMetni = ($yeni_durum == 1) ? 'AKTİF' : 'PASİF';
         $mesaj = "Form durumu başarıyla güncellendi.";
+        $curAdmin = $_SESSION['admin_ad_soyad'] ?? $_SESSION['admin_kullanici'] ?? 'Yönetici';
+        logEkle($db, $curAdmin, 0, $fRow['form_kodu'] ?? $f_id, "'{$fKoduAdi}' formunun durumunu {$durumMetni} yaptı.");
         
         // Formlar listesini ve izin tanımlarını yeniden yükleyelim
         $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
@@ -249,9 +302,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_durum_degistir'])
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_sil'])) {
     $f_id = intval($_POST['form_id']);
     try {
-        $f_kodu_stmt = $db->prepare("SELECT form_kodu FROM formlar WHERE id = :id");
+        $f_kodu_stmt = $db->prepare("SELECT form_kodu, form_adi FROM formlar WHERE id = :id");
         $f_kodu_stmt->execute([':id' => $f_id]);
-        $f_kodu = $f_kodu_stmt->fetchColumn();
+        $fRow = $f_kodu_stmt->fetch();
+        $f_kodu = $fRow['form_kodu'] ?? '';
+        $f_adi  = $fRow['form_adi'] ?? '';
 
         if ($f_kodu) {
             $delPerm = $db->prepare("DELETE FROM yonetici_izinleri WHERE form_kodu = :fkodu");
@@ -261,6 +316,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_sil'])) {
         $del = $db->prepare("DELETE FROM formlar WHERE id = :id");
         $del->execute([':id' => $f_id]);
         $mesaj = "Form başarıyla sistemden silindi.";
+        $curAdmin = $_SESSION['admin_ad_soyad'] ?? $_SESSION['admin_kullanici'] ?? 'Yönetici';
+        logEkle($db, $curAdmin, 0, $f_kodu ?: $f_id, "'{$f_kodu} - {$f_adi}' isimli başvuru formunu sistemden tamamen sildi.");
         
         // Formlar listesini ve izin tanımlarını yeniden yükleyelim
         $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
@@ -273,14 +330,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_sil'])) {
     }
 }
 
+// Bildirim Okundu İşlemi
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tum_bildirimleri_oku'])) {
+    $db->exec("UPDATE islem_loglari SET okundu = 1");
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit;
+}
+
+$okunmamis_sayisi = $db->query("SELECT COUNT(*) FROM islem_loglari WHERE okundu = 0")->fetchColumn() ?: 0;
+$bildirim_loglari = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 30")->fetchAll() ?: [];
+
 // Normal Yöneticileri Getir (rol = admin)
 $adminler = $db->query("SELECT * FROM yoneticiler WHERE rol = 'admin' ORDER BY kullanici_adi ASC")->fetchAll();
 
 // Her Yöneticinin Mevcut İzinleri
 $mevcut_izinler = [];
+$mevcut_revize_izinler = [];
 $izinRows = $db->query("SELECT * FROM yonetici_izinleri")->fetchAll();
 foreach ($izinRows as $row) {
     $mevcut_izinler[$row['yonetici_id']][] = $row['form_kodu'];
+    if (($row['revize_yetkisi'] ?? 0) == 1) {
+        $mevcut_revize_izinler[$row['yonetici_id']][] = $row['form_kodu'];
+    }
 }
 
 // İşlem Günlüğü (Loglar)
@@ -297,7 +368,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
         .header { background-color: #1b656e; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .header h1 { font-size: 20px; margin: 0; display: flex; align-items: center; gap: 10px; }
         .header-btn { background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 13px; font-weight: bold; transition: 0.3s; }
-        .header-btn:hover { background: rgba(255,255,255,0.3); }
+        .header-btn:hover { background: rgba(255,255,255,0.35); }
 
         .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
         
@@ -327,6 +398,12 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
         table.log-table th { background: #e8f4f8; color: #1b656e; padding: 10px; text-align: left; }
         table.log-table td { padding: 10px; border-bottom: 1px solid #eee; }
     </style>
+    <script>
+        function toggleBildirimKutusu() {
+            var el = document.getElementById('bildirimKutusu');
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
 </head>
 <body>
 
@@ -335,7 +412,49 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             <img src="https://baunwebapi.balikesir.edu.tr/uploads/1729083231270.png" height="35" style="background:white; border-radius:4px; padding:2px;">
             BAÜN Form İşlem Merkezi - Yönetici & İzin Yapılandırması
         </h1>
-        <div>
+        <div style="display:flex; align-items:center; gap:10px; position:relative;">
+            <!-- BİLDİRİMLER BUTONU VE AÇILIR PANEL -->
+            <div style="position:relative; display:inline-block;">
+                <button type="button" class="header-btn" onclick="toggleBildirimKutusu()" style="border:none; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                    🔔 Bildirimler
+                    <?php if ($okunmamis_sayisi > 0): ?>
+                        <span id="bildirimRozet" style="background:#d93025; color:white; font-size:11px; padding:2px 7px; border-radius:10px; font-weight:bold;"><?php echo $okunmamis_sayisi; ?></span>
+                    <?php endif; ?>
+                </button>
+
+                <!-- AÇILIR BİLDİRİM PANELİ -->
+                <div id="bildirimKutusu" style="display:none; position:absolute; top:42px; right:0; width:400px; background:white; color:#333; border-radius:8px; box-shadow:0 8px 30px rgba(0,0,0,0.3); z-index:999999; border:1px solid #d0e4eb; overflow:hidden;">
+                    <div style="background:#1b656e; color:white; padding:12px 15px; font-size:13.5px; font-weight:bold; display:flex; justify-content:space-between; align-items:center;">
+                        <span>🔔 Yönetici Bildirimleri & Günlüğü</span>
+                        <form method="POST" style="margin:0;">
+                            <button type="submit" name="tum_bildirimleri_oku" style="background:rgba(255,255,255,0.2); color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">✓ Tümünü Okundu Yap</button>
+                        </form>
+                    </div>
+                    <div style="max-height:400px; overflow-y:auto;">
+                        <?php if (count($bildirim_loglari) > 0): ?>
+                            <?php foreach ($bildirim_loglari as $log): ?>
+                                <div style="padding:12px 15px; border-bottom:1px solid #eee; background:<?php echo ($log['okundu'] == 0) ? '#f0f7f7' : '#ffffff'; ?>; text-align:left;">
+                                    <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px;">
+                                        <strong style="color:#1b656e;">👤 <?php echo htmlspecialchars($log['yonetici_adi']); ?></strong>
+                                        <span style="color:#888; font-size:11px;"><?php echo date('d.m.Y H:i', strtotime($log['tarih'])); ?></span>
+                                    </div>
+                                    <div style="font-size:13px; color:#444; line-height:1.4;">
+                                        <?php echo htmlspecialchars($log['islem_detayi']); ?>
+                                    </div>
+                                    <?php if ($log['basvuru_id'] > 0): ?>
+                                        <div style="margin-top:5px;">
+                                            <a href="detay.php?id=<?php echo $log['basvuru_id']; ?>" style="color:#1b656e; font-size:11.5px; font-weight:bold; text-decoration:none;">Başvuru Detayına Git →</a>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div style="padding:20px; text-align:center; color:#888; font-size:13px;">Henüz hiç bildirim yok.</div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
             <a href="panel.php" class="header-btn"> Panele Dön</a>
             <a href="cikis.php" class="header-btn" style="background:#d93025; margin-left:10px;">Güvenli Çıkış</a>
         </div>
@@ -349,6 +468,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             <div class="alert-danger"> <?php echo htmlspecialchars($hata); ?></div>
         <?php endif; ?>
 
+        <?php if ($admin_rol === 'superadmin'): ?>
         <!-- YENİ FORM OLUŞTURMA KARTI -->
         <div class="card" style="border-top: 4px solid #1b656e;">
             <h2>➕ Yeni Başvuru Formu Oluştur & Ekle (Dinamik Form Builder)</h2>
@@ -417,6 +537,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                 <button type="submit" name="yeni_admin_ekle" class="btn-kaydet" style="background:#1b656e;">Yöneticiyi Ekle</button>
             </form>
         </div>
+        <?php endif; ?>
 
         <!-- FORM YÖNETİM KARTI -->
         <div class="card">
@@ -488,7 +609,11 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($formlar_query as $f): ?>
+                    <?php foreach ($formlar_query as $f): 
+                        if ($admin_rol !== 'superadmin' && !in_array($f['form_kodu'], $my_revize_formlar)) {
+                            continue;
+                        }
+                    ?>
                         <tr>
                             <td style="padding:10px; border-bottom:1px solid #eee;"><strong><?php echo htmlspecialchars($f['form_kodu']); ?></strong></td>
                             <td style="padding:10px; border-bottom:1px solid #eee;"><?php echo htmlspecialchars($f['form_adi']); ?></td>
@@ -535,10 +660,13 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                                             <button type="submit" name="form_durum_degistir" class="btn-sec-hepsi" style="background:#27ae60; font-size:11px; padding:4px 8px; cursor:pointer;">Aktif Et</button>
                                         <?php endif; ?>
                                     </form>
-                                    <form method="POST" style="margin:0; display:inline;" onsubmit="return confirm('Bu formu silmek istediğinize emin misiniz? İzinler de temizlenecektir.');">
-                                        <input type="hidden" name="form_id" value="<?php echo $f['id']; ?>">
-                                        <button type="submit" name="form_sil" class="btn-sec-hepsi" style="background:#d93025; font-size:11px; padding:4px 8px; cursor:pointer;">Sil</button>
-                                    </form>
+
+                                    <?php if ($admin_rol === 'superadmin'): ?>
+                                        <form method="POST" style="margin:0; display:inline;" onsubmit="return confirm('Bu formu silmek istediğinize emin misiniz? İzinler de temizlenecektir.');">
+                                            <input type="hidden" name="form_id" value="<?php echo $f['id']; ?>">
+                                            <button type="submit" name="form_sil" class="btn-sec-hepsi" style="background:#d93025; font-size:11px; padding:4px 8px; cursor:pointer;">Sil</button>
+                                        </form>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>
@@ -547,40 +675,59 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             </table>
         </div>
 
+        <?php if ($admin_rol === 'superadmin'): ?>
         <!-- YÖNETİCİ İZİN / GÖREV ATAMA KARTLARI -->
         <div class="card" style="background:#f8fbfd; border:1px solid #d0e4eb;">
-            <h2 style="border-bottom:none; margin:0;"> Yönetici Görev & Form İzinleri</h2>
-            <p style="font-size:13px; color:#555; margin-top:5px;">Aşağıdan <strong>admin1</strong>, <strong>admin2</strong> ve yeni eklediğiniz tüm yöneticilerin inceleyebileceği formları seçip kaydedebilirsiniz.</p>
+            <h2 style="border-bottom:none; margin:0;">⚙️ Yönetici Görev, İnceleme & Revize İzinleri</h2>
+            <p style="font-size:13px; color:#555; margin-top:5px;">Aşağıdan tüm yöneticilerin <strong>başvuruları inceleme yetkisini</strong> ve <strong>formları revize etme / pasifleştirme yetkisini</strong> ayrı ayrı yönetebilirsiniz.</p>
         </div>
 
         <?php foreach ($adminler as $admin): ?>
             <?php 
                 $aid = $admin['id'];
                 $atanmis_formlar = $mevcut_izinler[$aid] ?? [];
+                $atanmis_revize_formlar = $mevcut_revize_izinler[$aid] ?? [];
             ?>
             <div class="card">
                 <h2>
-                    <span> <?php echo htmlspecialchars($admin['ad_soyad']); ?> (Kullanıcı Adı: <strong><?php echo htmlspecialchars($admin['kullanici_adi']); ?></strong>)</span>
-                    <button type="button" class="btn-sec-hepsi" onclick="tumunuSec('form_grid_<?php echo $aid; ?>')">Tümünü Seç / Kaldır</button>
+                    <span>👤 <?php echo htmlspecialchars($admin['ad_soyad']); ?> (Kullanıcı Adı: <strong><?php echo htmlspecialchars($admin['kullanici_adi']); ?></strong>)</span>
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" class="btn-sec-hepsi" onclick="tumGoruntulemeSec('form_grid_<?php echo $aid; ?>')">Tümünü Seç / Kaldır (Görüntüleme)</button>
+                        <button type="button" class="btn-sec-hepsi" style="background:#e67e22;" onclick="tumRevizeSec('form_grid_<?php echo $aid; ?>')">Seçilen Tüm Formlar İçin Revizeye İzin Ver / Kaldır</button>
+                    </div>
                 </h2>
                 
                 <form method="POST">
                     <input type="hidden" name="yonetici_id" value="<?php echo $aid; ?>">
 
-                    <div class="form-grid" id="form_grid_<?php echo $aid; ?>">
-                        <?php foreach ($tum_formlar as $kodu => $adi): ?>
-                            <?php $checked = in_array($kodu, $atanmis_formlar) ? 'checked' : ''; ?>
-                            <label>
-                                <input type="checkbox" name="izinler[]" value="<?php echo $kodu; ?>" <?php echo $checked; ?>>
-                                <strong><?php echo htmlspecialchars($kodu); ?></strong> - <?php echo htmlspecialchars($adi); ?>
-                            </label>
+                    <div class="form-grid" id="form_grid_<?php echo $aid; ?>" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; margin: 15px 0;">
+                        <?php foreach ($tum_formlar as $kodu => $adi): 
+                            $goruntule_checked = in_array($kodu, $atanmis_formlar) ? 'checked' : '';
+                            $revize_checked = in_array($kodu, $atanmis_revize_formlar) ? 'checked' : '';
+                        ?>
+                            <div style="background:#fff; border:1px solid #d0e4eb; border-radius:6px; padding:10px 12px; display:flex; flex-direction:column; gap:6px;">
+                                <div style="font-weight:bold; color:#1b656e; border-bottom:1px solid #eee; padding-bottom:5px; font-size:13.5px;">
+                                    <?php echo htmlspecialchars($adi); ?>
+                                </div>
+                                <div style="display:flex; gap:15px; font-size:13px; align-items:center;">
+                                    <label style="cursor:pointer; display:flex; align-items:center; gap:6px; margin:0;">
+                                        <input type="checkbox" class="chk-goruntule-<?php echo $aid; ?>" name="izinler[]" value="<?php echo $kodu; ?>" <?php echo $goruntule_checked; ?>> 
+                                        👁️ Görüntüleme İzni
+                                    </label>
+                                    <label style="cursor:pointer; display:flex; align-items:center; gap:6px; margin:0; color:#d93025; font-weight:500;">
+                                        <input type="checkbox" class="chk-revize-<?php echo $aid; ?>" name="revize_izinleri[]" value="<?php echo $kodu; ?>" <?php echo $revize_checked; ?>> 
+                                        Revize Etme & Pasifleştirme İzni
+                                    </label>
+                                </div>
+                            </div>
                         <?php endforeach; ?>
                     </div>
 
-                    <button type="submit" name="izinleri_kaydet" class="btn-kaydet">Görev ve İzinleri Kaydet</button>
+                    <button type="submit" name="izinleri_kaydet" class="btn-kaydet">✓ Görev ve İzinleri Kaydet</button>
                 </form>
             </div>
         <?php endforeach; ?>
+        <?php endif; ?>
 
         <!-- İŞLEM GÜNLÜĞÜ (AUDIT LOG) KARTI -->
         <div class="card">
@@ -671,7 +818,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                 try {
                     var alanlar = JSON.parse(alanlarJson);
                     alanlar.forEach(function(alan) {
-                        alanSatiriEkle(alan.label, alan.type, alan.required, alan.secenekler, alan.target || 'user');
+                        alanSatiriEkle(alan.label, alan.type, alan.required, alan.secenekler, alan.target || 'user', alan.active !== undefined ? alan.active : 1);
                     });
                 } catch(e) {
                     console.error("Alanlar JSON parse hatası:", e);
@@ -681,17 +828,19 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             document.getElementById("edit_form_container").scrollIntoView({ behavior: 'smooth' });
         }
 
-        function alanSatiriEkle(label = '', type = 'text', required = 0, secenekler = '', target = 'user') {
-            alanSatiriEkleTarget('edit_alanlar_listesi', label, type, required, secenekler, target);
+        function alanSatiriEkle(label = '', type = 'text', required = 0, secenekler = '', target = 'user', active = 1) {
+            alanSatiriEkleTarget('edit_alanlar_listesi', label, type, required, secenekler, target, active);
         }
 
-        function alanSatiriEkleTarget(targetId = 'edit_alanlar_listesi', label = '', type = 'text', required = 0, secenekler = '', target = 'user') {
+        function alanSatiriEkleTarget(targetId = 'edit_alanlar_listesi', label = '', type = 'text', required = 0, secenekler = '', target = 'user', active = 1) {
             var alanlarListesi = document.getElementById(targetId);
             if (!alanlarListesi) return;
             var div = document.createElement("div");
             div.className = "alan-satir";
-            div.style = "display:flex; gap:10px; margin-bottom:10px; align-items:center; background:#f9f9f9; padding:8px; border-radius:4px; border:1px solid #e0e0e0;";
             
+            var isAktif = (active == 1 || active === '1' || active === true);
+            div.style = `display:flex; gap:10px; margin-bottom:10px; align-items:center; background:${isAktif ? '#f9f9f9' : '#ebebeb'}; padding:8px; border-radius:4px; border:1px solid ${isAktif ? '#e0e0e0' : '#ccc'}; opacity:${isAktif ? '1' : '0.55'}; transition: all 0.2s ease;`;
+
             var selectTargetHtml = `
                 <select name="alan_hedef[]" style="padding:6px; border:1px solid #ddd; border-radius:4px; width:135px; font-weight:bold; color:${target === 'admin' ? '#1b656e' : '#333'};" onchange="this.style.color=(this.value==='admin'?'#1b656e':'#333')">
                     <option value="user" ${target === 'user' ? 'selected' : ''}>👤 Başvuru Sahibi</option>
@@ -719,9 +868,18 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                 </select>
             `;
 
+            var eyeTitle = isAktif ? "Bunu revize et (Şu an Görünür - Gizlemek için tıklayın)" : "Bunu revize et (Şu an Gizli - Göstermek için tıklayın)";
+            var eyeBtnHtml = `
+                <input type="hidden" name="alan_aktif[]" class="alan-aktif-input" value="${isAktif ? 1 : 0}">
+                <button type="button" class="btn-goz-toggle" title="${eyeTitle}" onclick="alanAktiflikToggle(this)" style="background:${isAktif ? '#e8f4f8' : '#e0e0e0'}; color:${isAktif ? '#1b656e' : '#777'}; border:1px solid ${isAktif ? '#1b656e' : '#aaa'}; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:15px; font-weight:bold; transition:all 0.2s ease;">${isAktif ? '👁️' : '👁️‍🗨️'}</button>
+            `;
+
             div.innerHTML = `
                 <div style="flex:2;">
-                    <input type="text" name="alan_etiket[]" value="${escapeHtml(label)}" placeholder="Kutucuk Etiketi (Örn: Adı Soyadı)" required style="width:100%; padding:6px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
+                    <input type="text" name="alan_etiket[]" value="${escapeHtml(label)}" placeholder="Kutucuk Etiketi (Örn: Adı Soyadı)" required style="width:100%; padding:6px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box; ${isAktif ? '' : 'text-decoration:line-through; color:#777;'}">
+                </div>
+                <div>
+                    ${eyeBtnHtml}
                 </div>
                 <div>
                     ${selectTargetHtml}
@@ -740,6 +898,43 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                 </div>
             `;
             alanlarListesi.appendChild(div);
+        }
+
+        function alanAktiflikToggle(btn) {
+            var satir = btn.closest('.alan-satir');
+            var inputAktif = satir.querySelector('.alan-aktif-input');
+            var inputEtiket = satir.querySelector('input[name="alan_etiket[]"]');
+            var suAnkiVal = inputAktif.value;
+
+            if (suAnkiVal == "1") {
+                inputAktif.value = "0";
+                btn.innerHTML = "👁️‍🗨️";
+                btn.title = "Bunu revize et (Şu an Gizli - Göstermek için tıklayın)";
+                btn.style.background = "#e0e0e0";
+                btn.style.color = "#777";
+                btn.style.borderColor = "#aaa";
+                satir.style.opacity = "0.55";
+                satir.style.background = "#ebebeb";
+                satir.style.borderColor = "#ccc";
+                if (inputEtiket) {
+                    inputEtiket.style.textDecoration = "line-through";
+                    inputEtiket.style.color = "#777";
+                }
+            } else {
+                inputAktif.value = "1";
+                btn.innerHTML = "👁️";
+                btn.title = "Bunu revize et (Şu an Görünür - Gizlemek için tıklayın)";
+                btn.style.background = "#e8f4f8";
+                btn.style.color = "#1b656e";
+                btn.style.borderColor = "#1b656e";
+                satir.style.opacity = "1";
+                satir.style.background = "#f9f9f9";
+                satir.style.borderColor = "#e0e0e0";
+                if (inputEtiket) {
+                    inputEtiket.style.textDecoration = "none";
+                    inputEtiket.style.color = "#333";
+                }
+            }
         }
 
         function alanTipiKontrol(selectElem) {
@@ -796,9 +991,34 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             }
         }
 
+        function tumGoruntulemeSec(gridId) {
+            var grid = document.getElementById(gridId);
+            if (!grid) return;
+            var inputs = grid.querySelectorAll('input[name="izinler[]"]');
+            var hepsiSecili = Array.from(inputs).every(input => input.checked);
+            inputs.forEach(input => input.checked = !hepsiSecili);
+        }
+
+        function tumRevizeSec(gridId) {
+            var grid = document.getElementById(gridId);
+            if (!grid) return;
+            var inputs = grid.querySelectorAll('input[name="revize_izinleri[]"]');
+            var hepsiSecili = Array.from(inputs).every(input => input.checked);
+            inputs.forEach(input => {
+                input.checked = !hepsiSecili;
+                if (!hepsiSecili) {
+                    var goruntuleInput = input.closest('div').querySelector('input[name="izinler[]"]');
+                    if (goruntuleInput) goruntuleInput.checked = true;
+                }
+            });
+        }
+
         // Sayfa yüklendiğinde yeni form alanına 1 varsayılan satır ekle
         document.addEventListener("DOMContentLoaded", function() {
-            alanSatiriEkleTarget('add_alanlar_listesi', 'Talep Açıklaması', 'text', 1, '');
+            var addTarget = document.getElementById('add_alanlar_listesi');
+            if (addTarget) {
+                alanSatiriEkleTarget('add_alanlar_listesi', 'Talep Açıklaması', 'text', 1, '');
+            }
         });
     </script>
 </body>

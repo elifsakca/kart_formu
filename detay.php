@@ -56,6 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
     $updateStmt = $db->prepare("UPDATE basvurular SET form_verileri = :fv WHERE id = :id");
     $updateStmt->execute([':fv' => $yeni_json, ':id' => $id]);
     
+    $curAdmin = $_SESSION['admin_ad_soyad'] ?? $_SESSION['admin_kullanici'] ?? 'Yönetici';
+    logEkle($db, $curAdmin, $id, $basvuru['takip_no'], "'".htmlspecialchars($basvuru['form_kodu'])."' kodlu başvuru için yönetici bilgi alanlarını doldurdu/güncelledi.");
+
     header("Location: detay.php?id={$id}&kaydedildi=1");
     exit;
 }

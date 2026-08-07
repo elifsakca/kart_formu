@@ -31,9 +31,16 @@ try {
         id INT AUTO_INCREMENT PRIMARY KEY,
         yonetici_id INT NOT NULL,
         form_kodu VARCHAR(50) NOT NULL,
+        revize_yetkisi TINYINT DEFAULT 0,
         UNIQUE KEY (yonetici_id, form_kodu),
         FOREIGN KEY (yonetici_id) REFERENCES yoneticiler(id) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+    // Sütun Kontrolü ve Güncellemesi (yonetici_izinleri)
+    $columnsIzinler = $db->query("SHOW COLUMNS FROM yonetici_izinleri")->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('revize_yetkisi', $columnsIzinler)) {
+        $db->exec("ALTER TABLE yonetici_izinleri ADD COLUMN revize_yetkisi TINYINT DEFAULT 0");
+    }
 
     // Formlar Tablosunun Oluşturulması
     $db->exec("CREATE TABLE IF NOT EXISTS formlar (
@@ -93,8 +100,29 @@ try {
         basvuru_id INT NOT NULL,
         takip_no VARCHAR(20) NOT NULL,
         islem_detayi TEXT NOT NULL,
+        okundu TINYINT DEFAULT 0,
         tarih DATETIME DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+    $columnsLog = $db->query("SHOW COLUMNS FROM islem_loglari")->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('okundu', $columnsLog)) {
+        $db->exec("ALTER TABLE islem_loglari ADD COLUMN okundu TINYINT DEFAULT 0");
+    }
+
+    // Sistem genelinde log kaydetme fonksiyonu
+    if (!function_exists('logEkle')) {
+        function logEkle($db, $yonetici_adi, $basvuru_id, $takip_no, $islem_detayi) {
+            try {
+                $stmt = $db->prepare("INSERT INTO islem_loglari (yonetici_adi, basvuru_id, takip_no, islem_detayi, okundu, tarih) VALUES (:yadi, :bid, :tno, :idetay, 0, NOW())");
+                $stmt->execute([
+                    ':yadi' => $yonetici_adi ?: 'Yönetici',
+                    ':bid'  => intval($basvuru_id),
+                    ':tno'  => (string)$takip_no,
+                    ':idetay' => $islem_detayi
+                ]);
+            } catch (Exception $e) {}
+        }
+    }
 
     // Mevcut takipsiz başvurulara takip no atama
     $takipsizler = $db->query("SELECT id FROM basvurular WHERE takip_no IS NULL OR takip_no = ''")->fetchAll();

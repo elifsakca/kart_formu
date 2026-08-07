@@ -1043,6 +1043,7 @@ foreach ($aktif_formlar as $f) {
 
             alanlar.forEach(function(alan) {
                 if (alan.target === 'admin') return; // Yönetici tarafından doldurulacak alanları başvuru ekranında gizle
+                if (alan.active === 0 || alan.active === '0' || alan.active === false) return; // Gizlenmiş (pasif) alanları başvuru ekranında gösterme
                 
                 var formGrup = document.createElement("div");
                 formGrup.className = "form-grup";

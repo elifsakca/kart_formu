@@ -235,6 +235,16 @@ if ($admin_rol === 'superadmin') {
         $silinen_basvuru = 0;
     }
 }
+
+// Bildirim Okundu İşlemi
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tum_bildirimleri_oku'])) {
+    $db->exec("UPDATE islem_loglari SET okundu = 1");
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit;
+}
+
+$okunmamis_sayisi = $db->query("SELECT COUNT(*) FROM islem_loglari WHERE okundu = 0")->fetchColumn() ?: 0;
+$bildirim_loglari = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 30")->fetchAll() ?: [];
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -502,6 +512,21 @@ if ($admin_rol === 'superadmin') {
         function modalKapat() {
             document.getElementById('redModal').style.display = 'none';
         }
+
+        function toggleBildirimKutusu() {
+            var k = document.getElementById("bildirimKutusu");
+            if (k) {
+                k.style.display = (k.style.display === "none" || k.style.display === "") ? "block" : "none";
+            }
+        }
+
+        document.addEventListener("click", function(e) {
+            var btn = e.target.closest("button[onclick='toggleBildirimKutusu()']");
+            var box = document.getElementById("bildirimKutusu");
+            if (!btn && box && !box.contains(e.target)) {
+                box.style.display = "none";
+            }
+        });
     </script>
 </body>
 </html>
