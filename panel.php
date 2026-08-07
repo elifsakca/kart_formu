@@ -238,19 +238,77 @@ if ($admin_rol === 'superadmin') {
 
 // Bildirim Okundu İşlemleri
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tum_bildirimleri_oku'])) {
-    $db->exec("UPDATE islem_loglari SET okundu = 1");
+    if ($admin_rol === 'superadmin') {
+        $db->exec("UPDATE islem_loglari SET okundu = 1");
+    } else {
+        if (count($izinli_formlar) > 0) {
+            $placeholders = implode(',', array_fill(0, count($izinli_formlar), '?'));
+            $q_update = "UPDATE islem_loglari l
+                         LEFT JOIN basvurular b ON l.basvuru_id = b.id
+                         SET l.okundu = 1
+                         WHERE b.form_kodu IN ($placeholders)
+                            OR (l.basvuru_id = 0 AND l.takip_no IN ($placeholders))";
+            $stmt_update = $db->prepare($q_update);
+            $stmt_update->execute(array_merge($izinli_formlar, $izinli_formlar));
+        }
+    }
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
 }
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tekli_oku'])) {
     $log_id = intval($_POST['tekli_oku_id']);
-    $db->prepare("UPDATE islem_loglari SET okundu = 1 WHERE id = :lid")->execute([':lid' => $log_id]);
+    if ($admin_rol === 'superadmin') {
+        $db->prepare("UPDATE islem_loglari SET okundu = 1 WHERE id = ?")->execute([$log_id]);
+    } else {
+        if (count($izinli_formlar) > 0) {
+            $placeholders = implode(',', array_fill(0, count($izinli_formlar), '?'));
+            $q_single = "UPDATE islem_loglari l
+                         LEFT JOIN basvurular b ON l.basvuru_id = b.id
+                         SET l.okundu = 1
+                         WHERE l.id = ? 
+                           AND (
+                               b.form_kodu IN ($placeholders)
+                               OR (l.basvuru_id = 0 AND l.takip_no IN ($placeholders))
+                           )";
+            $stmt_single = $db->prepare($q_single);
+            $stmt_single->execute(array_merge([$log_id], $izinli_formlar, $izinli_formlar));
+        }
+    }
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
 }
 
-$okunmamis_sayisi = $db->query("SELECT COUNT(*) FROM islem_loglari WHERE okundu = 0")->fetchColumn() ?: 0;
-$bildirim_loglari = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 30")->fetchAll() ?: [];
+if ($admin_rol === 'superadmin') {
+    $okunmamis_sayisi = $db->query("SELECT COUNT(*) FROM islem_loglari WHERE okundu = 0")->fetchColumn() ?: 0;
+    $bildirim_loglari = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 30")->fetchAll() ?: [];
+} else {
+    if (count($izinli_formlar) > 0) {
+        $placeholders = implode(',', array_fill(0, count($izinli_formlar), '?'));
+        
+        $q_count = "SELECT COUNT(DISTINCT l.id) FROM islem_loglari l
+                    LEFT JOIN basvurular b ON l.basvuru_id = b.id
+                    WHERE l.okundu = 0 
+                      AND (
+                          b.form_kodu IN ($placeholders)
+                          OR (l.basvuru_id = 0 AND l.takip_no IN ($placeholders))
+                      )";
+        $stmt_count = $db->prepare($q_count);
+        $stmt_count->execute(array_merge($izinli_formlar, $izinli_formlar));
+        $okunmamis_sayisi = $stmt_count->fetchColumn() ?: 0;
+
+        $q_logs = "SELECT DISTINCT l.* FROM islem_loglari l
+                   LEFT JOIN basvurular b ON l.basvuru_id = b.id
+                   WHERE b.form_kodu IN ($placeholders)
+                      OR (l.basvuru_id = 0 AND l.takip_no IN ($placeholders))
+                   ORDER BY l.tarih DESC LIMIT 30";
+        $stmt_logs = $db->prepare($q_logs);
+        $stmt_logs->execute(array_merge($izinli_formlar, $izinli_formlar));
+        $bildirim_loglari = $stmt_logs->fetchAll() ?: [];
+    } else {
+        $okunmamis_sayisi = 0;
+        $bildirim_loglari = [];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="tr">
