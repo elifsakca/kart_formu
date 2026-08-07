@@ -236,9 +236,15 @@ if ($admin_rol === 'superadmin') {
     }
 }
 
-// Bildirim Okundu İşlemi
+// Bildirim Okundu İşlemleri
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tum_bildirimleri_oku'])) {
     $db->exec("UPDATE islem_loglari SET okundu = 1");
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit;
+}
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tekli_oku'])) {
+    $log_id = intval($_POST['tekli_oku_id']);
+    $db->prepare("UPDATE islem_loglari SET okundu = 1 WHERE id = :lid")->execute([':lid' => $log_id]);
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
 }
@@ -343,11 +349,21 @@ $bildirim_loglari = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC 
                                     <div style="font-size:13px; color:#444; line-height:1.4;">
                                         <?php echo htmlspecialchars($log['islem_detayi']); ?>
                                     </div>
-                                    <?php if ($log['basvuru_id'] > 0): ?>
-                                        <div style="margin-top:5px;">
-                                            <a href="detay.php?id=<?php echo $log['basvuru_id']; ?>" style="color:#1b656e; font-size:11.5px; font-weight:bold; text-decoration:none;">Başvuru Detayına Git →</a>
-                                        </div>
-                                    <?php endif; ?>
+                                    <div style="margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
+                                        <?php if ($log['basvuru_id'] > 0): ?>
+                                            <a href="detay.php?id=<?php echo $log['basvuru_id']; ?>&read_log=<?php echo $log['id']; ?>" style="color:#1b656e; font-size:11.5px; font-weight:bold; text-decoration:none;">Başvuru Detayına Git →</a>
+                                        <?php else: ?>
+                                            <span></span>
+                                        <?php endif; ?>
+                                        <?php if ($log['okundu'] == 0): ?>
+                                            <form method="POST" style="margin:0; display:inline;">
+                                                <input type="hidden" name="tekli_oku_id" value="<?php echo $log['id']; ?>">
+                                                <button type="submit" name="tekli_oku" style="background:none; border:none; color:#7f8c8d; font-size:11px; cursor:pointer; text-decoration:underline;">✓ Okundu Yap</button>
+                                            </form>
+                                        <?php else: ?>
+                                            <span style="font-size:11px; color:#aaa;">✓ Okundu</span>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>

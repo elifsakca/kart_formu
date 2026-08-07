@@ -127,6 +127,11 @@ try {
         }
     }
 
+    // Okunmuş ve 1 haftadan (7 günden) eski olan bildirimleri otomatik temizleme
+    try {
+        $db->exec("DELETE FROM islem_loglari WHERE okundu = 1 AND tarih < DATE_SUB(NOW(), INTERVAL 7 DAY)");
+    } catch (Exception $e) {}
+
     // Mevcut takipsiz başvurulara takip no atama
     $takipsizler = $db->query("SELECT id FROM basvurular WHERE takip_no IS NULL OR takip_no = ''")->fetchAll();
     if ($takipsizler) {

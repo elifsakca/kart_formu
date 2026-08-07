@@ -17,6 +17,17 @@ if (!$basvuru) {
     die("Başvuru bulunamadı!");
 }
 
+// Detay sayfasına girildiğinde bu başvuruya ait bildirimleri okundu olarak işaretle
+try {
+    if (isset($_GET['read_log']) && intval($_GET['read_log']) > 0) {
+        $rlog_id = intval($_GET['read_log']);
+        $db->prepare("UPDATE islem_loglari SET okundu = 1 WHERE id = :lid")->execute([':lid' => $rlog_id]);
+    }
+    if ($id > 0) {
+        $db->prepare("UPDATE islem_loglari SET okundu = 1 WHERE basvuru_id = :bid")->execute([':bid' => $id]);
+    }
+} catch (Exception $e) {}
+
 $admin_id  = $_SESSION['admin_id'] ?? 0;
 $admin_rol = $_SESSION['admin_rol'] ?? 'admin';
 
