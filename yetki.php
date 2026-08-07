@@ -718,7 +718,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                             <td style="padding:10px; border-bottom:1px solid #eee;"><span style="font-size:11px; background:#e8f4f8; padding:3px 6px; border-radius:3px; color:#1b656e;"><?php echo htmlspecialchars($f['kategori']); ?></span></td>
                             <td style="padding:10px; border-bottom:1px solid #eee; font-family:monospace; font-size:12px;"><?php echo htmlspecialchars($f['dosya_adi']); ?></td>
                             <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; font-size:12px; color:#555;">
-                                📅 <?php echo !empty($f['son_revize_tarihi']) ? date('d.m.Y H:i', strtotime($f['son_revize_tarihi'])) : '-'; ?>
+                                 <?php echo !empty($f['son_revize_tarihi']) ? date('d.m.Y H:i', strtotime($f['son_revize_tarihi'])) : '-'; ?>
                             </td>
                             <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">
                                 <?php if ($f['durum'] == 1): ?>
@@ -779,7 +779,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
         <?php if ($admin_rol === 'superadmin'): ?>
         <!-- YÖNETİCİ İZİN / GÖREV ATAMA KARTLARI -->
         <div class="card" style="background:#f8fbfd; border:1px solid #d0e4eb;">
-            <h2 style="border-bottom:none; margin:0;">⚙️ Yönetici Görev, İnceleme & Revize İzinleri</h2>
+            <h2 style="border-bottom:none; margin:0;"> Yönetici Görev, İnceleme & Revize İzinleri</h2>
             <p style="font-size:13px; color:#555; margin-top:5px;">Aşağıdan tüm yöneticilerin <strong>başvuruları inceleme yetkisini</strong> ve <strong>formları revize etme / pasifleştirme yetkisini</strong> ayrı ayrı yönetebilirsiniz.</p>
         </div>
 
@@ -793,11 +793,11 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                 <h2>
                     <span>👤 <?php echo htmlspecialchars($admin['ad_soyad']); ?> (E-posta: <strong><?php echo htmlspecialchars($admin['kullanici_adi']); ?></strong>)</span>
                     <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                        <button type="button" class="btn-sec-hepsi" style="background:#f39c12; color:white;" onclick="adminDuzenleBtn(<?php echo $aid; ?>, '<?php echo htmlspecialchars($admin['kullanici_adi'], ENT_QUOTES); ?>', '<?php echo htmlspecialchars($admin['ad_soyad'], ENT_QUOTES); ?>')">✏️ Düzenle</button>
+                        <button type="button" class="btn-sec-hepsi" style="background:#f39c12; color:white;" onclick="adminDuzenleBtn(<?php echo $aid; ?>, '<?php echo htmlspecialchars($admin['kullanici_adi'], ENT_QUOTES); ?>', '<?php echo htmlspecialchars($admin['ad_soyad'], ENT_QUOTES); ?>')"> Düzenle</button>
                         
                         <form method="POST" style="margin:0; display:inline;" onsubmit="return confirm('Bu yönetici hesabını (<?php echo htmlspecialchars($admin['ad_soyad'], ENT_QUOTES); ?> - <?php echo htmlspecialchars($admin['kullanici_adi'], ENT_QUOTES); ?>) silmek istediğinize emin misiniz? Atanmış tüm form izinleri de temizlenecektir.');">
                             <input type="hidden" name="yonetici_id" value="<?php echo $aid; ?>">
-                            <button type="submit" name="admin_sil" class="btn-sec-hepsi" style="background:#d93025; color:white;">🗑️ Yöneticiyi Sil</button>
+                            <button type="submit" name="admin_sil" class="btn-sec-hepsi" style="background:#d93025; color:white;"> Yöneticiyi Sil</button>
                         </form>
 
                         <button type="button" class="btn-sec-hepsi" onclick="tumGoruntulemeSec('form_grid_<?php echo $aid; ?>')">Tümünü Seç / Kaldır (Görüntüleme)</button>
@@ -820,7 +820,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                                 <div style="display:flex; gap:15px; font-size:13px; align-items:center;">
                                     <label style="cursor:pointer; display:flex; align-items:center; gap:6px; margin:0;">
                                         <input type="checkbox" class="chk-goruntule-<?php echo $aid; ?>" name="izinler[]" value="<?php echo $kodu; ?>" <?php echo $goruntule_checked; ?>> 
-                                        👁️ Görüntüleme İzni
+                                        👁 Görüntüleme İzni
                                     </label>
                                     <label style="cursor:pointer; display:flex; align-items:center; gap:6px; margin:0; color:#d93025; font-weight:500;">
                                         <input type="checkbox" class="chk-revize-<?php echo $aid; ?>" name="revize_izinleri[]" value="<?php echo $kodu; ?>" <?php echo $revize_checked; ?>> 
@@ -948,7 +948,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             var eyeTitle = isAktif ? "Bunu revize et (Şu an Görünür - Gizlemek için tıklayın)" : "Bunu revize et (Şu an Gizli - Göstermek için tıklayın)";
             var eyeBtnHtml = `
                 <input type="hidden" name="alan_aktif[]" class="alan-aktif-input" value="${isAktif ? 1 : 0}">
-                <button type="button" class="btn-goz-toggle" title="${eyeTitle}" onclick="alanAktiflikToggle(this)" style="background:${isAktif ? '#e8f4f8' : '#e0e0e0'}; color:${isAktif ? '#1b656e' : '#777'}; border:1px solid ${isAktif ? '#1b656e' : '#aaa'}; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:15px; font-weight:bold; transition:all 0.2s ease;">${isAktif ? '👁️' : '👁️‍🗨️'}</button>
+                <button type="button" class="btn-goz-toggle" title="${eyeTitle}" onclick="alanAktiflikToggle(this)" style="background:${isAktif ? '#e8f4f8' : '#e0e0e0'}; color:${isAktif ? '#1b656e' : '#777'}; border:1px solid ${isAktif ? '#1b656e' : '#aaa'}; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:15px; font-weight:bold; transition:all 0.2s ease;">${isAktif ? '️👁' : '👁️‍🗨️'}</button>
             `;
 
             div.innerHTML = `
@@ -999,7 +999,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                 }
             } else {
                 inputAktif.value = "1";
-                btn.innerHTML = "👁️";
+                btn.innerHTML = "👁";
                 btn.title = "Bunu revize et (Şu an Görünür - Gizlemek için tıklayın)";
                 btn.style.background = "#e8f4f8";
                 btn.style.color = "#1b656e";
@@ -1117,7 +1117,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
     <!-- YÖNETİCİ BİLGİLERİNİ DÜZENLEME MODALI -->
     <div id="adminEditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:99999; justify-content:center; align-items:center;">
         <div style="background:white; padding:30px; border-radius:8px; max-width:450px; width:90%; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
-            <h3 style="margin-top:0; color:#1b656e; border-bottom:2px solid #e8f4f8; padding-bottom:10px;">✏️ Yönetici Hesabını Düzenle</h3>
+            <h3 style="margin-top:0; color:#1b656e; border-bottom:2px solid #e8f4f8; padding-bottom:10px;"> Yönetici Hesabını Düzenle</h3>
             <form method="POST">
                 <input type="hidden" name="edit_yonetici_id" id="edit_yonetici_id">
                 
