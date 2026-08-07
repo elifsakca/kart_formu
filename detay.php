@@ -274,7 +274,15 @@ $bugun = date('Y-m-d');
                         </tr>
                         <tr>
                             <td class="kdys-lbl">Revizyon Tarihi</td>
-                            <td class="kdys-val">08.07.2026</td>
+                            <td class="kdys-val"><?php 
+                                $fRevDate = null;
+                                if (!empty($basvuru['form_kodu'])) {
+                                    $rev_q = $db->prepare("SELECT son_revize_tarihi FROM formlar WHERE form_kodu = :fk");
+                                    $rev_q->execute([':fk' => $basvuru['form_kodu']]);
+                                    $fRevDate = $rev_q->fetchColumn();
+                                }
+                                echo !empty($fRevDate) ? date('d.m.Y H:i', strtotime($fRevDate)) : date('d.m.Y');
+                            ?></td>
                         </tr>
                         <tr>
                             <td class="kdys-lbl">Revizyon No</td>
@@ -296,7 +304,8 @@ $bugun = date('Y-m-d');
                     <strong>Takip No:</strong> <span style="font-size:16px; font-weight:bold; color:#000;">#<?php echo htmlspecialchars($basvuru['takip_no'] ?: $basvuru['id']); ?></span>
                 </p>
                 <p style="margin: 0; font-size: 13px; color: #333;">
-                    <strong>Başvuru Tarihi:</strong> <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?>
+                    <strong>Başvuru Tarihi:</strong> <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?> &nbsp;|&nbsp;
+                    <strong>Form Son Revize Tarihi:</strong> <?php echo !empty($fRevDate) ? date('d.m.Y H:i', strtotime($fRevDate)) : date('d.m.Y H:i'); ?>
                 </p>
             </div>
             <div>

@@ -80,6 +80,9 @@ try {
     if (!in_array('form_alanlari', $columnsFormlar)) {
         $db->exec("ALTER TABLE formlar ADD COLUMN form_alanlari LONGTEXT NULL");
     }
+    if (!in_array('son_revize_tarihi', $columnsFormlar)) {
+        $db->exec("ALTER TABLE formlar ADD COLUMN son_revize_tarihi DATETIME DEFAULT CURRENT_TIMESTAMP");
+    }
 
     // Sütun Kontrolü ve Güncellemesi (basvurular)
     $columnsBasvuru = $db->query("SHOW COLUMNS FROM basvurular")->fetchAll(PDO::FETCH_COLUMN);

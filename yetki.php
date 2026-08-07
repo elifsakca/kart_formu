@@ -302,7 +302,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_revize_et'])) {
                 $old_kodu_stmt->execute([':id' => $f_id]);
                 $eski_kodu = $old_kodu_stmt->fetchColumn();
 
-                $up = $db->prepare("UPDATE formlar SET form_kodu = :fkodu, form_adi = :fadi, kategori = :fkat, dosya_adi = :fdosya, form_alanlari = :falanlar WHERE id = :id");
+                $up = $db->prepare("UPDATE formlar SET form_kodu = :fkodu, form_adi = :fadi, kategori = :fkat, dosya_adi = :fdosya, form_alanlari = :falanlar, son_revize_tarihi = NOW() WHERE id = :id");
                 $up->execute([
                     ':fkodu' => $f_kodu,
                     ':fadi' => $f_adi,
@@ -360,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_durum_degistir'])
         $fRow = $f_adi_stmt->fetch();
         $fKoduAdi = ($fRow) ? "{$fRow['form_kodu']} ({$fRow['form_adi']})" : "Form #{$f_id}";
 
-        $up = $db->prepare("UPDATE formlar SET durum = :durum WHERE id = :id");
+        $up = $db->prepare("UPDATE formlar SET durum = :durum, son_revize_tarihi = NOW() WHERE id = :id");
         $up->execute([':durum' => $yeni_durum, ':id' => $f_id]);
         
         $durumMetni = ($yeni_durum == 1) ? 'AKTİF' : 'PASİF';
@@ -685,6 +685,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                         <th style="padding:10px; text-align:left;">Form Adı</th>
                         <th style="padding:10px; text-align:left;">Kategori</th>
                         <th style="padding:10px; text-align:left;">Şablon / Sayfa</th>
+                        <th style="padding:10px; text-align:center;">Son Revize Tarihi</th>
                         <th style="padding:10px; text-align:center;">Durum</th>
                         <th style="padding:10px; text-align:center; width:220px;">İşlemler</th>
                     </tr>
@@ -700,6 +701,9 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                             <td style="padding:10px; border-bottom:1px solid #eee;"><?php echo htmlspecialchars($f['form_adi']); ?></td>
                             <td style="padding:10px; border-bottom:1px solid #eee;"><span style="font-size:11px; background:#e8f4f8; padding:3px 6px; border-radius:3px; color:#1b656e;"><?php echo htmlspecialchars($f['kategori']); ?></span></td>
                             <td style="padding:10px; border-bottom:1px solid #eee; font-family:monospace; font-size:12px;"><?php echo htmlspecialchars($f['dosya_adi']); ?></td>
+                            <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; font-size:12px; color:#555;">
+                                📅 <?php echo !empty($f['son_revize_tarihi']) ? date('d.m.Y H:i', strtotime($f['son_revize_tarihi'])) : '-'; ?>
+                            </td>
                             <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">
                                 <?php if ($f['durum'] == 1): ?>
                                     <span style="background:#d4edda; color:#155724; padding:3px 8px; border-radius:12px; font-size:11px; font-weight:bold;">Aktif</span>

@@ -124,8 +124,9 @@ foreach ($aktif_formlar as $f) {
                         <option value="<?php echo htmlspecialchars($f['dosya_adi']); ?>" 
                                 data-kodu="<?php echo htmlspecialchars($f['form_kodu']); ?>" 
                                 data-adi="<?php echo htmlspecialchars($f['form_adi']); ?>"
+                                data-revize="<?php echo !empty($f['son_revize_tarihi']) ? date('d.m.Y H:i', strtotime($f['son_revize_tarihi'])) : date('d.m.Y H:i'); ?>"
                                 data-alanlar="<?php echo htmlspecialchars($f['form_alanlari'] ?: ''); ?>">
-                            <?php echo htmlspecialchars($f['form_kodu'] . ' - ' . $f['form_adi']); ?>
+                            <?php echo htmlspecialchars($f['form_kodu'] . ' - ' . $f['form_adi']); ?> (Son Revize: <?php echo !empty($f['son_revize_tarihi']) ? date('d.m.Y', strtotime($f['son_revize_tarihi'])) : date('d.m.Y'); ?>)
                         </option>
                     <?php endforeach; ?>
                 </optgroup>
@@ -1002,6 +1003,24 @@ foreach ($aktif_formlar as $f) {
                     }
                 }
                 
+                var formRevize = selectedOption.getAttribute('data-revize');
+                
+                var targetFormElem = (secilenForm === "form_genel.php" || !acilacakForm || hasCustomAlanlar) ? document.getElementById("form_genel.php") : acilacakForm;
+
+                if (targetFormElem) {
+                    var h2Elem = targetFormElem.querySelector('h2');
+                    if (h2Elem) {
+                        var existingBadge = targetFormElem.querySelector('.revize-tarihi-badge');
+                        if (!existingBadge) {
+                            existingBadge = document.createElement("div");
+                            existingBadge.className = "revize-tarihi-badge";
+                            existingBadge.style.cssText = "text-align:center; font-size:12.5px; color:#1b656e; margin:-5px 0 15px 0; font-weight:bold; background:#e8f4f8; padding:5px 15px; border-radius:15px; display:block; border:1px solid #1b656e;";
+                            h2Elem.insertAdjacentElement('afterend', existingBadge);
+                        }
+                        existingBadge.innerHTML = "📅 Doküman Son Revize Tarihi: " + (formRevize || "07.08.2026 13:28");
+                    }
+                }
+
                 if (secilenForm === "form_genel.php" || !acilacakForm || hasCustomAlanlar) {
                     var genelForm = document.getElementById("form_genel.php");
                     if (genelForm) {
