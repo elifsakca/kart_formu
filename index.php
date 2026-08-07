@@ -99,7 +99,7 @@ foreach ($aktif_formlar as $f) {
     <!-- Arama Kutusu -->
     <div class="arama-konteyner">
         <div class="arama-kutusu">
-            <span class="arama-icon">🔍</span>
+            <span class="arama-icon"> </span>
             <input type="text" id="formAramaInput" class="arama-input" placeholder="Form adı, form kodu veya anahtar kelime ile arayınız... (Örn: E-İmza, 0072, Statik IP, Akıllı Kart)" onkeyup="formFiltrele()">
         </div>
     </div>
@@ -115,7 +115,7 @@ foreach ($aktif_formlar as $f) {
         <?php foreach ($grup_formlar as $kategori => $formlar): ?>
             <div class="kategori-blok">
                 <div class="kategori-baslik">
-                    📁 <?php echo htmlspecialchars($kategori); ?>
+                     <?php echo htmlspecialchars($kategori); ?>
                     <span class="kategori-rozeti"><?php echo count($formlar); ?> Form</span>
                 </div>
 
