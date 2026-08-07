@@ -1018,42 +1018,90 @@ foreach ($aktif_formlar as $f) {
 
         function dinamikAlanlariCiz(containerId, alanlar) {
             var container = document.getElementById(containerId);
+            if (!container) return;
             container.innerHTML = ""; // Temizle
             
+            var pendingPair = [];
+
+            function flushPair() {
+                if (pendingPair.length === 0) return;
+                var satir = document.createElement("div");
+                satir.className = "form-satir";
+                satir.style.marginBottom = "15px";
+                pendingPair.forEach(function(item) {
+                    satir.appendChild(item);
+                });
+                container.appendChild(satir);
+                pendingPair = [];
+            }
+
             alanlar.forEach(function(alan) {
+                if (alan.target === 'admin') return; // Yönetici tarafından doldurulacak alanları başvuru ekranında gizle
+                
                 var formGrup = document.createElement("div");
                 formGrup.className = "form-grup";
+                formGrup.style.marginBottom = "0";
                 
                 var labelHtml = `<label>${alan.label}${alan.required == 1 ? ' *' : ''}</label>`;
                 var inputHtml = "";
                 
                 if (alan.type === 'textarea') {
+                    flushPair();
                     inputHtml = `<textarea name="${alan.name}" rows="4" ${alan.required == 1 ? 'required' : ''} placeholder="${alan.label} giriniz..."></textarea>`;
-                } else if (alan.type === 'file') {
-                    var acceptAttr = alan.name.includes('fotograf') || alan.label.toLowerCase().includes('foto') ? 'accept=".jpg,.jpeg,.png"' : 'accept=".pdf,.jpg,.jpeg,.png"';
-                    inputHtml = `<input type="file" name="${alan.name}" ${acceptAttr} ${alan.required == 1 ? 'required' : ''}>`;
-                } else if (alan.type === 'select') {
-                    var optionOptions = `<option value="">Seçiniz...</option>`;
+                    formGrup.style.marginBottom = "15px";
+                    formGrup.innerHTML = labelHtml + inputHtml;
+                    container.appendChild(formGrup);
+                } else if (alan.type === 'checkbox') {
+                    flushPair();
+                    var checkGridHtml = `<div class="form-bilgi-liste" style="background:#fce8e6; border-left:3px solid #d93025; padding:12px 15px; border-radius:5px; margin-top:5px; margin-bottom:15px;">`;
+                    checkGridHtml += `<label style="color:#d93025; font-weight:bold; font-size:13.5px; margin-bottom:10px; display:block;">${alan.label}:</label>`;
+                    checkGridHtml += `<div class="checkbox-grid">`;
                     if (alan.secenekler) {
                         var opts = alan.secenekler.split(',');
                         opts.forEach(function(o) {
                             var val = o.trim();
                             if (val) {
-                                optionOptions += `<option value="${val}">${val}</option>`;
+                                checkGridHtml += `<label style="cursor:pointer; display:flex; align-items:center; gap:6px;"><input type="checkbox" name="${alan.name}[]" value="${val}" style="width:16px; height:16px;"> ${val}</label>`;
                             }
                         });
                     }
-                    inputHtml = `<select name="${alan.name}" ${alan.required == 1 ? 'required' : ''}>${optionOptions}</select>`;
+                    checkGridHtml += `</div></div>`;
+                    formGrup.style.marginBottom = "15px";
+                    formGrup.innerHTML = checkGridHtml;
+                    container.appendChild(formGrup);
                 } else {
-                    // text, number, email, date
-                    var inputType = alan.type || 'text';
-                    var maxLen = inputType === 'text' && (alan.name.includes('tc') || alan.label.toLowerCase().includes('tc')) ? 'maxlength="11"' : '';
-                    inputHtml = `<input type="${inputType}" name="${alan.name}" ${maxLen} ${alan.required == 1 ? 'required' : ''} placeholder="${alan.label} giriniz...">`;
+                    // Normal ikili yan yana alanlar (text, select, date, file, email, number)
+                    if (alan.type === 'file') {
+                        var acceptAttr = alan.name.includes('fotograf') || alan.label.toLowerCase().includes('foto') ? 'accept=".jpg,.jpeg,.png"' : 'accept=".pdf,.jpg,.jpeg,.png"';
+                        inputHtml = `<input type="file" name="${alan.name}" ${acceptAttr} ${alan.required == 1 ? 'required' : ''}>`;
+                    } else if (alan.type === 'select') {
+                        var optionOptions = `<option value="">Seçiniz...</option>`;
+                        if (alan.secenekler) {
+                            var opts = alan.secenekler.split(',');
+                            opts.forEach(function(o) {
+                                var val = o.trim();
+                                if (val) {
+                                    optionOptions += `<option value="${val}">${val}</option>`;
+                                }
+                            });
+                        }
+                        inputHtml = `<select name="${alan.name}" ${alan.required == 1 ? 'required' : ''}>${optionOptions}</select>`;
+                    } else {
+                        var inputType = alan.type || 'text';
+                        var maxLen = inputType === 'text' && (alan.name.includes('tc') || alan.label.toLowerCase().includes('tc')) ? 'maxlength="11"' : '';
+                        inputHtml = `<input type="${inputType}" name="${alan.name}" ${maxLen} ${alan.required == 1 ? 'required' : ''} placeholder="${alan.label} giriniz...">`;
+                    }
+                    
+                    formGrup.innerHTML = labelHtml + inputHtml;
+                    pendingPair.push(formGrup);
+
+                    if (pendingPair.length === 2) {
+                        flushPair();
+                    }
                 }
-                
-                formGrup.innerHTML = labelHtml + inputHtml;
-                container.appendChild(formGrup);
             });
+
+            flushPair();
         }
 
         // KDYS.FR.0074 Formu İçin Satır Ekleme/Silme İşlemleri

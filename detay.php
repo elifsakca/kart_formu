@@ -31,6 +31,19 @@ if ($admin_rol !== 'superadmin') {
 
 $veriler = json_decode($basvuru['form_verileri'], true) ?? [];
 
+// Form detaylarını ve admin doldurulacak alanları veritabanından çekelim
+$form_info_stmt = $db->prepare("SELECT * FROM formlar WHERE form_kodu = :fk");
+$form_info_stmt->execute([':fk' => $basvuru['form_kodu']]);
+$formRow = $form_info_stmt->fetch();
+$form_alanlari = json_decode($formRow['form_alanlari'] ?? '[]', true) ?: [];
+
+$admin_alanlari = [];
+foreach ($form_alanlari as $fa) {
+    if (isset($fa['target']) && $fa['target'] === 'admin') {
+        $admin_alanlari[] = $fa;
+    }
+}
+
 // YÖNETİCİ TARAFINDAN GİRİLEN BİLGİLERİ KAYDETME İŞLEMİ
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yonetici_kaydet'])) {
     $yonetici_verileri = $_POST['yonetici'] ?? [];
@@ -473,6 +486,74 @@ $bugun = date('Y-m-d');
                 </div>
             </form>
 
+        <?php endif; ?>
+
+        <?php if (!empty($admin_alanlari)): ?>
+            <!-- DİNAMİK YÖNETİCİ / BİLGİ İŞLEM DOLDURMA KUTUSU -->
+            <form method="POST" action="detay.php?id=<?php echo $id; ?>">
+                <input type="hidden" name="id" value="<?php echo $id; ?>">
+
+                <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #f0f7f7;">
+                    <h4 style="margin:0 0 12px 0; color:#1b656e; text-align:center; border-bottom:2px solid #1b656e; padding-bottom:8px; font-weight:bold;">
+                        ⚙️ BİLGİ İŞLEM DAİRESİ / YÖNETİCİ DOLDURMA ALANI (* Sadece Yönetici Tarafından İşlenebilir)
+                    </h4>
+                    <table class="grid-table" style="margin-bottom:15px; width:100%;">
+                        <?php foreach ($admin_alanlari as $fa): 
+                            $val = $veriler[$fa['name']] ?? '';
+                        ?>
+                            <tr>
+                                <th style="width:35%; background:#e4f0f0; color:#1b656e; padding:10px; border:1px solid #ccc; font-weight:bold;">
+                                    <?php echo htmlspecialchars($fa['label']); ?> <?php echo $fa['required'] == 1 ? '*' : ''; ?>
+                                </th>
+                                <td style="padding:8px 10px; border:1px solid #ccc; background:#fff;">
+                                    <?php if ($fa['type'] === 'textarea'): ?>
+                                        <textarea class="yonetici-input" name="yonetici[<?php echo htmlspecialchars($fa['name']); ?>]" rows="3" style="width:100%; padding:6px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;"><?php echo htmlspecialchars(is_array($val) ? implode(', ', $val) : $val); ?></textarea>
+                                    <?php elseif ($fa['type'] === 'select'): ?>
+                                        <select class="yonetici-input" name="yonetici[<?php echo htmlspecialchars($fa['name']); ?>]" style="width:100%; padding:6px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;">
+                                            <option value="">Seçiniz...</option>
+                                            <?php 
+                                            if (!empty($fa['secenekler'])) {
+                                                $opts = explode(',', $fa['secenekler']);
+                                                foreach ($opts as $o) {
+                                                    $o = trim($o);
+                                                    if ($o !== '') {
+                                                        $sel = ($val === $o) ? 'selected' : '';
+                                                        echo "<option value=\"".htmlspecialchars($o)."\" $sel>".htmlspecialchars($o)."</option>";
+                                                    }
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    <?php elseif ($fa['type'] === 'checkbox'): ?>
+                                        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                                            <?php 
+                                            $val_arr = is_array($val) ? $val : array_map('trim', explode(',', (string)$val));
+                                            if (!empty($fa['secenekler'])) {
+                                                $opts = explode(',', $fa['secenekler']);
+                                                foreach ($opts as $o) {
+                                                    $o = trim($o);
+                                                    if ($o !== '') {
+                                                        $chk = in_array($o, $val_arr) ? 'checked' : '';
+                                                        echo "<label style='margin-right:12px; cursor:pointer;'><input type='checkbox' name='yonetici[".htmlspecialchars($fa['name'])."][]' value='".htmlspecialchars($o)."' $chk> ".htmlspecialchars($o)."</label>";
+                                                    }
+                                                }
+                                            }
+                                            ?>
+                                        </div>
+                                    <?php elseif ($fa['type'] === 'date'): ?>
+                                        <input type="date" class="yonetici-input" name="yonetici[<?php echo htmlspecialchars($fa['name']); ?>]" value="<?php echo htmlspecialchars(is_array($val) ? implode(', ', $val) : $val); ?>" style="width:100%; padding:6px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;">
+                                    <?php else: ?>
+                                        <input type="<?php echo htmlspecialchars($fa['type'] ?: 'text'); ?>" class="yonetici-input" name="yonetici[<?php echo htmlspecialchars($fa['name']); ?>]" value="<?php echo htmlspecialchars(is_array($val) ? implode(', ', $val) : $val); ?>" style="width:100%; padding:6px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;">
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                    <div style="text-align:center;">
+                        <button type="submit" name="yonetici_kaydet" class="btn-yonetici-kaydet" style="background:#1b656e; color:white; border:none; padding:10px 25px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:14px;">✓ Yönetici Bilgilerini Kaydet</button>
+                    </div>
+                </div>
+            </form>
         <?php endif; ?>
     </div>
 

@@ -23,6 +23,80 @@ foreach ($formlar_query as $f) {
     $tum_formlar[$f['form_kodu']] = $f['form_kodu'] . ' - ' . $f['form_adi'] . ($f['durum'] == 0 ? ' (PASİF)' : '');
 }
 
+// POST İşlemi: Yeni Form Ekleme
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_form_ekle'])) {
+    $f_kodu     = trim($_POST['form_kodu'] ?? '');
+    $f_adi      = trim($_POST['form_adi'] ?? '');
+    $f_kategori = trim($_POST['kategori'] ?? 'Bilgi İşlem Daire Başkanlığı Formları');
+    $f_dosya    = trim($_POST['dosya_adi'] ?? 'form_genel.php');
+
+    if ($f_kategori === 'YENI_KAT') {
+        $f_kategori = trim($_POST['yeni_kategori_adi'] ?? '');
+    }
+
+    if (empty($f_dosya)) {
+        $f_dosya = 'form_genel.php';
+    }
+
+    $alanlar = [];
+    if (isset($_POST['alan_etiket']) && is_array($_POST['alan_etiket'])) {
+        for ($i = 0; $i < count($_POST['alan_etiket']); $i++) {
+            $label = trim($_POST['alan_etiket'][$i]);
+            if (!empty($label)) {
+                $name = strtolower(str_replace([' ', '-', '.'], ['_', '_', ''], $label));
+                $alanlar[] = [
+                    'name' => $name,
+                    'label' => $label,
+                    'type' => $_POST['alan_tip'][$i] ?? 'text',
+                    'required' => intval($_POST['alan_zorunlu'][$i] ?? 0),
+                    'secenekler' => trim($_POST['alan_secenekler'][$i] ?? ''),
+                    'target' => $_POST['alan_hedef'][$i] ?? 'user'
+                ];
+            }
+        }
+    }
+    $form_alanlari_json = json_encode($alanlar, JSON_UNESCAPED_UNICODE);
+
+    if (!empty($f_kodu) && !empty($f_adi) && !empty($f_kategori)) {
+        try {
+            $chk = $db->prepare("SELECT COUNT(*) FROM formlar WHERE form_kodu = :fkodu");
+            $chk->execute([':fkodu' => $f_kodu]);
+            if ($chk->fetchColumn() > 0) {
+                $hata = "Bu form kodu ($f_kodu) zaten kullanılmaktadır!";
+            } else {
+                $ins = $db->prepare("INSERT INTO formlar (form_kodu, form_adi, kategori, dosya_adi, form_alanlari, durum) VALUES (:fkodu, :fadi, :fkat, :fdosya, :falanlar, 1)");
+                $ins->execute([
+                    ':fkodu' => $f_kodu,
+                    ':fadi'  => $f_adi,
+                    ':fkat'  => $f_kategori,
+                    ':fdosya' => $f_dosya,
+                    ':falanlar' => $form_alanlari_json
+                ]);
+
+                // Tüm normal adminlere otomatik olarak izin ekle
+                $admins = $db->query("SELECT id FROM yoneticiler WHERE rol = 'admin'")->fetchAll();
+                $insPerm = $db->prepare("INSERT IGNORE INTO yonetici_izinleri (yonetici_id, form_kodu) VALUES (:yid, :fkodu)");
+                foreach ($admins as $adm) {
+                    $insPerm->execute([':yid' => $adm['id'], ':fkodu' => $f_kodu]);
+                }
+
+                $mesaj = "Yeni başvuru formu ($f_kodu - $f_adi) başarıyla sisteme eklendi.";
+                
+                // Formlar listesini ve izin tanımlarını yeniden yükle
+                $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
+                $tum_formlar = [];
+                foreach ($formlar_query as $f) {
+                    $tum_formlar[$f['form_kodu']] = $f['form_kodu'] . ' - ' . $f['form_adi'] . ($f['durum'] == 0 ? ' (PASİF)' : '');
+                }
+            }
+        } catch (PDOException $e) {
+            $hata = "Form eklenirken hata oluştu: " . $e->getMessage();
+        }
+    } else {
+        $hata = "Lütfen form bilgilerini eksiksiz giriniz!";
+    }
+}
+
 // POST İşlemi 1: Yeni Admin Ekleme
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_admin_ekle'])) {
     $y_kadi   = trim($_POST['kullanici_adi'] ?? '');
@@ -95,7 +169,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_revize_et'])) {
                     'label' => $label,
                     'type' => $_POST['alan_tip'][$i] ?? 'text',
                     'required' => intval($_POST['alan_zorunlu'][$i] ?? 0),
-                    'secenekler' => trim($_POST['alan_secenekler'][$i] ?? '')
+                    'secenekler' => trim($_POST['alan_secenekler'][$i] ?? ''),
+                    'target' => $_POST['alan_hedef'][$i] ?? 'user'
                 ];
             }
         }
@@ -273,6 +348,53 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
         <?php if(!empty($hata)): ?>
             <div class="alert-danger"> <?php echo htmlspecialchars($hata); ?></div>
         <?php endif; ?>
+
+        <!-- YENİ FORM OLUŞTURMA KARTI -->
+        <div class="card" style="border-top: 4px solid #1b656e;">
+            <h2>➕ Yeni Başvuru Formu Oluştur & Ekle (Dinamik Form Builder)</h2>
+            <p style="font-size:13px; color:#666; margin-top:-5px;">Sisteme yeni bir başvuru formu ekleyebilir ve forma özel bilgi kutucukları (alanlar) tanımlayabilirsiniz.</p>
+            
+            <form method="POST">
+                <div class="form-satir">
+                    <div class="form-grup">
+                        <label>Form Kodu *</label>
+                        <input type="text" name="form_kodu" placeholder="Örn: KDYS.FR.0095 veya F-56" required autocomplete="off">
+                    </div>
+                    <div class="form-grup">
+                        <label>Form Adı *</label>
+                        <input type="text" name="form_adi" placeholder="Örn: Araştırma Projesi Destek Talep Formu" required>
+                    </div>
+                </div>
+
+                <div class="form-satir">
+                    <div class="form-grup">
+                        <label>Kategori *</label>
+                        <select name="kategori" onchange="kategoriSecimKontrolAdd(this)" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                            <option value="Bilgi İşlem Daire Başkanlığı Formları">Bilgi İşlem Daire Başkanlığı Formları</option>
+                            <option value="Akıllı Kart Formları">Akıllı Kart Formları</option>
+                            <option value="YENI_KAT">-- Yeni Kategori Ekle --</option>
+                        </select>
+                        <input type="text" name="yeni_kategori_adi" id="add_yeni_kategori_adi" placeholder="Yeni Kategori Adını Yazınız" style="display:none; margin-top:8px; width:100%; padding:10px; border:1px solid #ddd; border-radius:5px; box-sizing:border-box;">
+                    </div>
+                    <div class="form-grup">
+                        <label>Sayfa / Şablon (Dosya Adı)</label>
+                        <input type="text" name="dosya_adi" placeholder="Boş bırakılırsa genel şablon kullanılır (form_genel.php)" value="form_genel.php">
+                    </div>
+                </div>
+
+                <h3 style="color:#1b656e; font-size:15px; margin-top:20px; border-bottom: 1px solid #eee; padding-bottom: 5px;">Form Alanları (Dinamik Bilgi Kutucukları)</h3>
+                <p style="font-size:12px; color:#666; margin-top:0;">Formda doldurulmasını istediğiniz bilgileri (ad, soyad, tc, telefon, dosya vb.) aşağıdan ekleyebilirsiniz.</p>
+                
+                <div id="add_alanlar_listesi" style="margin-top:15px; margin-bottom:15px;">
+                    <!-- Dinamik alan satırları buraya eklenecek -->
+                </div>
+
+                <button type="button" class="btn-sec-hepsi" style="background:#1b656e; margin-bottom:20px; padding: 6px 12px; cursor:pointer;" onclick="alanSatiriEkleTarget('add_alanlar_listesi')">+ Yeni Bilgi Kutucuğu (Alan) Ekle</button>
+
+                <br>
+                <button type="submit" name="yeni_form_ekle" class="btn-kaydet" style="background:#1b656e; padding:12px 30px; font-size:15px;">✓ Formu Oluştur ve Yayınla</button>
+            </form>
+        </div>
 
         <!-- YENİ ADMİN EKLEME KARTI -->
         <div class="card">
@@ -549,7 +671,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                 try {
                     var alanlar = JSON.parse(alanlarJson);
                     alanlar.forEach(function(alan) {
-                        alanSatiriEkle(alan.label, alan.type, alan.required, alan.secenekler);
+                        alanSatiriEkle(alan.label, alan.type, alan.required, alan.secenekler, alan.target || 'user');
                     });
                 } catch(e) {
                     console.error("Alanlar JSON parse hatası:", e);
@@ -559,12 +681,24 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             document.getElementById("edit_form_container").scrollIntoView({ behavior: 'smooth' });
         }
 
-        function alanSatiriEkle(label = '', type = 'text', required = 0, secenekler = '') {
-            var alanlarListesi = document.getElementById("edit_alanlar_listesi");
+        function alanSatiriEkle(label = '', type = 'text', required = 0, secenekler = '', target = 'user') {
+            alanSatiriEkleTarget('edit_alanlar_listesi', label, type, required, secenekler, target);
+        }
+
+        function alanSatiriEkleTarget(targetId = 'edit_alanlar_listesi', label = '', type = 'text', required = 0, secenekler = '', target = 'user') {
+            var alanlarListesi = document.getElementById(targetId);
+            if (!alanlarListesi) return;
             var div = document.createElement("div");
             div.className = "alan-satir";
             div.style = "display:flex; gap:10px; margin-bottom:10px; align-items:center; background:#f9f9f9; padding:8px; border-radius:4px; border:1px solid #e0e0e0;";
             
+            var selectTargetHtml = `
+                <select name="alan_hedef[]" style="padding:6px; border:1px solid #ddd; border-radius:4px; width:135px; font-weight:bold; color:${target === 'admin' ? '#1b656e' : '#333'};" onchange="this.style.color=(this.value==='admin'?'#1b656e':'#333')">
+                    <option value="user" ${target === 'user' ? 'selected' : ''}>👤 Başvuru Sahibi</option>
+                    <option value="admin" ${target === 'admin' ? 'selected' : ''}>⚙️ Yönetici (Admin)</option>
+                </select>
+            `;
+
             var selectRequiredHtml = `
                 <select name="alan_zorunlu[]" style="padding:6px; border:1px solid #ddd; border-radius:4px; width:90px;">
                     <option value="1" ${required == 1 ? 'selected' : ''}>Zorunlu</option>
@@ -573,14 +707,15 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             `;
             
             var selectTypeHtml = `
-                <select name="alan_tip[]" style="padding:6px; border:1px solid #ddd; border-radius:4px; width:110px;" onchange="alanTipiKontrol(this)">
+                <select name="alan_tip[]" style="padding:6px; border:1px solid #ddd; border-radius:4px; width:130px;" onchange="alanTipiKontrol(this)">
                     <option value="text" ${type === 'text' ? 'selected' : ''}>Kısa Metin</option>
                     <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Uzun Metin</option>
+                    <option value="checkbox" ${type === 'checkbox' ? 'selected' : ''}>Tik Atmalık Kutular (Checkbox)</option>
+                    <option value="select" ${type === 'select' ? 'selected' : ''}>Açılır Liste (Dropdown)</option>
                     <option value="number" ${type === 'number' ? 'selected' : ''}>Sayı</option>
                     <option value="email" ${type === 'email' ? 'selected' : ''}>E-posta</option>
                     <option value="date" ${type === 'date' ? 'selected' : ''}>Tarih</option>
-                    <option value="file" ${type === 'file' ? 'selected' : ''}>Dosya</option>
-                    <option value="select" ${type === 'select' ? 'selected' : ''}>Açılır Liste</option>
+                    <option value="file" ${type === 'file' ? 'selected' : ''}>Dosya Yükleme</option>
                 </select>
             `;
 
@@ -589,13 +724,16 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                     <input type="text" name="alan_etiket[]" value="${escapeHtml(label)}" placeholder="Kutucuk Etiketi (Örn: Adı Soyadı)" required style="width:100%; padding:6px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
                 </div>
                 <div>
+                    ${selectTargetHtml}
+                </div>
+                <div>
                     ${selectTypeHtml}
                 </div>
                 <div>
                     ${selectRequiredHtml}
                 </div>
-                <div style="flex:2; display:${type === 'select' ? 'block' : 'none'};" class="secenekler-grup">
-                    <input type="text" name="alan_secenekler[]" value="${escapeHtml(secenekler)}" placeholder="Seçenekleri virgülle ayırın (A, B, C)" style="width:100%; padding:6px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
+                <div style="flex:2; display:${(type === 'select' || type === 'checkbox') ? 'block' : 'none'};" class="secenekler-grup">
+                    <input type="text" name="alan_secenekler[]" value="${escapeHtml(secenekler)}" placeholder="Seçenekleri virgülle ayırın (Örn: Ad, Soyad, Unvan, Birim)" style="width:100%; padding:6px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
                 </div>
                 <div>
                     <button type="button" onclick="this.closest('.alan-satir').remove()" style="background:#d93025; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-weight:bold;">✕</button>
@@ -606,7 +744,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
 
         function alanTipiKontrol(selectElem) {
             var seceneklerGrup = selectElem.closest('.alan-satir').querySelector('.secenekler-grup');
-            if (selectElem.value === 'select') {
+            if (selectElem.value === 'select' || selectElem.value === 'checkbox') {
                 seceneklerGrup.style.display = 'block';
             } else {
                 seceneklerGrup.style.display = 'none';
@@ -645,6 +783,23 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                 yeniKatInput.required = false;
             }
         }
+
+        function kategoriSecimKontrolAdd(selectElem) {
+            var yeniKatInput = document.getElementById("add_yeni_kategori_adi");
+            if (selectElem.value === "YENI_KAT") {
+                yeniKatInput.style.display = "block";
+                yeniKatInput.required = true;
+                yeniKatInput.focus();
+            } else {
+                yeniKatInput.style.display = "none";
+                yeniKatInput.required = false;
+            }
+        }
+
+        // Sayfa yüklendiğinde yeni form alanına 1 varsayılan satır ekle
+        document.addEventListener("DOMContentLoaded", function() {
+            alanSatiriEkleTarget('add_alanlar_listesi', 'Talep Açıklaması', 'text', 1, '');
+        });
     </script>
 </body>
 </html>
