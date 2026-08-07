@@ -77,10 +77,87 @@ $bugun = date('Y-m-d');
         .noprint a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 4px; }
         .noprint button { background: #27ae60; color: white; border: none; padding: 8px 18px; font-weight: bold; border-radius: 4px; cursor: pointer; }
         
+        /* Resimdeki Kurumsal KDYS Başlık Tablosu Stilleri */
+        .kdys-header-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 3px double #333;
+            margin-bottom: 25px;
+            background: #fff;
+        }
+        .kdys-header-table td {
+            border: 1px solid #333;
+            vertical-align: middle;
+        }
+        .kdys-logo-cell {
+            width: 120px;
+            text-align: center;
+            padding: 8px;
+        }
+        .kdys-logo-img {
+            max-height: 80px;
+            max-width: 95px;
+            object-fit: contain;
+        }
+        .kdys-title-cell {
+            text-align: center;
+            padding: 10px 15px;
+            font-family: 'Times New Roman', Times, serif, 'Segoe UI';
+            color: #111;
+        }
+        .kdys-tc {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 2px;
+            letter-spacing: 1px;
+        }
+        .kdys-unv {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+        .kdys-form-title {
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1.3;
+            text-transform: uppercase;
+        }
+        .kdys-info-cell {
+            width: 250px;
+            padding: 0 !important;
+        }
+        .kdys-info-subtable {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .kdys-info-subtable td {
+            padding: 3px 8px;
+            border: 1px solid #333;
+        }
+        .kdys-info-subtable tr:first-child td {
+            border-top: none;
+        }
+        .kdys-info-subtable tr:last-child td {
+            border-bottom: none;
+        }
+        .kdys-info-subtable td.kdys-lbl {
+            border-left: none;
+            font-weight: bold;
+            color: #444;
+            width: 48%;
+            white-space: nowrap;
+        }
+        .kdys-info-subtable td.kdys-val {
+            border-right: none;
+            color: #000;
+            font-weight: bold;
+            width: 52%;
+        }
+
         .paper { background: white; max-width: 900px; margin: 30px auto; padding: 40px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-        .paper-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1b656e; padding-bottom: 15px; margin-bottom: 25px; }
-        .paper-header h2 { margin: 0; color: #1b656e; font-size: 22px; }
-        .paper-header p { margin: 5px 0 0 0; color: #666; font-size: 13px; }
         
         .photo-box { width: 120px; height: 150px; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px; }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -128,8 +205,10 @@ $bugun = date('Y-m-d');
         @media print {
             .noprint, .btn-yonetici-kaydet, .kayit-bildirimi { display: none !important; }
             .only-print { display: block !important; }
-            body { background: white; }
+            body { background: white; margin: 0; padding: 0; }
             .paper { box-shadow: none; margin: 0; width: 100%; max-width: 100%; padding: 0; }
+            .kdys-header-table { border: 3px double #000 !important; }
+            .kdys-header-table td, .kdys-info-subtable td { border: 1px solid #000 !important; color: #000 !important; }
             .yonetici-input {
                 border: none !important;
                 background: transparent !important;
@@ -148,7 +227,7 @@ $bugun = date('Y-m-d');
         <a href="panel.php">← Panele Dön</a>
         <div>
             <span style="margin-right: 15px;">Yönetici Paneli</span>
-            <button onclick="window.print()">Yazdır / PDF Çıktısı Al</button>
+            <button onclick="window.print()" style="font-size: 14px; padding: 8px 16px;">📄 PDF İndir / Yazdır</button>
         </div>
     </div>
 
@@ -159,13 +238,60 @@ $bugun = date('Y-m-d');
     <?php endif; ?>
 
     <div class="paper">
-        <div class="paper-header">
+        <!-- RESİMDEKİ RESMİ KDYS BAŞLIK TABLOSU -->
+        <table class="kdys-header-table">
+            <tr>
+                <td class="kdys-logo-cell">
+                    <img src="https://baunwebapi.balikesir.edu.tr/uploads/1729083231270.png" alt="BAÜN Logo" class="kdys-logo-img">
+                </td>
+                <td class="kdys-title-cell">
+                    <div class="kdys-tc">T.C.</div>
+                    <div class="kdys-unv">BALIKESİR ÜNİVERSİTESİ</div>
+                    <div class="kdys-form-title">
+                        <?php 
+                            $temiz_baslik = preg_replace('/\s*\(KDYS\.FR\.\d+\)\s*/i', '', $basvuru['form_adi']);
+                            if (mb_strpos($temiz_baslik, 'Formu') === false && mb_strpos($temiz_baslik, 'FORMU') === false) {
+                                $temiz_baslik .= ' FORMU';
+                            }
+                            echo htmlspecialchars(mb_strtoupper($temiz_baslik, 'UTF-8')); 
+                        ?>
+                    </div>
+                </td>
+                <td class="kdys-info-cell">
+                    <table class="kdys-info-subtable">
+                        <tr>
+                            <td class="kdys-lbl">Doküman No</td>
+                            <td class="kdys-val"><?php echo htmlspecialchars($basvuru['form_kodu'] ?: 'KDYS.FR.0001'); ?></td>
+                        </tr>
+                        <tr>
+                            <td class="kdys-lbl">İlk Yayın Tarihi</td>
+                            <td class="kdys-val">19.03.2025</td>
+                        </tr>
+                        <tr>
+                            <td class="kdys-lbl">Revizyon Tarihi</td>
+                            <td class="kdys-val">08.07.2026</td>
+                        </tr>
+                        <tr>
+                            <td class="kdys-lbl">Revizyon No</td>
+                            <td class="kdys-val">01</td>
+                        </tr>
+                        <tr>
+                            <td class="kdys-lbl">Sayfa No</td>
+                            <td class="kdys-val">1/1</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <!-- TAKİP NO & FOTOĞRAF / DURUM BİLGİ ALANI -->
+        <div style="display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 12px 18px; border-radius: 6px; border: 1px solid #e0e0e0; margin-bottom: 25px;">
             <div>
-                <h2>BALIKESİR ÜNİVERSİTESİ</h2>
-                <p><strong>Form Kodu / Adı:</strong> <?php echo htmlspecialchars($basvuru['form_kodu'] . ' - ' . $basvuru['form_adi']); ?></p>
-                <p>
-                    <strong>Takip No:</strong> <span style="font-size:15px; font-weight:bold; color:#1b656e;">#<?php echo htmlspecialchars($basvuru['takip_no'] ?: $basvuru['id']); ?></span> | 
-                    <strong>Tarih:</strong> <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?>
+                <p style="margin: 0 0 5px 0; font-size: 14px;">
+                    <strong>Takip No:</strong> <span style="font-size:16px; font-weight:bold; color:#1b656e;">#<?php echo htmlspecialchars($basvuru['takip_no'] ?: $basvuru['id']); ?></span>
+                </p>
+                <p style="margin: 0; font-size: 13px; color: #555;">
+                    <strong>Başvuru Tarihi:</strong> <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?>
                 </p>
             </div>
             <div>
