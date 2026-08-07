@@ -471,13 +471,52 @@ foreach ($aktif_formlar as $f) {
                 <span class="icon">▼</span>
             </button>
             <div class="accordion-panel">
-                <div style="padding-top: 15px; padding-bottom: 15px;">
-                    <p><strong>1- KANUNİ YÜKÜMLÜLÜK:</strong></p>
-                    <p>1.1- @balikesir.edu.tr domain’i T.C. Balıkesir Üniversitesi personeline (Akademik vce İdari) hizmet vermektedir. Bu hizmet akademik eğitim- öğretim amaçlı araştırma ve geliştirme faaliyetleri içermektedir.</p>
-                    <p>1.2- @balikesir.edu.tr domain’ine ait e-posta hesaplarını kullanan şahıslar Türkiye Cumhuriyeti kanun ve bunlara bağlı olan yönetmeliklere, TÜBİTAK ULAKBİM tarafından işletilen Ulusal Akademik Ağ'ın (ULAKNET) kullanımına ilişkin usul ve esaslara, T.C. Balıkesir Üniversitesi yönetmeliklerine aykırı hareket edemezler.</p>
+                <div style="padding-top: 15px; padding-bottom: 15px; font-size:12px; line-height:1.6; color:#333;">
+                    <p style="margin-bottom:8px;"><strong>1- KANUNİ YÜKÜMLÜLÜK:</strong></p>
+                    <p style="margin:3px 0;"><strong>1.1-</strong> @balikesir.edu.tr domain’i T.C. Balıkesir Üniversitesi personeline (Akademik ve İdari) hizmet vermektedir. Bu hizmet akademik eğitim-öğretim amaçlı araştırma ve geliştirme faaliyetleri içermektedir.</p>
+                    <p style="margin:3px 0;"><strong>1.2-</strong> @balikesir.edu.tr domain’ine ait e-posta hesaplarını kullanan şahıslar Türkiye Cumhuriyeti kanun ve bunlara bağlı olan yönetmeliklere, Türkiye Bilimsel ve Teknik Araştırma Kurumu'nun (TÜBİTAK) bir enstitüsü olan Ulusal Akademik Ağ ve Bilgi Merkezi (ULAKBİM) tarafından işletilen Ulusal Akademik Ağ'ın (ULAKNET) kullanımına ilişkin usul ve esaslara, T.C. Balıkesir Üniversitesi yönetmeliklerine aykırı hareket edemezler.</p>
+                    <p style="margin:3px 0 3px 15px;"><strong>1.2.1-</strong> İnternet Ortamında Yapılan Yayınların Düzenlenmesi ve Bu Yayınlar Yoluyla İşlenen Suçlarla Mücadele Edilmesi Hakkında Kanun. (Kanun/Karar No: 5651, Tarih: 23.05.2007)</p>
+                    <p style="margin:3px 0 3px 15px;"><strong>1.2.2-</strong> İnternet Ortamında Yapılan Yayınların Düzenlenmesine Dair Usul ve Esaslar Hakkında Yönetmelik (Tarih: 30.11.2007)</p>
+                    <p style="margin:3px 0 3px 15px;"><strong>1.2.3-</strong> Birlikte Çalışabilirlik Esasları Rehberi ile İlgili 2005/20 Sayılı Başbakanlık Genelgesi. (Tarih: 05.08.2005)</p>
+                    <p style="margin:3px 0 3px 15px;"><strong>1.2.4-</strong> Türkiye Bilimsel ve Teknik Araştırma Kurumu'nun (TÜBİTAK) bir enstitüsü olan Ulusal Akademik Ağ ve Bilgi Merkezi (ULAKBİM) tarafından işletilen Ulusal Akademik Ağ'ın (ULAKNET) kullanımına ilişkin usul ve esasları.</p>
                     
-                    <p><strong>2- GİZLİLİK ve GÜVENLİK:</strong></p>
-                    <p>2.1- T.C. Balıkesir Üniversitesinden personel e-posta adresi talep eden şahıslar, bu formu doldurup personel kimlikleri ile birlikte Bilgi İşlem Dairesi Başkanlığına şahsen müracaat etmeleri gerekmektedir.</p>
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>2- GİZLİLİK ve GÜVENLİK:</strong></p>
+                    <p style="margin:3px 0;"><strong>2.1-</strong> T.C. Balıkesir Üniversitesinden personel e-posta adresi talep eden şahıslar, bu formu doldurup imzalayarak, personel kimlikleri ile birlikte Bilgi İşlem Dairesi Başkanlığına şahsen müracaat etmeleri gerekmektedir. Diğer talepler değerlendirmeye alınmayacaktır.</p>
+                    <p style="margin:3px 0;"><strong>2.2-</strong> Balıkesir Üniversitesinden e-posta adresi alan kişi, Bilgi İşlem Daire Başkanlığı’nın belirleyeceği bir e-posta hesap adı, öğrenci numarasından oluşan bir kullanıcı adı ve kendisinin belirleyeceği bir kullanıcı şifresine sahip olur.</p>
+                    <p style="margin:3px 0;"><strong>2.3-</strong> Kullanıcı adı ve e-posta adı kişiye özeldir ve @balikesir.edu.tr domaininde bir benzeri daha yoktur.</p>
+                    <p style="margin:3px 0;"><strong>2.4-</strong> Kullanıcı şifresi sadece kullanıcı tarafından bilinir. Kullanıcı dilediği zaman şifresini değiştirebilir. Şifrenin seçimi ve korunması tamamıyla kullanıcının sorumluluğundadır. Bilgi İşlem Daire Başkanlığı, şifre kullanımından doğacak problemlerden kesinlikle sorumlu değildir.</p>
+                    <p style="margin:3px 0;"><strong>2.5-</strong> E-posta şifresini unutan kullanıcılar, Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığına bizzat müracaat etmek zorundadır.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>3- E-POSTA ADRESİ ALAN KİŞİNİN YÜKÜMLÜLÜKLERİ: (Kişi;)</strong></p>
+                    <p style="margin:2px 0;"><strong>3.1-</strong> E-posta hesabı sahibi, bu servisi kullanırken ileri sürdüğü şahsi fikir, düşünce ve ifadeler ile elektronik ortama eklediği dosya ve/veya bilgilerin sorumluluğunun şahsına ait olduğunu ve bundan dolayı bu e-posta ile ekli dosyalardan dolayı hiçbir şekilde Balıkesir Üniversitesinin sorumlu tutulmayacağını kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.2-</strong> Balıkesir Üniversitesi e-posta hizmetlerinde, e-posta sitesinin geneline zarar verecek veya Balıkesir Üniversitesi’ni başka şahıs ya da kuruluşlarla adli (mahkemelik) duruma getirecek herhangi bir yazılım veya materyal bulunduramayacağını, paylaşamayacağını ve hukuki bir durum doğarsa tüm adli ve cezai sorumlulukları üstüne aldığını kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.3-</strong> E-posta servisinin kullanımı sırasında kaybolacak ve/veya eksik alınacak, yanlış adrese iletilecek bilgi, mesaj ve dosyalardan Balıkesir Üniversitesi Bilgi İşlem Dairesi Başkanlığının sorumlu olmayacağını kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.4-</strong> E-posta hesabı sahibi, teknik nedenlerden (arıza, güncelleme, aktarma vb.) dolayı e-postalardaki gecikme ve kayıplardan dolayı Balıkesir Üniversitesi Bilgi İşlem Dairesi Bşk. sorumlu olmayacağını kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.5-</strong> E-posta hesabı sahibi, posta hesaplarındaki verilerinin, Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığı’nın ihmali görülmeden, yetkisiz kişilerce okunmasından (e-posta sahiplerinin, gizli bilgilerini başka kişiler ile paylaşması, siteden ayrılırken çıkış yapmaması, vb. durumlardan) dolayı gelebilecek maddi ve manevi zararlardan ötürü, Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığı’nın sorumlu olmadığını kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.6-</strong> E-posta hesabı sahibi, başka şahıs veya kuruluşlardaki bilgisayara, bu bilgisayarlardaki bilgilere ya da yazılıma zarar verecek bilgi veya programlar göndermemeyi ve barındırmamayı, aksi takdirde doğacak tüm hukuki ve cezai sorumluluğun şahsına ait olduğunu kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.7-</strong> Üniversite e-posta servisini kullanarak elde edilen herhangi bir bilgi veya materyalin tamamıyla kullanıcının rızası dahilinde olduğunu, kullanıcı bilgisayarında yaratacağı arızalar, bilgi kaybı ve diğer kayıpların sorumluluğunun tamamıyla kendisine ait olduğunu, e-posta servisinin kullanımından dolayı uğrayabileceği zararlardan Balıkesir Üniversitesinin sorumlu olmadığını kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.8-</strong> E-posta hesabı sahibi, genel ahlak ve adaba aykırı, ırkçı, ayrımcı, ticari, siyasi propaganda, taciz ve tehdit edici ile Türkiye Cumhuriyeti yasalarına, vatandaşı olduğu diğer ülkelerin yasalarına ve uluslararası anlaşmalara aykırı e-posta göndermemeyi, barındırmamayı ve bunlara aykırı her türlü uygulamalardan doğacak cezai ve hukuki sorumluluğun şahsına ait olduğunu kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.9-</strong> E-posta hesabı sahibi, T.C. Kanunlarına göre postalanması yasak, gizli olan bilgileri postalamamayı, barındırmamayı ve gönderilme yetkisi olmayan postaları dağıtmamayı ile bunlara ait yasal yükümlülüğü kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.10-</strong> E-posta hesabı sahibi, zincir posta (chain mail), yazılım virüsü vb. postaları başka posta hesaplarına dağıtmamayı, barındırmamayı ve bunlara ait cezai ve yasal yükümlülüğü kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.11-</strong> E-posta hesabı sahibi, rastgele ve alıcının istemi dışında mesaj (spam iletiler) göndermeyeceğini ve bunlara ait yasal yükümlülüğü kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.12-</strong> E-posta hesabı sahibi, e-posta kullanıcı adıyla yapacağı her türlü işlemden bizzat kendisinin sorumlu olduğunu kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.13-</strong> E-posta hesabı sahipleri, kullanım haklarını, doğrudan ya da dolaylı olarak 3. şahıslara devredemez ve kiralayamazlar.</p>
+                    <p style="margin:2px 0;"><strong>3.14-</strong> E-posta hesabı sahibi yasa ve kurallara aykırı davrandığı takdirde Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığı’nın gerekli müdahalelerde bulunma, kişiyi hizmet dışına çıkarma ve üyeliğine son verme hakkına sahip olduğunu kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.15-</strong> E-posta hesabı sahibi, yasa ve kurallara aykırı davrandığı takdirde T.C. Balıkesir Üniversitesi makamlarının; gerekli sözlü ve yazılı uyarıda bulunmaya, kişiyi sınırlı veya sınırsız hizmet dışına çıkarmaya, üniversite içi idari soruşturma başlatmaya ya da adli yargıya bildirimde bulunma hakkına sahip olduğunu kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.16-</strong> E-posta hesabı sahibi, e-posta hesabını tek taraflı olarak iptal ettirse bile, bu iptal işleminden önce, üyeliği sırasında gerçekleştirdiği icraatlardan kendisinin sorumlu olacağını kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.17-</strong> E-posta sahibi, Balıkesir Üniversitesi e-posta hizmetinden yararlandığı sırada, kayıt formunda yer alan bilgilerin doğru olduğunu ve bu bilgilerin gerekli olduğu (şifre unutma gibi) durumlarda, bilginin hatalı veya noksan olmasından doğacak zararlardan dolayı sorumluluğun kendisine ait olduğunu, bu hallerde e-mail adresinin iptal edileceğini kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.18-</strong> T.C. Balıkesir Üniversitesi Bilgi İşlem Dairesi Başkanlığı, kullanıcıların bilgisi olmaksızın E-posta hizmetleri servis politikasında değişiklik yapma hakkına sahiptir. Kullanıcılar bu metinde yer alan bilgileri izlemek ve olası değişikliklerden haberdar olmakla yükümlüdürler.</p>
+                    <p style="margin:2px 0;"><strong>3.19-</strong> İmzalayan Taraf, ULAKBİM'in yasal ve teknolojik gelişmeleri gözönünde tutarak bu Kullanım Politikası'nı kısmen değiştirebileceğinden haberdardır ve bunu açıkça kabul eder. Değiştirilen Kullanım Politikası, http://www.ulakbim.gov.tr/ulaknet/kullanim-politikasi.uhtml adresinde yer alması ile birlikte yürürlüğe girer. İmzalayan Taraf ULAKBİM'in Kullanım Politikası'nı tam olarak anladığını, tanıdığını, uyacağını kabul eder.</p>
+                    <p style="margin:2px 0;"><strong>3.20-</strong> Tüm bu maddeleri daha sonra hiçbir itiraza mahal vermeyecek şekilde okudığını, KABUL ve TAAHHÜT ETMİŞTİR.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>4- YÜRÜRLÜLÜK:</strong></p>
+                    <p style="margin:3px 0;">Kullanıcı, adına düzenlenmiş bu formu doldurup imzaladıktan sonra bu sözleşme yürürlüğe girer ve T.C. Balıkesir Üniversitesi birimi olduğu sürece devam eder.</p>
+                </div>
+            </div>
+
+            <div class="resmi-yazi" style="font-size: 12.5px;">
+                Birimimiz adına kullanılmak üzere, sistemde yukarıda belirtilen e-posta hesabının açılmasını talep ediyoruz. Ayrıca yukarıda bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, T.C. Balıkesir Üniversitesi E-posta Kullanım Politikası ve Bilgi İşlem Daire Başkanlığı web sayfasında bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikalara okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.
+            </div>esi Başkanlığına şahsen müracaat etmeleri gerekmektedir.</p>
                     <p>2.2- Kullanıcı adı ve şifrenin seçimi ve korunması tamamıyla kullanıcının sorumluluğundadır.</p>
                 </div>
             </div>
@@ -665,13 +704,57 @@ foreach ($aktif_formlar as $f) {
                 <span style="font-size: 16px;">▼</span>
             </button>
             <div class="accordion-panel">
-                <h4>1. Tanımlamalar</h4>
-                <p><strong>BAÜN Bilişim Kaynakları:</strong> Mülkiyet hakları BAÜN’ ye ait olan, BAÜN tarafından lisanslanan/kiralanan ya da BAÜN tarafından kullanım hakkına sahip olunan her türlü bilgisayar/bilgisayar ağı, donanım, yazılım ve servislerini ifade eder.</p>
-                <p><strong>BAÜN Bilişim Kaynakları Kullanıcıları:</strong> BAÜN Bilişim Kaynaklarını kullanmak üzere, bu kaynaklar üzerinde gerekli yetkilendirme tanımları yapılarak belirlenen özel ve tüzel kişilerdir.</p>
-                <p><strong>BAÜN Kullanıcıları:</strong> BAÜN’ nün idari yapısı içinde yer alan birimlerde akademik ve idari görevlerde bulunan kadrolu/geçici personel ile BAÜN’ de öğrenim hayatını sürdürmekte olan tüm lisans ve lisansüstü öğrenciler “BAÜN Kullanıcıları” olarak tanımlanır.</p>
-                
-                <h4>2. Genel İlkeler</h4>
-                <p>BAÜN Bilişim Kaynakları, Temel Kullanım kapsamındaki ihtiyaçlar için hizmete sunulmaktadır. Bu kaynakların israfından kaçınılmalıdır.</p>
+                <div style="padding-top: 15px; padding-bottom: 15px; font-size:12px; line-height:1.6; color:#333;">
+                    <p style="margin-bottom:8px;"><strong>1. Tanımlamalar</strong></p>
+                    <p style="margin:3px 0;"><strong>BAÜN Bilişim Kaynakları:</strong> Mülkiyet hakları BAÜN’ye ait olan, BAÜN tarafından lisanslanan/kiralanan ya da BAÜN tarafından kullanım hakkına sahip olunan her türlü bilgisayar/bilgisayar ağı, donanım, yazılım ve servislerini ifade eder.</p>
+                    <p style="margin:3px 0;"><strong>BAÜN Bilişim Kaynakları Kullanıcıları:</strong> BAÜN Bilişim Kaynaklarını kullanmak üzere, bu kaynaklar üzerinde gerekli yetkilendirme tanımları yapılarak belirlenen özel ve tüzel kişilerdir.</p>
+                    <p style="margin:3px 0;"><strong>BAÜN Kullanıcıları:</strong> BAÜN’nün idari yapısı içinde yer alan birimlerde akademik ve idari görevlerde bulunan kadrolu/geçici personel ile BAÜN’de öğrenim hayatını sürdürmekte olan tüm lisans ve lisansüstü öğrenciler “BAÜN Kullanıcıları” olarak tanımlanır. Bu kullanıcılar, BAÜN Bilişim Kaynaklarını doğrudan kullanım hakkına sahiptir.</p>
+                    <p style="margin:3px 0;"><strong>Kapsamdışı Kullanıcılar:</strong> BAÜN Bilişim Kaynaklarını, BAÜN Kullanıcıları ve Özel Kullanıcılar başlığı altında tanımlandığı biçimiyle kullanım hakkına sahip olmayan, sadece genel kullanıma açık kaynak ya da servisleri (Örneğin; BAÜN web sayfaları, BAÜN Elektronik Liste Servisi, ftp servisi vb.) kullanan kişi ve kuruluşlar Kapsamdışı Kullanıcılar olarak tanımlanır.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>2. Kullanım</strong></p>
+                    <p style="margin:3px 0;"><strong>Temel Kullanım:</strong> BAÜN Bilişim Kaynaklarının, Üniversitenin eğitim, öğretim, araştırma, geliştirme, toplumsal hizmet ve idari/yönetimsel faaliyetleri ile doğrudan ilişkili olan kullanımı “Temel Kullanım” olarak tanımlanır.</p>
+                    <p style="margin:3px 0;"><strong>İkincil (tali) Kullanım:</strong> Temel Kullanım tanımı dışında kalan her türlü kullanım, “İkincil (tali) Kullanım” olarak tanımlanır. Kaynakların, ancak Temel Kullanım kapsamında ihtiyaç duyulmayan atıl kapasitesinin bu amaç için kullanılabilmesi söz konusudur. İkincil Kullanım, Temel Kullanımı kısıtlayıcı/engelleyici boyutlara ulaştığında “genel ilkelere aykırı kullanım” kapsamına girer.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>3. Genel İlkeler</strong></p>
+                    <p style="margin:3px 0;"><strong>1.</strong> BAÜN Bilişim Kaynakları, Temel Kullanım kapsamındaki ihtiyaçlar için hizmete sunulmaktadır. Bu kaynakların israfından kaçınılmalıdır.</p>
+                    <p style="margin:3px 0;"><strong>2.</strong> BAÜN Bilişim Kaynaklarını kullanıma sunan birimler;</p>
+                    <p style="margin:2px 0 2px 15px;">• Kullanıcı bilgilerinin gizliliğini, mahremiyetini korumalı,</p>
+                    <p style="margin:2px 0 2px 15px;">• Kaynakların adil olarak paylaştırılmasını sağlamalı,</p>
+                    <p style="margin:2px 0 2px 15px;">• Kaynağa yönelik tehditleri en aza indirebilmek için risk düzeylerine göre güvenlik önlemlerini almalı,</p>
+                    <p style="margin:2px 0 2px 15px;">• Kritik olma düzeyine göre kaynakları yedeklemeli,</p>
+                    <p style="margin:2px 0 2px 15px;">• Güvenliği ilgilendiren durumlarda kanıt özelliği taşıyabilecek bilgileri, kaynakları kullananların kimliğinin tespit edilmesini sağlayacak düzende tutmalıdır.</p>
+                    <p style="margin:3px 0;"><strong>3.</strong> BAÜN Bilişim Kaynakları kullanıcıları, Temel Kullanım kapsamında kullanımlarına tahsis edilen mülkiyetin, kendilerine ait olan kaynakların güvenliği ile ilgili kişisel önlemlerini almalı, bu kaynaklar üzerinde yer alan bilgileri, kritik olma düzeyine göre yedeklemelidir.</p>
+                    <p style="margin:3px 0;"><strong>4.</strong> BAÜN Bilişim Kaynakları, BAÜN yönetiminin yetkilendirdiği makamlarca belirlenmiş kurallar ve yönergeler çerçevesinde, yetkinin veriliş amacını aşmayacak şekilde ve yapılacak her iş için uygun yetkilendirme ile kullanılmalı, yetki almadan değiştirilmemeli, ortadan kaldırılmamalıdır.</p>
+                    <p style="margin:3px 0;"><strong>5.</strong> BAÜN Bilişim Kaynakları, bu kaynaklar kullanılarak oluşturulan ve bu kaynaklar üzerinde barındırılan/kullanılan her türlü kaynağın (yazılım, donanım, ağ kaynağı, ...) kullanım kurallarına ve koşullarına (izin, kaynak gösterim koşulu, telif hakkı, lisans koşulları, ağ kullanım kuralları, vb.) uyularak kullanılmalıdır.</p>
+                    <p style="margin:3px 0;"><strong>6.</strong> BAÜN Bilişim Kaynakları;</p>
+                    <p style="margin:2px 0 2px 15px;">• Kullanım hakkını, doğrudan ya da dolaylı olarak devretmek ya da kiralamak amacıyla,</p>
+                    <p style="margin:2px 0 2px 15px;">• Ticari nitelik taşıyan ve gelir teminine yönelik kullanımlar için, Rektörlük makamından izin alınmadan, kullanılmamalıdır.</p>
+                    <p style="margin:3px 0;"><strong>7.</strong> BAÜN Bilişim Kaynakları;</p>
+                    <p style="margin:2px 0 2px 15px;">• BAÜN içi bilgi kaynaklarını (duyuru, haber, doküman vb.), yetkisiz ve/veya izinsiz olarak 3. kişilere/kuruluşlara dağıtmak amacıyla,</p>
+                    <p style="margin:2px 0 2px 15px;">• BAÜN’ye ve 3. kişilere/kuruluşlara ait bilgilere ve kaynaklara (bilgisayar, bilgisayar ağı, yazılım ve servisler) izinsiz ve/veya yetkisiz erişim sağlamak amacıyla,</p>
+                    <p style="margin:2px 0 2px 15px;">• Diğer kullanıcıların kaynak kullanım hakkını engelleyici faaliyetlerde bulunmak amacıyla,</p>
+                    <p style="margin:2px 0 2px 15px;">• Kaynaklara zarar verici/kaynakların güvenliğini tehdit edici biçimde kullanılmamalıdır.</p>
+                    <p style="margin:3px 0;"><strong>8.</strong> BAÜN Bilişim Kaynakları;</p>
+                    <p style="margin:2px 0 2px 15px;">• Genel ahlak ilkelerine aykırı materyal üretmek, barındırmak, iletmek,</p>
+                    <p style="margin:2px 0 2px 15px;">• Siyasi propaganda yapmak,</p>
+                    <p style="margin:2px 0 2px 15px;">• Rastgele ve alıcının istemi dışında mesaj (SPAM iletiler) göndermek amacıyla kullanılmamalıdır.</p>
+                    <p style="margin:3px 0;"><strong>9.</strong> BAÜN Bilişim Kaynakları, Üniversite yönetmeliklerine, Türkiye Cumhuriyeti yasalarına ve bunlara bağlı olan yönetmeliklere aykırı faaliyetlerde bulunmak amacıyla kullanılamaz.</p>
+                    <p style="margin:3px 0;"><strong>10.</strong> “Yasal Sorumluluk Reddi (Disclaimer)” metinleri, Genel İlkelere aykırı kullanımların kabul edilebilir olduğunu göstermez.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>4. Yetki ve Sorumluluklar</strong></p>
+                    <p style="margin:3px 0;">• Üniversite, temel amaçları doğrultusunda, BAÜN Bilişim Kaynaklarını kullanıcılarına sunar, bu hizmetlerin çalışırlığını ve sürekliliğini sağlar.</p>
+                    <p style="margin:3px 0;">• BAÜN Bilişim Kaynakları kullanıcıları, BAÜN sunucuları üzerinde kendilerine tahsis edilen “Kullanıcı Adı/Şifre” ikilisi ve/veya IP (Internet Protokol) adresi kullanılarak gerçekleştirdikleri her türlü etkinlikten, BAÜN Bilişim Kaynaklarını kullanarak oluşturdukları ve/veya kendilerine tahsis edilen BAÜN Bilişim Kaynağı üzerinde bulundurdukları her türlü kaynağın (belge, doküman, yazılım, vb.) içeriğinden, kaynağın kullanımı hakkında yetkili makamlar tarafından talep edilen bilgilerin doğru ve eksiksiz verilmesinden, yedeklerinin tutulmasından, ilgili kaynağın kullanım kurallarına, Üniversite Yönetmeliklerine, Türkiye Cumhuriyeti yasalarına ve yasal mevzuata karşı birebir kendileri sorumludur.</p>
+                    <p style="margin:3px 0;">• BAÜN yönetimi, BAÜN Kullanıcıları ve Özel Kullanıcılar ile üçüncü kişi veya kuruluşlar arasında doğabilecek her türlü ihtilaf durumunda doğrudan taraf olma hakkını saklı tutar.</p>
+                    <p style="margin:3px 0;">• BAÜN Rektörlüğü ve/veya yetkilendirdiği birimler, BAÜN Bilişim Kaynakları kullanımı hakkında genel-geçer kuralları belirleyip, bu kuralları gelişen teknolojinin öngördüğü biçimde sürekli olarak değerlendirir ve gerekli değişiklikleri hayata geçirir. Bu tür değişiklikler yapıldığında genel duyuru mekanizmaları ile kullanıcılar bilgilendirilir.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>5. Uygulama ve Yaptırımlar</strong></p>
+                    <p style="margin:3px 0;">BAÜN makamları, BAÜN Bilişim Kaynaklarının “Genel İlkelere” aykırı etkinlikler dâhilinde kullanılması durumunda, gerçekleştirilen eylemin yoğunluğuna, kaynaklara veya kişi/kurumlara verilen zararın boyutuna ve tekrarına aşağıdaki işlemlerin bir ya da birden fazla maddesini, sıra ile ya da sırasız uygulayabilir;</p>
+                    <p style="margin:2px 0 2px 15px;">• Kullanıcı sözlü ve/veya yazılı olarak uyarılır</p>
+                    <p style="margin:2px 0 2px 15px;">• Kullanıcıya tahsis edilmiş BAÜN Bilişim Kaynakları sınırlı veya sınırsız süre ile kapatılabilir</p>
+                    <p style="margin:2px 0 2px 15px;">• Üniversite bünyesindeki akademik/idari soruşturma mekanizmaları harekete geçirilebilir</p>
+                    <p style="margin:2px 0 2px 15px;">• Adli yargı mekanizmaları harekete geçirilebilir.</p>
+                    <p style="margin:3px 0;">Kullanım ve Kullanıcı tanımlarının yetersiz kaldığı ya da “BAÜN Bilişim Kaynakları Kullanım Politikası” belgesi dâhilinde tanımlı olmayan durumlar BAÜN makamlarınca değerlendirilir.</p>
+                </div>
             </div>
             <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Talebi ve Sözleşmeyi Gönder</button>
         </form>
@@ -739,6 +822,64 @@ foreach ($aktif_formlar as $f) {
 
             <div class="resmi-yazi">
                 Birimimiz adına kullanılmak üzere, bir adet statik ip'nin tarafımıza tahsis edilmesini talep ediyoruz. Kullanacağımız tüm bilgisayar, sunucu ve cihazlar birimimiz tarafından temin edilecektir. Bu statik ip'nin erişim sağlayıcı (gateway) olarak kullanılmayacağını, ayrıca bu sayfanın arkasında bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası ve <a href="http://bid.balikesir.edu.tr" target="_blank" style="color: #1b656e; font-weight: bold;">http://bid.balikesir.edu.tr</a> adresinde bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaların okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.
+            </div>
+
+            <button type="button" class="accordion-btn" onclick="toggleAccordion(this)">
+                <span> BAÜN Bilişim Kaynakları Kullanım Politikası</span>
+                <span style="font-size: 16px;">▼</span>
+            </button>
+            <div class="accordion-panel">
+                <div style="padding-top: 15px; padding-bottom: 15px; font-size:12px; line-height:1.6; color:#333;">
+                    <p style="margin-bottom:8px;"><strong>1. Tanımlamalar</strong></p>
+                    <p style="margin:3px 0;"><strong>BAÜN Bilişim Kaynakları:</strong> Mülkiyet hakları BAÜN’ye ait olan, BAÜN tarafından lisanslanan/kiralanan ya da BAÜN tarafından kullanım hakkına sahip olunan her türlü bilgisayar/bilgisayar ağı, donanım, yazılım ve servislerini ifade eder.</p>
+                    <p style="margin:3px 0;"><strong>BAÜN Bilişim Kaynakları Kullanıcıları:</strong> BAÜN Bilişim Kaynaklarını kullanmak üzere, bu kaynaklar üzerinde gerekli yetkilendirme tanımları yapılarak belirlenen özel ve tüzel kişilerdir.</p>
+                    <p style="margin:3px 0;"><strong>BAÜN Kullanıcıları:</strong> BAÜN’nün idari yapısı içinde yer alan birimlerde akademik ve idari görevlerde bulunan kadrolu/geçici personel ile BAÜN’de öğrenim hayatını sürdürmekte olan tüm lisans ve lisansüstü öğrenciler “BAÜN Kullanıcıları” olarak tanımlanır. Bu kullanıcılar, BAÜN Bilişim Kaynaklarını doğrudan kullanım hakkına sahiptir.</p>
+                    <p style="margin:3px 0;"><strong>Kapsamdışı Kullanıcılar:</strong> BAÜN Bilişim Kaynaklarını, BAÜN Kullanıcıları ve Özel Kullanıcılar başlığı altında tanımlandığı biçimiyle kullanım hakkına sahip olmayan, sadece genel kullanıma açık kaynak ya da servisleri (Örneğin; BAÜN web sayfaları, BAÜN Elektronik Liste Servisi, ftp servisi vb.) kullanan kişi ve kuruluşlar Kapsamdışı Kullanıcılar olarak tanımlanır.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>2. Kullanım</strong></p>
+                    <p style="margin:3px 0;"><strong>Temel Kullanım:</strong> BAÜN Bilişim Kaynaklarının, Üniversitenin eğitim, öğretim, araştırma, geliştirme, toplumsal hizmet ve idari/yönetimsel faaliyetleri ile doğrudan ilişkili olan kullanımı “Temel Kullanım” olarak tanımlanır.</p>
+                    <p style="margin:3px 0;"><strong>İkincil (tali) Kullanım:</strong> Temel Kullanım tanımı dışında kalan her türlü kullanım, “İkincil (tali) Kullanım” olarak tanımlanır. Kaynakların, ancak Temel Kullanım kapsamında ihtiyaç duyulmayan atıl kapasitesinin bu amaç için kullanılabilmesi söz konusudur. İkincil Kullanım, Temel Kullanımı kısıtlayıcı/engelleyici boyutlara ulaştığında “genel ilkelere aykırı kullanım” kapsamına girer.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>3. Genel İlkeler</strong></p>
+                    <p style="margin:3px 0;"><strong>1.</strong> BAÜN Bilişim Kaynakları, Temel Kullanım kapsamındaki ihtiyaçlar için hizmete sunulmaktadır. Bu kaynakların israfından kaçınılmalıdır.</p>
+                    <p style="margin:3px 0;"><strong>2.</strong> BAÜN Bilişim Kaynaklarını kullanıma sunan birimler;</p>
+                    <p style="margin:2px 0 2px 15px;">• Kullanıcı bilgilerinin gizliliğini, mahremiyetini korumalı,</p>
+                    <p style="margin:2px 0 2px 15px;">• Kaynakların adil olarak paylaştırılmasını sağlamalı,</p>
+                    <p style="margin:2px 0 2px 15px;">• Kaynağa yönelik tehditleri en aza indirebilmek için risk düzeylerine göre güvenlik önlemlerini almalı,</p>
+                    <p style="margin:2px 0 2px 15px;">• Kritik olma düzeyine göre kaynakları yedeklemeli,</p>
+                    <p style="margin:2px 0 2px 15px;">• Güvenliği ilgilendiren durumlarda kanıt özelliği taşıyabilecek bilgileri, kaynakları kullananların kimliğinin tespit edilmesini sağlayacak düzende tutmalıdır.</p>
+                    <p style="margin:3px 0;"><strong>3.</strong> BAÜN Bilişim Kaynakları kullanıcıları, Temel Kullanım kapsamında kullanımlarına tahsis edilen mülkiyetin, kendilerine ait olan kaynakların güvenliği ile ilgili kişisel önlemlerini almalı, bu kaynaklar üzerinde yer alan bilgileri, kritik olma düzeyine göre yedeklemelidir.</p>
+                    <p style="margin:3px 0;"><strong>4.</strong> BAÜN Bilişim Kaynakları, BAÜN yönetiminin yetkilendirdiği makamlarca belirlenmiş kurallar ve yönergeler çerçevesinde, yetkinin veriliş amacını aşmayacak şekilde ve yapılacak her iş için uygun yetkilendirme ile kullanılmalı, yetki almadan değiştirilmemeli, ortadan kaldırılmamalıdır.</p>
+                    <p style="margin:3px 0;"><strong>5.</strong> BAÜN Bilişim Kaynakları, bu kaynaklar kullanılarak oluşturulan ve bu kaynaklar üzerinde barındırılan/kullanılan her türlü kaynağın (yazılım, donanım, ağ kaynağı, ...) kullanım kurallarına ve koşullarına (izin, kaynak gösterim koşulu, telif hakkı, lisans koşulları, ağ kullanım kuralları, vb.) uyularak kullanılmalıdır.</p>
+                    <p style="margin:3px 0;"><strong>6.</strong> BAÜN Bilişim Kaynakları;</p>
+                    <p style="margin:2px 0 2px 15px;">• Kullanım hakkını, doğrudan ya da dolaylı olarak devretmek ya da kiralamak amacıyla,</p>
+                    <p style="margin:2px 0 2px 15px;">• Ticari nitelik taşıyan ve gelir teminine yönelik kullanımlar için, Rektörlük makamından izin alınmadan, kullanılmamalıdır.</p>
+                    <p style="margin:3px 0;"><strong>7.</strong> BAÜN Bilişim Kaynakları;</p>
+                    <p style="margin:2px 0 2px 15px;">• BAÜN içi bilgi kaynaklarını (duyuru, haber, doküman vb.), yetkisiz ve/veya izinsiz olarak 3. kişilere/kuruluşlara dağıtmak amacıyla,</p>
+                    <p style="margin:2px 0 2px 15px;">• BAÜN’ye ve 3. kişilere/kuruluşlara ait bilgilere ve kaynaklara (bilgisayar, bilgisayar ağı, yazılım ve servisler) izinsiz ve/veya yetkisiz erişim sağlamak amacıyla,</p>
+                    <p style="margin:2px 0 2px 15px;">• Diğer kullanıcıların kaynak kullanım hakkını engelleyici faaliyetlerde bulunmak amacıyla,</p>
+                    <p style="margin:2px 0 2px 15px;">• Kaynaklara zarar verici/kaynakların güvenliğini tehdit edici biçimde kullanılmamalıdır.</p>
+                    <p style="margin:3px 0;"><strong>8.</strong> BAÜN Bilişim Kaynakları;</p>
+                    <p style="margin:2px 0 2px 15px;">• Genel ahlak ilkelerine aykırı materyal üretmek, barındırmak, iletmek,</p>
+                    <p style="margin:2px 0 2px 15px;">• Siyasi propaganda yapmak,</p>
+                    <p style="margin:2px 0 2px 15px;">• Rastgele ve alıcının istemi dışında mesaj (SPAM iletiler) göndermek amacıyla kullanılmamalıdır.</p>
+                    <p style="margin:3px 0;"><strong>9.</strong> BAÜN Bilişim Kaynakları, Üniversite yönetmeliklerine, Türkiye Cumhuriyeti yasalarına ve bunlara bağlı olan yönetmeliklere aykırı faaliyetlerde bulunmak amacıyla kullanılamaz.</p>
+                    <p style="margin:3px 0;"><strong>10.</strong> “Yasal Sorumluluk Reddi (Disclaimer)” metinleri, Genel İlkelere aykırı kullanımların kabul edilebilir olduğunu göstermez.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>4. Yetki ve Sorumluluklar</strong></p>
+                    <p style="margin:3px 0;">• Üniversite, temel amaçları doğrultusunda, BAÜN Bilişim Kaynaklarını kullanıcılarına sunar, bu hizmetlerin çalışırlığını ve sürekliliğini sağlar.</p>
+                    <p style="margin:3px 0;">• BAÜN Bilişim Kaynakları kullanıcıları, BAÜN sunucuları üzerinde kendilerine tahsis edilen “Kullanıcı Adı/Şifre” ikilisi ve/veya IP (Internet Protokol) adresi kullanılarak gerçekleştirdikleri her türlü etkinlikten, BAÜN Bilişim Kaynaklarını kullanarak oluşturdukları ve/veya kendilerine tahsis edilen BAÜN Bilişim Kaynağı üzerinde bulundurdukları her türlü kaynağın (belge, doküman, yazılım, vb.) içeriğinden, kaynağın kullanımı hakkında yetkili makamlar tarafından talep edilen bilgilerin doğru ve eksiksiz verilmesinden, yedeklerinin tutulmasından, ilgili kaynağın kullanım kurallarına, Üniversite Yönetmeliklerine, Türkiye Cumhuriyeti yasalarına ve yasal mevzuata karşı birebir kendileri sorumludur.</p>
+                    <p style="margin:3px 0;">• BAÜN yönetimi, BAÜN Kullanıcıları ve Özel Kullanıcılar ile üçüncü kişi veya kuruluşlar arasında doğabilecek her türlü ihtilaf durumunda doğrudan taraf olma hakkını saklı tutar.</p>
+                    <p style="margin:3px 0;">• BAÜN Rektörlüğü ve/veya yetkilendirdiği birimler, BAÜN Bilişim Kaynakları kullanımı hakkında genel-geçer kuralları belirleyip, bu kuralları gelişen teknolojinin öngördüğü biçimde sürekli olarak değerlendirir ve gerekli değişiklikleri hayata geçirir. Bu tür değişiklikler yapıldığında genel duyuru mekanizmaları ile kullanıcılar bilgilendirilir.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>5. Uygulama ve Yaptırımlar</strong></p>
+                    <p style="margin:3px 0;">BAÜN makamları, BAÜN Bilişim Kaynaklarının “Genel İlkelere” aykırı etkinlikler dâhilinde kullanılması durumunda, gerçekleştirilen eylemin yoğunluğuna, kaynaklara veya kişi/kurumlara verilen zararın boyutuna ve tekrarına aşağıdaki işlemlerin bir ya da birden fazla maddesini, sıra ile ya da sırasız uygulayabilir;</p>
+                    <p style="margin:2px 0 2px 15px;">• Kullanıcı sözlü ve/veya yazılı olarak uyarılır</p>
+                    <p style="margin:2px 0 2px 15px;">• Kullanıcıya tahsis edilmiş BAÜN Bilişim Kaynakları sınırlı veya sınırsız süre ile kapatılabilir</p>
+                    <p style="margin:2px 0 2px 15px;">• Üniversite bünyesindeki akademik/idari soruşturma mekanizmaları harekete geçirilebilir</p>
+                    <p style="margin:2px 0 2px 15px;">• Adli yargı mekanizmaları harekete geçirilebilir.</p>
+                    <p style="margin:3px 0;">Kullanım ve Kullanıcı tanımlarının yetersiz kaldığı ya da “BAÜN Bilişim Kaynakları Kullanım Politikası” belgesi dâhilinde tanımlı olmayan durumlar BAÜN makamlarınca değerlendirilir.</p>
+                </div>
             </div>
 
             <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Talebi ve Sözleşmeyi Gönder</button>
@@ -815,6 +956,64 @@ foreach ($aktif_formlar as $f) {
                 Birimimiz adına kullanılmak üzere, sistemde yukarıda belirtilen alan adının açılması, 250 MB web ve 100 MB veri tabanı (istenirse) kotalı alanın tahsis edilmesi ve bu alanların kullanımı için gerekli web kullanıcısının açılarak yukarıda adı belirtilen personele teslim edilmesini talep ediyoruz. Ayrıca bu sayfanın arkasında bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, eki Web Kullanıcıları Servis Politikası ve <a href="http://bid.balikesir.edu.tr" target="_blank" style="color: #1b656e; font-weight: bold;">http://bid.balikesir.edu.tr</a> adresinde bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaların okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.
             </div>
 
+            <button type="button" class="accordion-btn" onclick="toggleAccordion(this)">
+                <span> BAÜN Bilişim Kaynakları Kullanım Politikası</span>
+                <span style="font-size: 16px;">▼</span>
+            </button>
+            <div class="accordion-panel">
+                <div style="padding-top: 15px; padding-bottom: 15px; font-size:12px; line-height:1.6; color:#333;">
+                    <p style="margin-bottom:8px;"><strong>1. Tanımlamalar</strong></p>
+                    <p style="margin:3px 0;"><strong>BAÜN Bilişim Kaynakları:</strong> Mülkiyet hakları BAÜN’ye ait olan, BAÜN tarafından lisanslanan/kiralanan ya da BAÜN tarafından kullanım hakkına sahip olunan her türlü bilgisayar/bilgisayar ağı, donanım, yazılım ve servislerini ifade eder.</p>
+                    <p style="margin:3px 0;"><strong>BAÜN Bilişim Kaynakları Kullanıcıları:</strong> BAÜN Bilişim Kaynaklarını kullanmak üzere, bu kaynaklar üzerinde gerekli yetkilendirme tanımları yapılarak belirlenen özel ve tüzel kişilerdir.</p>
+                    <p style="margin:3px 0;"><strong>BAÜN Kullanıcıları:</strong> BAÜN’nün idari yapısı içinde yer alan birimlerde akademik ve idari görevlerde bulunan kadrolu/geçici personel ile BAÜN’de öğrenim hayatını sürdürmekte olan tüm lisans ve lisansüstü öğrenciler “BAÜN Kullanıcıları” olarak tanımlanır. Bu kullanıcılar, BAÜN Bilişim Kaynaklarını doğrudan kullanım hakkına sahiptir.</p>
+                    <p style="margin:3px 0;"><strong>Kapsamdışı Kullanıcılar:</strong> BAÜN Bilişim Kaynaklarını, BAÜN Kullanıcıları ve Özel Kullanıcılar başlığı altında tanımlandığı biçimiyle kullanım hakkına sahip olmayan, sadece genel kullanıma açık kaynak ya da servisleri (Örneğin; BAÜN web sayfaları, BAÜN Elektronik Liste Servisi, ftp servisi vb.) kullanan kişi ve kuruluşlar Kapsamdışı Kullanıcılar olarak tanımlanır.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>2. Kullanım</strong></p>
+                    <p style="margin:3px 0;"><strong>Temel Kullanım:</strong> BAÜN Bilişim Kaynaklarının, Üniversitenin eğitim, öğretim, araştırma, geliştirme, toplumsal hizmet ve idari/yönetimsel faaliyetleri ile doğrudan ilişkili olan kullanımı “Temel Kullanım” olarak tanımlanır.</p>
+                    <p style="margin:3px 0;"><strong>İkincil (tali) Kullanım:</strong> Temel Kullanım tanımı dışında kalan her türlü kullanım, “İkincil (tali) Kullanım” olarak tanımlanır. Kaynakların, ancak Temel Kullanım kapsamında ihtiyaç duyulmayan atıl kapasitesinin bu amaç için kullanılabilmesi söz konusudur. İkincil Kullanım, Temel Kullanımı kısıtlayıcı/engelleyici boyutlara ulaştığında “genel ilkelere aykırı kullanım” kapsamına girer.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>3. Genel İlkeler</strong></p>
+                    <p style="margin:3px 0;"><strong>1.</strong> BAÜN Bilişim Kaynakları, Temel Kullanım kapsamındaki ihtiyaçlar için hizmete sunulmaktadır. Bu kaynakların israfından kaçınılmalıdır.</p>
+                    <p style="margin:3px 0;"><strong>2.</strong> BAÜN Bilişim Kaynaklarını kullanıma sunan birimler;</p>
+                    <p style="margin:2px 0 2px 15px;">• Kullanıcı bilgilerinin gizliliğini, mahremiyetini korumalı,</p>
+                    <p style="margin:2px 0 2px 15px;">• Kaynakların adil olarak paylaştırılmasını sağlamalı,</p>
+                    <p style="margin:2px 0 2px 15px;">• Kaynağa yönelik tehditleri en aza indirebilmek için risk düzeylerine göre güvenlik önlemlerini almalı,</p>
+                    <p style="margin:2px 0 2px 15px;">• Kritik olma düzeyine göre kaynakları yedeklemeli,</p>
+                    <p style="margin:2px 0 2px 15px;">• Güvenliği ilgilendiren durumlarda kanıt özelliği taşıyabilecek bilgileri, kaynakları kullananların kimliğinin tespit edilmesini sağlayacak düzende tutmalıdır.</p>
+                    <p style="margin:3px 0;"><strong>3.</strong> BAÜN Bilişim Kaynakları kullanıcıları, Temel Kullanım kapsamında kullanımlarına tahsis edilen mülkiyetin, kendilerine ait olan kaynakların güvenliği ile ilgili kişisel önlemlerini almalı, bu kaynaklar üzerinde yer alan bilgileri, kritik olma düzeyine göre yedeklemelidir.</p>
+                    <p style="margin:3px 0;"><strong>4.</strong> BAÜN Bilişim Kaynakları, BAÜN yönetiminin yetkilendirdiği makamlarca belirlenmiş kurallar ve yönergeler çerçevesinde, yetkinin veriliş amacını aşmayacak şekilde ve yapılacak her iş için uygun yetkilendirme ile kullanılmalı, yetki almadan değiştirilmemeli, ortadan kaldırılmamalıdır.</p>
+                    <p style="margin:3px 0;"><strong>5.</strong> BAÜN Bilişim Kaynakları, bu kaynaklar kullanılarak oluşturulan ve bu kaynaklar üzerinde barındırılan/kullanılan her türlü kaynağın (yazılım, donanım, ağ kaynağı, ...) kullanım kurallarına ve koşullarına (izin, kaynak gösterim koşulu, telif hakkı, lisans koşulları, ağ kullanım kuralları, vb.) uyularak kullanılmalıdır.</p>
+                    <p style="margin:3px 0;"><strong>6.</strong> BAÜN Bilişim Kaynakları;</p>
+                    <p style="margin:2px 0 2px 15px;">• Kullanım hakkını, doğrudan ya da dolaylı olarak devretmek ya da kiralamak amacıyla,</p>
+                    <p style="margin:2px 0 2px 15px;">• Ticari nitelik taşıyan ve gelir teminine yönelik kullanımlar için, Rektörlük makamından izin alınmadan, kullanılmamalıdır.</p>
+                    <p style="margin:3px 0;"><strong>7.</strong> BAÜN Bilişim Kaynakları;</p>
+                    <p style="margin:2px 0 2px 15px;">• BAÜN içi bilgi kaynaklarını (duyuru, haber, doküman vb.), yetkisiz ve/veya izinsiz olarak 3. kişilere/kuruluşlara dağıtmak amacıyla,</p>
+                    <p style="margin:2px 0 2px 15px;">• BAÜN’ye ve 3. kişilere/kuruluşlara ait bilgilere ve kaynaklara (bilgisayar, bilgisayar ağı, yazılım ve servisler) izinsiz ve/veya yetkisiz erişim sağlamak amacıyla,</p>
+                    <p style="margin:2px 0 2px 15px;">• Diğer kullanıcıların kaynak kullanım hakkını engelleyici faaliyetlerde bulunmak amacıyla,</p>
+                    <p style="margin:2px 0 2px 15px;">• Kaynaklara zarar verici/kaynakların güvenliğini tehdit edici biçimde kullanılmamalıdır.</p>
+                    <p style="margin:3px 0;"><strong>8.</strong> BAÜN Bilişim Kaynakları;</p>
+                    <p style="margin:2px 0 2px 15px;">• Genel ahlak ilkelerine aykırı materyal üretmek, barındırmak, iletmek,</p>
+                    <p style="margin:2px 0 2px 15px;">• Siyasi propaganda yapmak,</p>
+                    <p style="margin:2px 0 2px 15px;">• Rastgele ve alıcının istemi dışında mesaj (SPAM iletiler) göndermek amacıyla kullanılmamalıdır.</p>
+                    <p style="margin:3px 0;"><strong>9.</strong> BAÜN Bilişim Kaynakları, Üniversite yönetmeliklerine, Türkiye Cumhuriyeti yasalarına ve bunlara bağlı olan yönetmeliklere aykırı faaliyetlerde bulunmak amacıyla kullanılamaz.</p>
+                    <p style="margin:3px 0;"><strong>10.</strong> “Yasal Sorumluluk Reddi (Disclaimer)” metinleri, Genel İlkelere aykırı kullanımların kabul edilebilir olduğunu göstermez.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>4. Yetki ve Sorumluluklar</strong></p>
+                    <p style="margin:3px 0;">• Üniversite, temel amaçları doğrultusunda, BAÜN Bilişim Kaynaklarını kullanıcılarına sunar, bu hizmetlerin çalışırlığını ve sürekliliğini sağlar.</p>
+                    <p style="margin:3px 0;">• BAÜN Bilişim Kaynakları kullanıcıları, BAÜN sunucuları üzerinde kendilerine tahsis edilen “Kullanıcı Adı/Şifre” ikilisi ve/veya IP (Internet Protokol) adresi kullanılarak gerçekleştirdikleri her türlü etkinlikten, BAÜN Bilişim Kaynaklarını kullanarak oluşturdukları ve/veya kendilerine tahsis edilen BAÜN Bilişim Kaynağı üzerinde bulundurdukları her türlü kaynağın (belge, doküman, yazılım, vb.) içeriğinden, kaynağın kullanımı hakkında yetkili makamlar tarafından talep edilen bilgilerin doğru ve eksiksiz verilmesinden, yedeklerinin tutulmasından, ilgili kaynağın kullanım kurallarına, Üniversite Yönetmeliklerine, Türkiye Cumhuriyeti yasalarına ve yasal mevzuata karşı birebir kendileri sorumludur.</p>
+                    <p style="margin:3px 0;">• BAÜN yönetimi, BAÜN Kullanıcıları ve Özel Kullanıcılar ile üçüncü kişi veya kuruluşlar arasında doğabilecek her türlü ihtilaf durumunda doğrudan taraf olma hakkını saklı tutar.</p>
+                    <p style="margin:3px 0;">• BAÜN Rektörlüğü ve/veya yetkilendirdiği birimler, BAÜN Bilişim Kaynakları kullanımı hakkında genel-geçer kuralları belirleyip, bu kuralları gelişen teknolojinin öngördüğü biçimde sürekli olarak değerlendirir ve gerekli değişiklikleri hayata geçirir. Bu tür değişiklikler yapıldığında genel duyuru mekanizmaları ile kullanıcılar bilgilendirilir.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>5. Uygulama ve Yaptırımlar</strong></p>
+                    <p style="margin:3px 0;">BAÜN makamları, BAÜN Bilişim Kaynaklarının “Genel İlkelere” aykırı etkinlikler dâhilinde kullanılması durumunda, gerçekleştirilen eylemin yoğunluğuna, kaynaklara veya kişi/kurumlara verilen zararın boyutuna ve tekrarına aşağıdaki işlemlerin bir ya da birden fazla maddesini, sıra ile ya da sırasız uygulayabilir;</p>
+                    <p style="margin:2px 0 2px 15px;">• Kullanıcı sözlü ve/veya yazılı olarak uyarılır</p>
+                    <p style="margin:2px 0 2px 15px;">• Kullanıcıya tahsis edilmiş BAÜN Bilişim Kaynakları sınırlı veya sınırsız süre ile kapatılabilir</p>
+                    <p style="margin:2px 0 2px 15px;">• Üniversite bünyesindeki akademik/idari soruşturma mekanizmaları harekete geçirilebilir</p>
+                    <p style="margin:2px 0 2px 15px;">• Adli yargı mekanizmaları harekete geçirilebilir.</p>
+                    <p style="margin:3px 0;">Kullanım ve Kullanıcı tanımlarının yetersiz kaldığı ya da “BAÜN Bilişim Kaynakları Kullanım Politikası” belgesi dâhilinde tanımlı olmayan durumlar BAÜN makamlarınca değerlendirilir.</p>
+                </div>
+            </div>
+
             <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Talebi ve Sözleşmeyi Gönder</button>
         </form>
     </div>
@@ -831,12 +1030,14 @@ foreach ($aktif_formlar as $f) {
                 <span style="font-weight: normal; font-style: italic; font-size: 12px;">- Gizlilik Taahhüt Belgesi -</span>
             </div>
 
-            <div class="resmi-yazi">
-                <strong>AÇIKLAMA:</strong> 10/07/2005 tarih ve 25871 sayılı Resmi Gazete'de yayımlanan T.C. Nüfus ve Vatandaşlık İşleri Genel Müdürlüğüne ait Kimlik Paylaşım Sistemi (KPS) Uygulama Yönetmeliği kapsamında Bakanlığımız ile ilgili iş ve işlem süreçlerindeki vatandaşlarımızın nüfus ve adres bilgilerinin paylaşımı hakkında "ikili anlaşma" imzalanmıştır. İlgili Yönetmeliğe ilişkin usul ve esaslar içerisinde yer alan "Özel Hayatın Gizliliği" ve "Kişisel Verilerin Korunması" hükümleriyle Balıkesir Üniversitesine ve görevli personele bazı sorumluluklar getirilmiştir. Bu sorumlulukların paylaşımı çerçevesinde iş süreçlerinde KPS üzerinden nüfus ve adres bilgilerine erişen çalışanlarımız için aşağıdaki taahhütname hazırlanmıştır.
+            <div class="resmi-yazi" style="font-size: 12.5px; line-height: 1.6;">
+                10/07/2005 tarih ve 25871 sayılı resmi gazetede yayımlanan T.C. Nüfus ve Vatandaşlık İşleri Genel Müdürlüğüne ait Kimlik Paylaşım Sistemi (KPS) Uygulama Yönetmeliği kapsamında Bakanlığımız ile ilgili iş ve işlem süreçlerindeki vatandaşlarımızın nüfus ve adres bilgilerinin paylaşımı hakkında “ikili anlaşma” imzalanmıştır.<br><br>
+                İlgili Yönetmeliğe ilişkin usul ve esasları içerisinde yer alan “Özel Hayatın Gizliliği” ve “Kişisel Verilerin Korunması” hükümleriyle Balıkesir Üniversitesine ve görevli personele bazı sorumluluklar getirilmiştir. Bu sorumlulukların paylaşımı çerçevesinde iş süreçlerinde KPS üzerinden nüfus ve adres bilgilerine erişen çalışanlarımız için aşağıdaki taahhütname hazırlanmıştır.
             </div>
 
-            <div class="resmi-yazi" style="font-weight: bold;">
-                TAAHHÜTNAME: Anayasamızın 20. maddesinde "Herkes, özel hayatına ve aile hayatına saygı gösterilmesini isteme hakkına sahiptir. Özel hayatın ve aile hayatının gizliliğine dokunulamaz." denilmektedir. Bu kapsamda KPS'den elde edilen tüm nüfus ve adres bilgilerini sadece T.C. Balıkesir Üniversitesi ve bağlı birimlerdeki iş süreçleri içerisinde kullanacağımı, kullanıcı parolamın güvenliğini sağlayacağımı, aksi takdirde idari, hukuki ve mali sorumluluğun tarafıma ait olduğunu beyan ve taahhüt ederim.
+            <div class="resmi-yazi" style="font-weight: bold; font-size: 12.5px; line-height: 1.6; background-color: #fffde8; border-left: 4px solid #1b656e; padding: 12px;">
+                TAAHHÜTNAME<br><br>
+                Anayasamızın 20 nci maddesinde “Herkes, özel hayatına ve aile hayatına saygı gösterilmesini isteme hakkına sahiptir. Özel hayatın ve aile hayatının gizliliğine dokunulamaz.” denilmektedir. Bu kapsamda KPS’den elde edilen tüm nüfus ve adres bilgilerini sadece T.C. Balıkesir Üniversitesi ve bağlı birimlerdeki iş süreçleri içerisinde kullanacağımı, kullanıcı parolamın güvenliğini sağlayacağımı aksi takdirde idari, hukuki ve mali sorumluluğun tarafıma ait olduğunu beyan ve taahhüt ederim.
             </div>
 
             <div class="form-grup">
@@ -930,10 +1131,49 @@ foreach ($aktif_formlar as $f) {
                 <span style="font-size: 16px;">▼</span>
             </button>
             <div class="accordion-panel">
-                <h4>1. Kanuni Yükümlülük</h4>
-                <p>@balikesir.edu.tr domaini T.C. Balıkesir Üniversitesi personeline (akademik ve idari) hizmet vermektedir.</p>
-                <h4>2. Gizlilik ve Güvenlik</h4>
-                <p>E-posta şifresinin korunması kullanıcının sorumluluğundadır.</p>
+                <div style="padding-top: 15px; padding-bottom: 15px; font-size:12px; line-height:1.6; color:#333;">
+                    <p style="margin-bottom:8px;"><strong>1- KANUNİ YÜKÜMLÜLÜK:</strong></p>
+                    <p style="margin:3px 0;"><strong>1.1-</strong> @balikesir.edu.tr domain’i T.C. Balıkesir Üniversitesi personeline (Akademik ve İdari) hizmet vermektedir. Bu hizmet akademik eğitim- öğretim amaçlı araştırma ve geliştirme faaliyetleri içermektedir.</p>
+                    <p style="margin:3px 0;"><strong>1.2-</strong> @balikesir.edu.tr domain ’ine ait e-posta hesaplarını kullanan şahıslar Türkiye Cumhuriyeti kanun ve bunlara bağlı olan yönetmeliklere, Türkiye Bilimsel ve Teknik Araştırma Kurumu'nun (TÜBİTAK) bir enstitüsü olan Ulusal Akademik Ağ ve Bilgi Merkezi (ULAKBİM) tarafından işletilen Ulusal Akademik Ağ'ın (ULAKNET) kullanımına ilişkin usul ve esaslara, T.C. Balıkesir Üniversitesi yönetmeliklerine aykırı hareket edemezler.</p>
+                    <p style="margin:2px 0 2px 15px;"><strong>1.2.1-</strong> İnternet Ortamında Yapılan Yayınların Düzenlenmesi ve Bu Yayınlar Yoluyla İşlenen Suçlarla Mücadele Edilmesi Hakkında Kanun. (Kanun/Karar No: 5651, Tarih: 23.05.2007) <a href="http://www.resmigazete.gov.tr/eskiler/2007/05/20070523-1.htm" target="_blank" style="color:#1b656e;">Resmi Gazete Bağlantısı</a></p>
+                    <p style="margin:2px 0 2px 15px;"><strong>1.2.2-</strong> İnternet Ortamında Yapılan Yayınların Düzenlenmesine Dair Usul ve Esaslar Hakkında Yönetmelik (Tarih:30.11.2007) <a href="http://www.resmigazete.gov.tr/eskiler/2007/11/20071130-6.htm" target="_blank" style="color:#1b656e;">Resmi Gazete Bağlantısı</a></p>
+                    <p style="margin:2px 0 2px 15px;"><strong>1.2.3-</strong> Birlikte Çalışabilirlik Esasları Rehberi ile İlgili 2005/20 Sayılı Başbakanlık Genelgesi. (Tarih: 05.08.2005) <a href="http://www.resmigazete.gov.tr/eskiler/2005/08/20050805-11.htm" target="_blank" style="color:#1b656e;">Resmi Gazete Bağlantısı</a></p>
+                    <p style="margin:2px 0 2px 15px;"><strong>1.2.4-</strong> Türkiye Bilimsel ve Teknik Araştırma Kurumu'nun (TÜBİTAK) bir enstitüsü olan Ulusal Akademik Ağ ve Bilgi Merkezi (ULAKBİM) tarafından işletilen Ulusal Akademik Ağ'ın (ULAKNET) kullanımına ilişkin usul ve esasları <a href="http://ulakbim.tubitak.gov.tr/sites/images/Ulakbim/ukp-v2011.pdf" target="_blank" style="color:#1b656e;">ULAKBİM Mevzuatı (PDF)</a></p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>2- GİZLİLİK ve GÜVENLİK:</strong></p>
+                    <p style="margin:3px 0;"><strong>2.1-</strong> T.C. Balıkesir Üniversitesi’nden personel e-posta adresi talep eden şahısları, bu formu doldurup imzalayarak, personel kimlikleri ile birlikte Bilgi İşlem Dairesi Başkanlığına şahsen müracaat etmeleri gerekmektedir. Diğer talepler değerlendirmeye alınmayacaktır.</p>
+                    <p style="margin:3px 0;"><strong>2.2-</strong> Balıkesir Üniversitesi’nden e-posta adresi alan kişi, Bilgi İşlem Daire Başkanlığı’nın belirleyeceği bir e-posta hesap adı ve kendisinin belirleyeceği bir kullanıcı şifresine sahip olur.</p>
+                    <p style="margin:3px 0;"><strong>2.3-</strong> Kullanıcı adı ve e-posta adresi kişiye özeldir ve @balikesir.edu.tr domainin de bir benzeri daha yoktur.</p>
+                    <p style="margin:3px 0;"><strong>2.4-</strong> Kullanıcı şifresi sadece kullanıcı tarafından bilinir. Kullanıcı dilediği zaman şifresini değiştirebilir. Şifrenin seçimi ve korunması tamamıyla kullanıcının sorumluluğundadır. Bilgi İşlem Daire Başkanlığı, şifre kullanımından doğacak problemlerden kesinlikle sorumlu değildir.</p>
+                    <p style="margin:3px 0;"><strong>2.5-</strong> E-posta şifresini unutan kullanıcılar, Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığına bizzat müracaat etmek zorundadır.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>3- E-POSTA ADRESİ ALAN KİŞİNİN YÜKÜMLÜLÜKLERİ:</strong></p>
+                    <p style="margin:3px 0;"><strong>3.1-</strong> E-posta hesabı sahibi, bu servisi kullanırken ileri sürdüğü şahsi fikir, düşünce ve ifadeler ile elektronik ortama eklediği dosya ve/veya bilgilerin sorumluluğunun şahsına ait olduğunu ve bundan dolayı bu e-posta ile ekli dosyalardan dolayı hiçbir şekilde Balıkesir Üniversitesinin sorumlu tutulmayacağını kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.2-</strong> Balıkesir Üniversitesi e-posta hizmetlerinde, e-posta sitesinin geneline zarar verecek veya Balıkesir Üniversitesi’ni başka şahıs ya da kuruluşlarla adli (mahkemelik) duruma getirecek herhangi bir yazılım veya materyal bulunduramayacağını, paylaşamayacağını ve hukuki bir durum doğarsa tüm adli ve cezai sorumlulukları üstüne aldığını kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.3-</strong> E-posta servisinin kullanımı sırasında kaybolacak ve/veya eksik alınacak, yanlış adrese iletilecek bilgi, mesaj ve dosyalardan Balıkesir Üniversitesi Bilgi İşlem dairesi Başkanlığı’nın sorumlu olmayacağını kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.4-</strong> E-posta hesabı sahibi, teknik nedenlerden (arıza, güncelleme, aktarma vb.) dolayı e-postalardaki gecikme ve kayıplardan dolayı Balıkesir Üniversitesi Bilgi İşlem Dairesi Başkanlığı’nın sorumlu olmayacağını kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.5-</strong> E-posta hesabı sahibi, posta hesaplarındaki verilerinin, Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığı’nın ihmali görülmeden, yetkisiz kişilerce okunmasından (e-posta sahiplerinin, gizli bilgilerini başka kişiler ile paylaşması, siteden ayrılırken çıkış yapmaması, vb. durumlardan) dolayı gelebilecek maddi ve manevi zararlardan ötürü, Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığı’nın sorumlu olmadığını kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.6-</strong> E-posta hesabı sahibi, başka şahıs veya kuruluşlardaki bilgisayara, bu bilgisayarlardaki bilgilere ya da yazılıma zarar verecek bilgi veya programlar göndermemeyi ve barındırmamayı, aksi takdirde doğacak tüm hukuki ve cezai sorumluluğun şahsına ait olduğunu kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.7-</strong> Üniversite e-posta servisini kullanarak elde edilen herhangi bir bilgi veya materyalin tamamıyla kullanıcının rızası dahilinde olduğunu, kullanıcı bilgisayarında yaratacağı arızalar, bilgi kaybı ve diğer kayıpların sorumluluğunun tamamıyla kendisine ait olduğunu, eposta servisinin kullanımından dolayı uğrayabileceği zararlardan Balıkesir Üniversitesi’nin sorumlu olmadığını kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.8-</strong> E-posta hesabı sahibi, genel ahlak ve adaba aykırı, ırkçı, ayrımcı, ticari, siyasi propaganda, taciz ve tehdit edici ile Türkiye Cumhuriyeti yasalarına, vatandaşı olduğu diğer ülkelerin yasalarına ve uluslararası anlaşmalara aykırı e-posta göndermemeyi, barındırmamayı ve bunlara aykırı her türlü uygulamalardan doğacak cezai ve hukuki sorumluluğun şahsına ait olduğunu kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.9-</strong> E-posta hesabı sahibi, T.C. Kanunlara göre postalanması yasak, gizli olan bilgileri postalamamayı, barındırmamayı ve gönderilme yetkisi olamayan postaları dağıtmamayı ile bunlara ait yasal yükümlülüğü kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.10-</strong> E-posta hesabı sahibi, zincir posta (chain mail), yazılım virüsü vb. postaları başka posta hesaplarına dağıtmamayı, barındırmamayı ve bunlara ait cezai ve yasal yükümlülüğü kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.11-</strong> E-posta hesabı sahibi, rastgele ve alıcının istemi dışında mesaj (spam iletiler) göndermeyeceğini ve bunlara ait yasal yükümlülüğü kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.12-</strong> E-posta hesabı sahibi, e-posta kullanıcı adıyla yapacağı her türlü işlemden bizzat kendisinin sorumlu olduğunu kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.13-</strong> E-posta hesabı sahipleri, kullanım haklarını, doğrudan ya da dolaylı olarak 3. şahıslara devredemez ve kiralayamazlar.</p>
+                    <p style="margin:3px 0;"><strong>3.14-</strong> E-posta hesabı sahibi yasa ve kurallara aykırı davrandığı takdirde Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığı’nın gerekli müdahalelerde bulunma, kişiyi hizmet dışına çıkarma ve üyeliğine son verme hakkına sahip olduğunu kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.15-</strong> E-posta hesabı sahibi, yasa ve kurallara aykırı davrandığı takdirde T.C. Balıkesir Üniversitesi makamlarının; gerekli sözlü ve yazılı uyarıda bulunmaya, kişiyi sınırlı veya sınırsız hizmet dışına çıkarmaya, üniversite içi idari soruşturma başlatmaya ya da adli yargıya bildirimde bulunma hakkına sahip olduğunu kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.16-</strong> E-posta hesabı sahibi, e-posta hesabını tek taraflı olarak iptal ettirse bile, bu iptal işleminden önce, üyeliği sırasında gerçekleştirdiği icraatlardan kendisinin sorumlu olacağını kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.17-</strong> E-posta sahibi, Balıkesir Üniversitesi e-posta hizmetinden yararlandığı sırada, kayıt formunda yer alan bilgilerin doğru olduğunu ve bu bilgilerin gerekli olduğu (şifre unutma gibi) durumlarda, bilginin hatalı veya noksan olmasından doğacak zararlardan dolayı sorumluluğun kendisine ait olduğunu, bu hallerde e-mail adresinin iptal edileceğini kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.18-</strong> E-posta hesabı sahibinin, e-posta hesabını 3 ay süre ile kullanmadığı takdirde e-posta hesabının içeriği silinecek, üniversiteden ayrılması (emeklilik,tayin,istifa,vb.) durumunda 30 gün içerisinde e-posta hesabı iptal edilecektir.</p>
+                    <p style="margin:3px 0;"><strong>3.19-</strong> T.C. Balıkesir Üniversitesi Bilgi İşlem Dairesi Başkanlığı, kullanıcıların bilgisi olmaksızın E-posta hizmetleri servis politikasında değişiklik yapma hakkına sahiptir. Kullanıcılar bu metinde yer alan bilgileri izlemek ve olası değişikliklerden haberdar olmakla yükümlüdürler.</p>
+                    <p style="margin:3px 0;"><strong>3.20-</strong> İmzalayan Taraf, ULAKBİM'in yasal ve teknolojik gelişmeleri göz önünde tutarak bu Kullanım Politikası'nı kısmen değiştirebileceğinden haberdardır ve bunu açıkça kabul eder. Değiştirilen Kullanım Politikası, http://ulakbim.tubitak.gov.tr/sites/images/Ulakbim/ukp-v2011.pdf adresinde yeralması ile birlikte yürürlüğe girer. İmzalayan Taraf ULAKBİM'in Kullanım Politikası'nı tam olarak anladığını, tanıdığını, uyacağını kabul eder.</p>
+                    <p style="margin:3px 0;"><strong>3.21-</strong> Tüm bu maddeleri daha sonra hiçbir itiraza mahal vermeyecek şekilde okuduğunu, KABUL ve TAAHHÜT ETMİŞTİR.</p>
+
+                    <p style="margin-top:12px; margin-bottom:8px;"><strong>4- YÜRÜRLÜLÜK:</strong></p>
+                    <p style="margin:3px 0;">Kullanıcı, adına düzenlenmiş bu formu doldurup, imzaladıktan sonra bu sözleşme yürürlüğe girer ve T.C. Balıkesir Üniversitesi personeli olduğu sürece devam eder.</p>
+                    <p style="margin-top:6px; font-weight:bold;">Yukarıda açıklanan e-posta kullanım kurallarının tümünü okudum ve kabul ediyorum.</p>
+                </div>
             </div>
 
             <button type="submit" name="form_gonder" class="btn-tamam" style="width: 100%; justify-content: center; margin-top: 15px;">Başvuruyu Gönder</button>
