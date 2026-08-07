@@ -324,7 +324,7 @@ $bildirim_loglari = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC 
             <!-- BİLDİRİMLER BUTONU VE AÇILIR PANEL -->
             <div style="position:relative; display:inline-block;">
                 <button type="button" class="header-btn" onclick="toggleBildirimKutusu()" style="background:#34495e; color:white; border:none; cursor:pointer; display:flex; align-items:center; gap:6px; padding:8px 14px; border-radius:5px; font-weight:bold; font-size:13px;">
-                    🔔 Bildirimler
+                     Bildirimler
                     <?php if ($okunmamis_sayisi > 0): ?>
                         <span id="bildirimRozet" style="background:#d93025; color:white; font-size:11px; padding:2px 7px; border-radius:10px; font-weight:bold;"><?php echo $okunmamis_sayisi; ?></span>
                     <?php endif; ?>
@@ -333,7 +333,7 @@ $bildirim_loglari = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC 
                 <!-- AÇILIR BİLDİRİM PANELİ -->
                 <div id="bildirimKutusu" style="display:none; position:absolute; top:42px; right:0; width:400px; background:white; color:#333; border-radius:8px; box-shadow:0 8px 30px rgba(0,0,0,0.3); z-index:999999; border:1px solid #d0e4eb; overflow:hidden;">
                     <div style="background:#1b656e; color:white; padding:12px 15px; font-size:13.5px; font-weight:bold; display:flex; justify-content:space-between; align-items:center;">
-                        <span>🔔 Yönetici Bildirimleri & Günlüğü</span>
+                        <span> Yönetici Bildirimleri & Günlüğü</span>
                         <form method="POST" style="margin:0;">
                             <button type="submit" name="tum_bildirimleri_oku" style="background:rgba(255,255,255,0.2); color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">✓ Tümünü Okundu Yap</button>
                         </form>
