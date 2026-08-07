@@ -168,13 +168,16 @@ try {
         }
     }
 
-    // Normal yöneticilere varsayılan tüm form izinlerini otomatik tanımla
-    $tum_form_kodlari = $db->query("SELECT form_kodu FROM formlar")->fetchAll(PDO::FETCH_COLUMN);
-    $admins = $db->query("SELECT id FROM yoneticiler WHERE rol = 'admin'")->fetchAll();
-    $insPerm = $db->prepare("INSERT IGNORE INTO yonetici_izinleri (yonetici_id, form_kodu) VALUES (:yid, :fkodu)");
-    foreach ($admins as $adm) {
-        foreach ($tum_form_kodlari as $fk) {
-            $insPerm->execute([':yid' => $adm['id'], ':fkodu' => $fk]);
+    // Sadece tablo tamamen boşsa (ilk kurulumda/seeding) varsayılan tüm form izinlerini tanımla
+    $izin_kontrol = $db->query("SELECT COUNT(*) FROM yonetici_izinleri")->fetchColumn();
+    if ($izin_kontrol == 0) {
+        $tum_form_kodlari = $db->query("SELECT form_kodu FROM formlar")->fetchAll(PDO::FETCH_COLUMN);
+        $admins = $db->query("SELECT id FROM yoneticiler WHERE rol = 'admin'")->fetchAll();
+        $insPerm = $db->prepare("INSERT IGNORE INTO yonetici_izinleri (yonetici_id, form_kodu) VALUES (:yid, :fkodu)");
+        foreach ($admins as $adm) {
+            foreach ($tum_form_kodlari as $fk) {
+                $insPerm->execute([':yid' => $adm['id'], ':fkodu' => $fk]);
+            }
         }
     }
 

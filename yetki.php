@@ -137,6 +137,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_admin_ekle'])) {
             $ins = $db->prepare("INSERT INTO yoneticiler (kullanici_adi, sifre, ad_soyad, rol) VALUES (:kadi, :sifre, :adsoyad, 'admin')");
             $hashed = password_hash($y_sifre, PASSWORD_DEFAULT);
             $ins->execute([':kadi' => $y_kadi, ':sifre' => $hashed, ':adsoyad' => $y_adsoyad]);
+            
+            // Yeni yöneticiye varsayılan tüm form izinlerini tanımla
+            $y_yeni_id = $db->lastInsertId();
+            try {
+                $tum_form_kodlari = $db->query("SELECT form_kodu FROM formlar")->fetchAll(PDO::FETCH_COLUMN) ?: [];
+                $insPerm = $db->prepare("INSERT IGNORE INTO yonetici_izinleri (yonetici_id, form_kodu) VALUES (:yid, :fkodu)");
+                foreach ($tum_form_kodlari as $fk) {
+                    $insPerm->execute([':yid' => $y_yeni_id, ':fkodu' => $fk]);
+                }
+            } catch (PDOException $ex) {}
+
             $mesaj = "Yeni yönetici ($y_adsoyad - $y_kadi) başarıyla eklendi.";
             $curAdmin = $_SESSION['admin_ad_soyad'] ?? $_SESSION['admin_kullanici'] ?? 'Yönetici';
             logEkle($db, $curAdmin, 0, '-', "Yeni yönetici hesabı oluşturdu: {$y_adsoyad} ({$y_kadi})");
@@ -423,7 +434,7 @@ if ($admin_rol === 'superadmin') {
     $izinli_formlar = $iStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
 }
 
-// Bildirim Okundu İşlemleri
+// Bildirim Okundu & Silme İşlemleri
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tum_bildirimleri_oku'])) {
     if ($admin_rol === 'superadmin') {
         $db->exec("UPDATE islem_loglari SET okundu = 1");
@@ -439,7 +450,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tum_bildirimleri_oku']
             $stmt_update->execute(array_merge($izinli_formlar, $izinli_formlar));
         }
     }
-    header("Location: " . $_SERVER['REQUEST_URI']);
+    $queryParams = $_GET;
+    $queryParams['show_notifications'] = '1';
+    header("Location: " . strtok($_SERVER['REQUEST_URI'], '?') . '?' . http_build_query($queryParams));
     exit;
 }
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tekli_oku'])) {
@@ -461,7 +474,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tekli_oku'])) {
             $stmt_single->execute(array_merge([$log_id], $izinli_formlar, $izinli_formlar));
         }
     }
-    header("Location: " . $_SERVER['REQUEST_URI']);
+    $queryParams = $_GET;
+    $queryParams['show_notifications'] = '1';
+    header("Location: " . strtok($_SERVER['REQUEST_URI'], '?') . '?' . http_build_query($queryParams));
+    exit;
+}
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tum_bildirimleri_sil'])) {
+    if ($admin_rol === 'superadmin') {
+        $db->exec("DELETE FROM islem_loglari");
+    } else {
+        if (count($izinli_formlar) > 0) {
+            $placeholders = implode(',', array_fill(0, count($izinli_formlar), '?'));
+            $q_delete = "DELETE l FROM islem_loglari l
+                         LEFT JOIN basvurular b ON l.basvuru_id = b.id
+                         WHERE b.form_kodu IN ($placeholders)
+                            OR (l.basvuru_id = 0 AND l.takip_no IN ($placeholders))";
+            $stmt_delete = $db->prepare($q_delete);
+            $stmt_delete->execute(array_merge($izinli_formlar, $izinli_formlar));
+        }
+    }
+    $queryParams = $_GET;
+    $queryParams['show_notifications'] = '1';
+    header("Location: " . strtok($_SERVER['REQUEST_URI'], '?') . '?' . http_build_query($queryParams));
+    exit;
+}
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tekli_sil'])) {
+    $log_id = intval($_POST['tekli_sil_id']);
+    if ($admin_rol === 'superadmin') {
+        $db->prepare("DELETE FROM islem_loglari WHERE id = ?")->execute([$log_id]);
+    } else {
+        if (count($izinli_formlar) > 0) {
+            $placeholders = implode(',', array_fill(0, count($izinli_formlar), '?'));
+            $q_single_delete = "DELETE l FROM islem_loglari l
+                                 LEFT JOIN basvurular b ON l.basvuru_id = b.id
+                                 WHERE l.id = ? 
+                                   AND (
+                                       b.form_kodu IN ($placeholders)
+                                       OR (l.basvuru_id = 0 AND l.takip_no IN ($placeholders))
+                                   )";
+            $stmt_single_delete = $db->prepare($q_single_delete);
+            $stmt_single_delete->execute(array_merge([$log_id], $izinli_formlar, $izinli_formlar));
+        }
+    }
+    $queryParams = $_GET;
+    $queryParams['show_notifications'] = '1';
+    header("Location: " . strtok($_SERVER['REQUEST_URI'], '?') . '?' . http_build_query($queryParams));
     exit;
 }
 
@@ -580,43 +637,57 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                 </button>
 
                 <!-- AÇILIR BİLDİRİM PANELİ -->
-                <div id="bildirimKutusu" style="display:none; position:absolute; top:42px; right:0; width:400px; background:white; color:#333; border-radius:8px; box-shadow:0 8px 30px rgba(0,0,0,0.3); z-index:999999; border:1px solid #d0e4eb; overflow:hidden;">
-                    <div style="background:#1b656e; color:white; padding:12px 15px; font-size:13.5px; font-weight:bold; display:flex; justify-content:space-between; align-items:center;">
-                        <span> Yönetici Bildirimleri & Günlüğü</span>
-                        <form method="POST" style="margin:0;">
-                            <button type="submit" name="tum_bildirimleri_oku" style="background:rgba(255,255,255,0.2); color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">✓ Tümünü Okundu Yap</button>
-                        </form>
+                <div id="bildirimKutusu" style="display: <?php echo (isset($_GET['show_notifications']) && $_GET['show_notifications'] == 1) ? 'block' : 'none'; ?>; position: absolute; top: 42px; right: 0; width: 400px; background: white; color: #333; border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,0.3); z-index: 999999; border: 1px solid #d0e4eb; overflow: hidden;">
+                    <div style="background: #1b656e; color: white; padding: 12px 15px; font-size: 13.5px; font-weight: bold; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <span> Yönetici Bildirimleri & Günlüğü</span>
+                        </div>
+                        <div style="display: flex; gap: 6px; justify-content: flex-end; width: 100%;">
+                            <form method="POST" style="margin:0;">
+                                <button type="submit" name="tum_bildirimleri_oku" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold;">✓ Tümünü Okundu Yap</button>
+                            </form>
+                            <form method="POST" style="margin:0;" onsubmit="return confirm('Tüm bildirimleri silmek istediğinize emin misiniz?');">
+                                <button type="submit" name="tum_bildirimleri_sil" style="background: #d93025; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold;">✕ Tümünü Sil</button>
+                            </form>
+                        </div>
                     </div>
-                    <div style="max-height:400px; overflow-y:auto;">
+                    <div style="max-height: 400px; overflow-y: auto;">
                         <?php if (count($bildirim_loglari) > 0): ?>
                             <?php foreach ($bildirim_loglari as $log): ?>
-                                <div style="padding:12px 15px; border-bottom:1px solid #eee; background:<?php echo ($log['okundu'] == 0) ? '#f0f7f7' : '#ffffff'; ?>; text-align:left;">
-                                    <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px;">
-                                        <strong style="color:#1b656e;">👤 <?php echo htmlspecialchars($log['yonetici_adi']); ?></strong>
-                                        <span style="color:#888; font-size:11px;"><?php echo date('d.m.Y H:i', strtotime($log['tarih'])); ?></span>
+                                <div style="padding: 12px 15px; border-bottom: 1px solid #eee; background: <?php echo ($log['okundu'] == 0) ? '#f0f7f7' : '#ffffff'; ?>; text-align: left;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 12px;">
+                                        <strong style="color: #1b656e;">👤 <?php echo htmlspecialchars($log['yonetici_adi']); ?></strong>
+                                        <span style="color: #888; font-size: 11px;"><?php echo date('d.m.Y H:i', strtotime($log['tarih'])); ?></span>
                                     </div>
-                                    <div style="font-size:13px; color:#444; line-height:1.4;">
+                                    <div style="font-size: 13px; color: #444; line-height: 1.4;">
                                         <?php echo htmlspecialchars($log['islem_detayi']); ?>
                                     </div>
-                                    <div style="margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="margin-top: 6px; display: flex; justify-content: space-between; align-items: center;">
                                         <?php if ($log['basvuru_id'] > 0): ?>
-                                            <a href="detay.php?id=<?php echo $log['basvuru_id']; ?>&read_log=<?php echo $log['id']; ?>" style="color:#1b656e; font-size:11.5px; font-weight:bold; text-decoration:none;">Başvuru Detayına Git →</a>
+                                            <a href="detay.php?id=<?php echo $log['basvuru_id']; ?>&read_log=<?php echo $log['id']; ?>" style="color: #1b656e; font-size: 11.5px; font-weight: bold; text-decoration: none;">Başvuru Detayına Git →</a>
                                         <?php else: ?>
                                             <span></span>
                                         <?php endif; ?>
-                                        <?php if ($log['okundu'] == 0): ?>
-                                            <form method="POST" style="margin:0; display:inline;">
-                                                <input type="hidden" name="tekli_oku_id" value="<?php echo $log['id']; ?>">
-                                                <button type="submit" name="tekli_oku" style="background:none; border:none; color:#7f8c8d; font-size:11px; cursor:pointer; text-decoration:underline;">✓ Okundu Yap</button>
+                                        <div style="display: flex; gap: 10px; align-items: center;">
+                                            <?php if ($log['okundu'] == 0): ?>
+                                                <form method="POST" style="margin: 0; display: inline;">
+                                                    <input type="hidden" name="tekli_oku_id" value="<?php echo $log['id']; ?>">
+                                                    <button type="submit" name="tekli_oku" style="background: none; border: none; color: #1b656e; font-size: 11px; cursor: pointer; text-decoration: underline; font-weight: bold;">✓ Okundu Yap</button>
+                                                </form>
+                                            <?php else: ?>
+                                                <span style="font-size: 11px; color: #aaa;">✓ Okundu</span>
+                                            <?php endif; ?>
+                                            
+                                            <form method="POST" style="margin: 0; display: inline;" onsubmit="return confirm('Bu bildirim günlüğünü silmek istediğinize emin misiniz?');">
+                                                <input type="hidden" name="tekli_sil_id" value="<?php echo $log['id']; ?>">
+                                                <button type="submit" name="tekli_sil" style="background: none; border: none; color: #d93025; font-size: 11px; cursor: pointer; text-decoration: underline; font-weight: bold;">✕ Sil</button>
                                             </form>
-                                        <?php else: ?>
-                                            <span style="font-size:11px; color:#aaa;">✓ Okundu</span>
-                                        <?php endif; ?>
+                                        </div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <div style="padding:20px; text-align:center; color:#888; font-size:13px;">Henüz hiç bildirim yok.</div>
+                            <div style="padding: 20px; text-align: center; color: #888; font-size: 13px;">Henüz hiç bildirim yok.</div>
                         <?php endif; ?>
                     </div>
                 </div>
