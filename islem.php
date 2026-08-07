@@ -99,10 +99,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_kodu'])) {
             ':form_verileri'  => $form_verileri_json
         ]);
 
-        header("Location: index.php?durum=basarili&takip_no={$takip_no}");
+        header("Location: doldur.php?kodu=" . urlencode($form_kodu) . "&durum=basarili&takip_no={$takip_no}");
         exit;
     } catch (PDOException $e) {
-        header("Location: index.php?durum=hata&mesaj=" . urlencode($e->getMessage()));
+        header("Location: doldur.php?kodu=" . urlencode($form_kodu) . "&durum=hata&mesaj=" . urlencode($e->getMessage()));
         exit;
     }
 } else {

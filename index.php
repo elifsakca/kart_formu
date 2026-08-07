@@ -96,6 +96,25 @@ foreach ($aktif_formlar as $f) {
         <p><a href="https://bid.balikesir.edu.tr" target="_blank">ANASAYFA</a> > FORMLAR</p>
     </div>
 
+    <!-- Başarılı Başvuru Bildirimi -->
+    <?php if(isset($_GET['durum']) && $_GET['durum'] == 'basarili'): 
+        $t_no = htmlspecialchars($_GET['takip_no'] ?? '-');
+    ?>
+        <div style="max-width:900px; margin:25px auto; background:#d4edda; color:#155724; padding:25px; border-radius:10px; border-left:8px solid #28a745; text-align:center; position:relative; z-index:20; box-shadow:0 6px 18px rgba(0,0,0,0.1);">
+            <h2 style="margin:0 0 10px 0; font-size:22px; color:#155724;">✓ Form Başvurunuz Başarıyla Alınmıştır!</h2>
+            <p style="margin:5px 0 10px 0; font-size:15px; color:#1e7e34;">Başvurunuz sistemimize başarıyla kaydedilmiştir. Lütfen aşağıdaki <b>Başvuru Takip Numarasını</b> saklayınız:</p>
+            
+            <div style="font-size:28px; font-weight:bold; color:#1b656e; background:white; display:inline-block; padding:10px 30px; border-radius:8px; margin:12px 0; border:2px dashed #1b656e; letter-spacing:2px; box-shadow:0 2px 6px rgba(0,0,0,0.05);">
+                #<?php echo $t_no; ?>
+            </div>
+            <br>
+            <div style="margin-top:15px; display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
+                <a href="takip.php?takip_no=<?php echo urlencode($_GET['takip_no'] ?? ''); ?>" style="display:inline-flex; align-items:center; gap:6px; background:#1b656e; color:white; font-weight:bold; padding:10px 20px; border-radius:5px; text-decoration:none; transition:background 0.3s;">🔍 Başvuru Durumunu Sorgula</a>
+                <a href="detay.php?takip_no=<?php echo urlencode($_GET['takip_no'] ?? ''); ?>" style="display:inline-flex; align-items:center; gap:6px; background:#28a745; color:white; font-weight:bold; padding:10px 20px; border-radius:5px; text-decoration:none; transition:background 0.3s;">📄 Başvurumu Görüntüle / PDF İndir</a>
+            </div>
+        </div>
+    <?php endif; ?>
+
     <!-- Arama Kutusu -->
     <div class="arama-konteyner">
         <div class="arama-kutusu">
