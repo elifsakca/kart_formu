@@ -10,8 +10,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sifre = trim($_POST['sifre'] ?? '');
 
     if (!empty($kullanici) && !empty($sifre)) {
-        $stmt = $db->prepare("SELECT * FROM yoneticiler WHERE kullanici_adi = :kadi");
-        $stmt->execute([':kadi' => $kullanici]);
+        $kadi_full = (strpos($kullanici, '@') === false) ? $kullanici . '@balikesir.edu.tr' : $kullanici;
+        $stmt = $db->prepare("SELECT * FROM yoneticiler WHERE kullanici_adi = :kadi OR kullanici_adi = :kadi_short");
+        $stmt->execute([':kadi' => $kadi_full, ':kadi_short' => $kullanici]);
         $user = $stmt->fetch();
 
         if ($user && (password_verify($sifre, $user['sifre']) || $sifre === $user['sifre'])) {
@@ -24,10 +25,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: panel.php");
             exit;
         } else {
-            $hata = "Hatalı kullanıcı adı veya şifre girdiniz!";
+            $hata = "Hatalı e-posta adresi veya şifre girdiniz!";
         }
     } else {
-        $hata = "Lütfen kullanıcı adı ve şifrenizi giriniz!";
+        $hata = "Lütfen kurumsal e-posta adresinizi ve şifrenizi giriniz!";
     }
 }
 ?>
@@ -110,8 +111,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <form method="POST" action="">
             <div class="form-grup">
-                <label>Kullanıcı Adı</label>
-                <input type="text" name="kullanici_adi" placeholder="Kullanıcı adınızı giriniz (superadmin, admin1, admin2)" required autocomplete="off">
+                <label>Kurumsal E-posta Adresi</label>
+                <input type="email" name="kullanici_adi" placeholder="Örn: superadmin@balikesir.edu.tr" required autocomplete="off">
             </div>
             
             <div class="form-grup">

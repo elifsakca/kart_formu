@@ -123,12 +123,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_admin_ekle'])) {
     $y_sifre  = trim($_POST['sifre'] ?? '');
     $y_adsoyad= trim($_POST['ad_soyad'] ?? '');
 
+    if (!empty($y_kadi) && strpos($y_kadi, '@') === false) {
+        $y_kadi .= '@balikesir.edu.tr';
+    }
+
     if (!empty($y_kadi) && !empty($y_sifre) && !empty($y_adsoyad)) {
         $chk = $db->prepare("SELECT COUNT(*) FROM yoneticiler WHERE kullanici_adi = :kadi");
         $chk->execute([':kadi' => $y_kadi]);
         
         if ($chk->fetchColumn() > 0) {
-            $hata = "Bu kullanıcı adı ($y_kadi) zaten kullanılmaktadır!";
+            $hata = "Bu e-posta adresi ($y_kadi) zaten kullanılmaktadır!";
         } else {
             $ins = $db->prepare("INSERT INTO yoneticiler (kullanici_adi, sifre, ad_soyad, rol) VALUES (:kadi, :sifre, :adsoyad, 'admin')");
             $hashed = password_hash($y_sifre, PASSWORD_DEFAULT);
@@ -139,6 +143,83 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_admin_ekle'])) {
         }
     } else {
         $hata = "Lütfen tüm yönetici bilgilerini eksiksiz giriniz!";
+    }
+}
+
+// POST İşlemi 1.1: Admin Hesabı Silme
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['admin_sil'])) {
+    if ($admin_rol !== 'superadmin') {
+        die("Bu işlemi sadece Süper Admin gerçekleştirebilir!");
+    }
+    $y_id = intval($_POST['yonetici_id']);
+
+    if ($y_id === $admin_id) {
+        $hata = "Kendi Süper Admin hesabınızı silemezsiniz!";
+    } else {
+        try {
+            $admStmt = $db->prepare("SELECT kullanici_adi, ad_soyad, rol FROM yoneticiler WHERE id = :id");
+            $admStmt->execute([':id' => $y_id]);
+            $admRow = $admStmt->fetch();
+
+            if ($admRow && $admRow['rol'] !== 'superadmin') {
+                $delPerm = $db->prepare("DELETE FROM yonetici_izinleri WHERE yonetici_id = :id");
+                $delPerm->execute([':id' => $y_id]);
+
+                $delStmt = $db->prepare("DELETE FROM yoneticiler WHERE id = :id AND rol != 'superadmin'");
+                $delStmt->execute([':id' => $y_id]);
+
+                $mesaj = "Yönetici hesabı ({$admRow['ad_soyad']} - {$admRow['kullanici_adi']}) başarıyla silindi.";
+                $curAdmin = $_SESSION['admin_ad_soyad'] ?? $_SESSION['admin_kullanici'] ?? 'Yönetici';
+                logEkle($db, $curAdmin, 0, '-', "Yönetici hesabını sildi: {$admRow['ad_soyad']} ({$admRow['kullanici_adi']})");
+            } else {
+                $hata = "Süper Admin hesabı silinemez!";
+            }
+        } catch (PDOException $e) {
+            $hata = "Yönetici silinirken hata oluştu: " . $e->getMessage();
+        }
+    }
+}
+
+// POST İşlemi 1.2: Admin Hesabı Bilgilerini Düzenleme
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['admin_duzenle'])) {
+    if ($admin_rol !== 'superadmin') {
+        die("Bu işlemi sadece Süper Admin gerçekleştirebilir!");
+    }
+    $y_id      = intval($_POST['edit_yonetici_id']);
+    $y_kadi    = trim($_POST['edit_kullanici_adi'] ?? '');
+    $y_adsoyad = trim($_POST['edit_ad_soyad'] ?? '');
+    $y_sifre   = trim($_POST['edit_sifre'] ?? '');
+
+    if (!empty($y_kadi) && strpos($y_kadi, '@') === false) {
+        $y_kadi .= '@balikesir.edu.tr';
+    }
+
+    if ($y_id > 0 && !empty($y_kadi) && !empty($y_adsoyad)) {
+        try {
+            $chk = $db->prepare("SELECT COUNT(*) FROM yoneticiler WHERE kullanici_adi = :kadi AND id != :id");
+            $chk->execute([':kadi' => $y_kadi, ':id' => $y_id]);
+
+            if ($chk->fetchColumn() > 0) {
+                $hata = "Bu e-posta adresi ($y_kadi) başka bir yönetici tarafından kullanılmaktadır!";
+            } else {
+                if (!empty($y_sifre)) {
+                    $hashed = password_hash($y_sifre, PASSWORD_DEFAULT);
+                    $up = $db->prepare("UPDATE yoneticiler SET kullanici_adi = :kadi, ad_soyad = :adsoyad, sifre = :sifre WHERE id = :id");
+                    $up->execute([':kadi' => $y_kadi, ':adsoyad' => $y_adsoyad, ':sifre' => $hashed, ':id' => $y_id]);
+                } else {
+                    $up = $db->prepare("UPDATE yoneticiler SET kullanici_adi = :kadi, ad_soyad = :adsoyad WHERE id = :id");
+                    $up->execute([':kadi' => $y_kadi, ':adsoyad' => $y_adsoyad, ':id' => $y_id]);
+                }
+
+                $mesaj = "Yönetici bilgileri ({$y_adsoyad} - {$y_kadi}) başarıyla güncellendi.";
+                $curAdmin = $_SESSION['admin_ad_soyad'] ?? $_SESSION['admin_kullanici'] ?? 'Yönetici';
+                logEkle($db, $curAdmin, 0, '-', "Yönetici bilgilerini güncelledi: {$y_adsoyad} ({$y_kadi})");
+            }
+        } catch (PDOException $e) {
+            $hata = "Yönetici güncellenirken hata oluştu: " . $e->getMessage();
+        }
+    } else {
+        $hata = "Lütfen e-posta adresi ve ad soyad alanlarını doldurunuz!";
     }
 }
 
@@ -522,8 +603,8 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             <form method="POST">
                 <div class="form-satir">
                     <div class="form-grup">
-                        <label>Kullanıcı Adı</label>
-                        <input type="text" name="kullanici_adi" placeholder="Örn: admin3" required autocomplete="off">
+                        <label>Kurumsal E-posta Adresi</label>
+                        <input type="email" name="kullanici_adi" placeholder="Örn: admin3@balikesir.edu.tr" required autocomplete="off">
                     </div>
                     <div class="form-grup">
                         <label>Şifre</label>
@@ -690,8 +771,15 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             ?>
             <div class="card">
                 <h2>
-                    <span>👤 <?php echo htmlspecialchars($admin['ad_soyad']); ?> (Kullanıcı Adı: <strong><?php echo htmlspecialchars($admin['kullanici_adi']); ?></strong>)</span>
-                    <div style="display:flex; gap:8px;">
+                    <span>👤 <?php echo htmlspecialchars($admin['ad_soyad']); ?> (E-posta: <strong><?php echo htmlspecialchars($admin['kullanici_adi']); ?></strong>)</span>
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                        <button type="button" class="btn-sec-hepsi" style="background:#f39c12; color:white;" onclick="adminDuzenleBtn(<?php echo $aid; ?>, '<?php echo htmlspecialchars($admin['kullanici_adi'], ENT_QUOTES); ?>', '<?php echo htmlspecialchars($admin['ad_soyad'], ENT_QUOTES); ?>')">✏️ Düzenle</button>
+                        
+                        <form method="POST" style="margin:0; display:inline;" onsubmit="return confirm('Bu yönetici hesabını (<?php echo htmlspecialchars($admin['ad_soyad'], ENT_QUOTES); ?> - <?php echo htmlspecialchars($admin['kullanici_adi'], ENT_QUOTES); ?>) silmek istediğinize emin misiniz? Atanmış tüm form izinleri de temizlenecektir.');">
+                            <input type="hidden" name="yonetici_id" value="<?php echo $aid; ?>">
+                            <button type="submit" name="admin_sil" class="btn-sec-hepsi" style="background:#d93025; color:white;">🗑️ Yöneticiyi Sil</button>
+                        </form>
+
                         <button type="button" class="btn-sec-hepsi" onclick="tumGoruntulemeSec('form_grid_<?php echo $aid; ?>')">Tümünü Seç / Kaldır (Görüntüleme)</button>
                         <button type="button" class="btn-sec-hepsi" style="background:#e67e22;" onclick="tumRevizeSec('form_grid_<?php echo $aid; ?>')">Seçilen Tüm Formlar İçin Revizeye İzin Ver / Kaldır</button>
                     </div>
@@ -1020,6 +1108,51 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                 alanSatiriEkleTarget('add_alanlar_listesi', 'Talep Açıklaması', 'text', 1, '');
             }
         });
+
+        // Yönetici Düzenleme Modalı Fonksiyonları
+        function adminDuzenleBtn(id, kadi, adsoyad) {
+            document.getElementById('edit_yonetici_id').value = id;
+            document.getElementById('edit_kullanici_adi').value = kadi;
+            document.getElementById('edit_ad_soyad').value = adsoyad;
+            
+            var modal = document.getElementById('adminEditModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeAdminEditModal() {
+            var modal = document.getElementById('adminEditModal');
+            if (modal) modal.style.display = 'none';
+        }
     </script>
+
+    <!-- YÖNETİCİ BİLGİLERİNİ DÜZENLEME MODALI -->
+    <div id="adminEditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:99999; justify-content:center; align-items:center;">
+        <div style="background:white; padding:30px; border-radius:8px; max-width:450px; width:90%; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+            <h3 style="margin-top:0; color:#1b656e; border-bottom:2px solid #e8f4f8; padding-bottom:10px;">✏️ Yönetici Hesabını Düzenle</h3>
+            <form method="POST">
+                <input type="hidden" name="edit_yonetici_id" id="edit_yonetici_id">
+                
+                <div style="margin-bottom:15px; text-align:left;">
+                    <label style="display:block; font-weight:bold; font-size:13.5px; margin-bottom:5px; color:#333;">Adı Soyadı *</label>
+                    <input type="text" name="edit_ad_soyad" id="edit_ad_soyad" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box; font-size:14px;">
+                </div>
+
+                <div style="margin-bottom:15px; text-align:left;">
+                    <label style="display:block; font-weight:bold; font-size:13.5px; margin-bottom:5px; color:#333;">Kurumsal E-posta Adresi *</label>
+                    <input type="email" name="edit_kullanici_adi" id="edit_kullanici_adi" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box; font-size:14px;">
+                </div>
+
+                <div style="margin-bottom:20px; text-align:left;">
+                    <label style="display:block; font-weight:bold; font-size:13.5px; margin-bottom:5px; color:#333;">Yeni Şifre (Değiştirmek istemiyorsanız boş bırakın)</label>
+                    <input type="text" name="edit_sifre" placeholder="Boş bırakılırsa mevcut şifre korunur" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box; font-size:14px;">
+                </div>
+
+                <div style="display:flex; gap:10px; justify-content:flex-end;">
+                    <button type="button" class="btn-sec-hepsi" style="background:#7f8c8d; padding:8px 16px; font-size:13px;" onclick="closeAdminEditModal()">İptal</button>
+                    <button type="submit" name="admin_duzenle" class="btn-kaydet" style="padding:8px 20px; font-size:13px; background:#27ae60;">✓ Değişiklikleri Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

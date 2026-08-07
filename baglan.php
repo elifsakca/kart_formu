@@ -134,14 +134,14 @@ try {
         }
     }
 
-    // Eski 'admin' veya gereksiz hesapları temizleme
-    $db->exec("DELETE FROM yoneticiler WHERE kullanici_adi NOT IN ('superadmin', 'admin1', 'admin2') AND rol != 'admin'");
+    // Mevcut kullanıcı adlarının sonuna @balikesir.edu.tr ekleme otomatik güncellemesi
+    $db->exec("UPDATE yoneticiler SET kullanici_adi = CONCAT(kullanici_adi, '@balikesir.edu.tr') WHERE kullanici_adi NOT LIKE '%@%'");
 
-    // Varsayılan Yöneticilerin Oluşturulması
+    // Varsayılan Yöneticilerin Oluşturulması (E-posta Formatlı)
     $varsayilan_yoneticiler = [
-        ['kullanici_adi' => 'superadmin', 'sifre' => '123456', 'ad_soyad' => 'Süper Yönetici', 'rol' => 'superadmin'],
-        ['kullanici_adi' => 'admin1',      'sifre' => '123456', 'ad_soyad' => 'Yönetici 1',     'rol' => 'admin'],
-        ['kullanici_adi' => 'admin2',      'sifre' => '123456', 'ad_soyad' => 'Yönetici 2',     'rol' => 'admin']
+        ['kullanici_adi' => 'superadmin@balikesir.edu.tr', 'sifre' => '123456', 'ad_soyad' => 'Süper Yönetici', 'rol' => 'superadmin'],
+        ['kullanici_adi' => 'admin1@balikesir.edu.tr',      'sifre' => '123456', 'ad_soyad' => 'Yönetici 1',     'rol' => 'admin'],
+        ['kullanici_adi' => 'admin2@balikesir.edu.tr',      'sifre' => '123456', 'ad_soyad' => 'Yönetici 2',     'rol' => 'admin']
     ];
 
     $checkStmt = $db->prepare("SELECT COUNT(*) FROM yoneticiler WHERE kullanici_adi = :kadi");
