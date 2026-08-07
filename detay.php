@@ -406,66 +406,13 @@ $bugun = date('Y-m-d');
                 break;
             case 'KDYS.FR.0072':
             case 'KDYS.FR.0082':
-                $taahhut_metni = "Birimimiz/şahsım adına kullanılmak üzere, sistemde yukarıda belirtilen e-posta hesabının açılması talep edilmektedir. Ayrıca T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, T.C. Balıkesir Üniversitesi E-posta Kullanım Politikası ve Bilgi İşlem Daire Başkanlığı web sayfasında bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaların okunduğu ve bunlara uygun hareket edileceği taahhüt edilir.";
-                $ek_bilgi_ve_politikalar = '
-                <div style="margin-top: 15px; padding: 15px; border: 1px solid #ddd; background: #fff; border-radius: 4px; font-size: 12px; line-height: 1.5; margin-bottom: 15px;">
-                    <h5 style="margin: 0 0 10px 0; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-align: center;">BALIKESİR ÜNİVERSİTESİ ELEKTRONİK POSTA (e-mail) ADRESİ KULLANIM KURALLARI</h5>
-                    <p><strong>1- KANUNİ YÜKÜMLÜLÜK:</strong></p>
-                    <p style="margin-left: 15px;">1.1- @balikesir.edu.tr domain’i T.C. Balıkesir Üniversitesi personeline (Akademik ve İdari) hizmet vermektedir. Bu hizmet akademik eğitim-öğretim amaçlı araştırma ve geliştirme faaliyetleri içermektedir.</p>
-                    <p style="margin-left: 15px;">1.2- @balikesir.edu.tr domain’ine ait e-posta hesaplarını kullanan şahıslar Türkiye Cumhuriyeti kanun ve bunlara bağlı olan yönetmeliklere, TÜBİTAK ULAKBİM tarafından işletilen Ulusal Akademik Ağ\'ın (ULAKNET) kullanımına ilişkin usul ve esaslara, T.C. Balıkesir Üniversitesi yönetmeliklerine aykırı hareket edemezler.</p>
-                    <p><strong>2- GİZLİLİK ve GÜVENLİK:</strong></p>
-                    <p style="margin-left: 15px;">2.1- T.C. Balıkesir Üniversitesinden personel e-posta adresi talep eden şahıslar, bu formu doldurup personel kimlikleri ile birlikte Bilgi İşlem Dairesi Başkanlığına şahsen müracaat etmeleri gerekmektedir.</p>
-                    <p style="margin-left: 15px;">2.2- Kullanıcı adı ve şifrenin seçimi ve korunması tamamıyla kullanıcının sorumluluğundadır.</p>
-                </div>';
-                break;
             case 'KDYS.FR.0073':
-                $taahhut_metni = "Talep edilmiş olan e-imza mini kart okuyucuyu TÜBİTAK Bilişim ve Bilgi Güvenliği İleri Teknolojileri Araştırma Merkezi firmasından şahsen teslim aldığımı beyan ve taahhüt ederim.";
-                break;
             case 'KDYS.FR.0074':
-                $taahhut_metni = "Başvuru sahibi personellerimiz için e-imza sertifikası ve kart okuyucu talep edilmektedir. İlgili yasal mevzuat, kullanım politikaları ve taahhütlerin tarafımızca okunduğu ve bunlara uygun hareket edileceği beyan edilir.";
-                break;
             case 'KDYS.FR.0077':
-                $taahhut_metni = "Akademik/İdari çalışmalarımda kullanmak üzere, sistemde yukarıda belirtilen alan adının açılması, 150 MB web ve 20 MB veritabanı (istenirse) kotalı alanın tahsis edilmesi ve bu alanların kullanımı için gerekli web kullanıcısının açılarak erişim bilgilerinin tarafıma teslim edilmesini talep ediyorum. Ayrıca T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası ve http://bid.balikesir.edu.tr adresinde bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaları okuduğumu ve bunlara uygun hareket edeceğimi taahhüt ederim.";
-                $ek_bilgi_ve_politikalar = '
-                <div style="margin-top: 15px; padding: 15px; border: 1px solid #ddd; background: #fff; border-radius: 4px; font-size: 12px; line-height: 1.5; margin-bottom: 15px;">
-                    <h5 style="margin: 0 0 10px 0; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-align: center;">T.C. BALIKESİR ÜNİVERSİTESİ BİLİŞİM KAYNAKLARI KULLANIM POLİTİKASI</h5>
-                    <p><strong>1. Tanımlamalar</strong></p>
-                    <p style="margin-left: 15px;"><b>BAÜN Bilişim Kaynakları:</b> Mülkiyet hakları BAÜN’ ye ait olan, BAÜN tarafından lisanslanan/kiralanan ya da BAÜN tarafından kullanım hakkına sahip olunan her türlü bilgisayar/bilgisayar ağı, donanım, yazılım ve servislerini ifade eder.</p>
-                    <p style="margin-left: 15px;"><b>BAÜN Bilişim Kaynakları Kullanıcıları:</b> BAÜN Bilişim Kaynaklarını kullanmak üzere, bu kaynaklar üzerinde gerekli yetkilendirme tanımları yapılarak belirlenen özel ve tüzel kişilerdir.</p>
-                    <p style="margin-left: 15px;"><b>BAÜN Kullanıcıları:</b> BAÜN’ nün idari yapısı içinde yer alan birimlerde akademik ve idari görevlerde bulunan kadrolu/geçici personel ile BAÜN’ de öğrenim hayatını sürdürmekte olan tüm lisans ve lisansüstü öğrenciler “BAÜN Kullanıcıları” olarak tanımlanır.</p>
-                    <p><strong>2. Genel İlkeler</strong></p>
-                    <p style="margin-left: 15px;">BAÜN Bilişim Kaynakları, Temel Kullanım kapsamındaki ihtiyaçlar için hizmete sunulmaktadır. Bu kaynakların israfından kaçınılmalıdır.</p>
-                </div>';
-                break;
             case 'KDYS.FR.0078':
-                $taahhut_metni = "Birimimiz adına kullanılmak üzere, bir adet statik ip'nin tarafımıza tahsis edilmesini talep ediyoruz. Kullanacağımız tüm bilgisayar, sunucu ve cihazlar birimimiz tarafından temin edilecektir. Bu statik ip'nin erişim sağlayıcı (gateway) olarak kullanılmayacağını, ayrıca T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası ve http://bid.balikesir.edu.tr adresinde bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaların okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.";
-                $ek_bilgi_ve_politikalar = '
-                <div style="margin-top: 15px; padding: 15px; border: 1px solid #ddd; background: #fff; border-radius: 4px; font-size: 12px; line-height: 1.5; margin-bottom: 15px;">
-                    <h5 style="margin: 0 0 10px 0; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-align: center;">T.C. BALIKESİR ÜNİVERSİTESİ BİLİŞİM KAYNAKLARI KULLANIM POLİTİKASI</h5>
-                    <p><strong>1. Tanımlamalar</strong></p>
-                    <p style="margin-left: 15px;"><b>BAÜN Bilişim Kaynakları:</b> Mülkiyet hakları BAÜN’ ye ait olan, BAÜN tarafından lisanslanan/kiralanan ya da BAÜN tarafından kullanım hakkına sahip olunan her türlü bilgisayar/bilgisayar ağı, donanım, yazılım ve servislerini ifade eder.</p>
-                    <p style="margin-left: 15px;"><b>BAÜN Bilişim Kaynakları Kullanıcıları:</b> BAÜN Bilişim Kaynaklarını kullanmak üzere, bu kaynaklar üzerinde gerekli yetkilendirme tanımları yapılarak belirlenen özel ve tüzel kişilerdir.</p>
-                    <p style="margin-left: 15px;"><b>BAÜN Kullanıcıları:</b> BAÜN’ nün idari yapısı içinde yer alan birimlerde akademik ve idari görevlerde bulunan kadrolu/geçici personel ile BAÜN’ de öğrenim hayatını sürdürmekte olan tüm lisans ve lisansüstü öğrenciler “BAÜN Kullanıcıları” olarak tanımlanır.</p>
-                    <p><strong>2. Genel İlkeler</strong></p>
-                    <p style="margin-left: 15px;">BAÜN Bilişim Kaynakları, Temel Kullanım kapsamındaki ihtiyaçlar için hizmete sunulmaktadır. Bu kaynakların israfından kaçınılmalıdır.</p>
-                </div>';
-                break;
             case 'KDYS.FR.0079':
-                $taahhut_metni = "Birimimiz adına kullanılmak üzere, sistemde yukarıda belirtilen alan adının açılması, 250 MB web ve 100 MB veri tabanı (istenirse) kotalı alanın tahsis edilmesi ve bu alanların kullanımı için gerekli web kullanıcısının açılarak yukarıda adı belirtilen personele teslim edilmesini talep ediyoruz. Ayrıca T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, eki Web Kullanıcıları Servis Politikası ve http://bid.balikesir.edu.tr adresinde bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikaların okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.";
-                $ek_bilgi_ve_politikalar = '
-                <div style="margin-top: 15px; padding: 15px; border: 1px solid #ddd; background: #fff; border-radius: 4px; font-size: 12px; line-height: 1.5; margin-bottom: 15px;">
-                    <h5 style="margin: 0 0 10px 0; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-align: center;">T.C. BALIKESİR ÜNİVERSİTESİ BİLİŞİM KAYNAKLARI KULLANIM POLİTİKASI</h5>
-                    <p><strong>1. Tanımlamalar</strong></p>
-                    <p style="margin-left: 15px;"><b>BAÜN Bilişim Kaynakları:</b> Mülkiyet hakları BAÜN’ ye ait olan, BAÜN tarafından lisanslanan/kiralanan ya da BAÜN tarafından kullanım hakkına sahip olunan her türlü bilgisayar/bilgisayar ağı, donanım, yazılım ve servislerini ifade eder.</p>
-                </div>';
-                break;
             case 'KDYS.FR.0080':
-                $taahhut_metni = "TAAHHÜTNAME\n\nAnayasamızın 20 nci maddesinde “Herkes, özel hayatına ve aile hayatına saygı gösterilmesini isteme hakkına sahiptir. Özel hayatın ve aile hayatının gizliliğine dokunulamaz.” denilmektedir. Bu kapsamda KPS’den elde edilen tüm nüfus ve adres bilgilerini sadece T.C. Balıkesir Üniversitesi ve bağlı birimlerdeki iş süreçleri içerisinde kullanacağımı, kullanıcı parolamın güvenliğini sağlayacağımı aksi takdirde idari, hukuki ve mali sorumluluğun tarafıma ait olduğunu beyan ve taahhüt ederim.";
-                $ek_bilgi_ve_politikalar = '
-                <div style="margin-top: 15px; padding: 15px; border: 1px solid #ddd; background: #fff; border-radius: 4px; font-size: 12px; line-height: 1.6; margin-bottom: 15px;">
-                    10/07/2005 tarih ve 25871 sayılı resmi gazetede yayımlanan T.C. Nüfus ve Vatandaşlık İşleri Genel Müdürlüğüne ait Kimlik Paylaşım Sistemi (KPS) Uygulama Yönetmeliği kapsamında Bakanlığımız ile ilgili iş ve işlem süreçlerindeki vatandaşlarımızın nüfus ve adres bilgilerinin paylaşımı hakkında “ikili anlaşma” imzalanmıştır.<br><br>
-                    İlgili Yönetmeliğe ilişkin usul ve esasları içerisinde yer alan “Özel Hayatın Gizliliği” ve “Kişisel Verilerin Korunması” hükümleriyle Balıkesir Üniversitesine ve görevli personele bazı sorumluluklar getirilmiştir. Bu sorumlulukların paylaşımı çerçevesinde iş süreçlerinde KPS üzerinden nüfus ve adres bilgilerine erişen çalışanlarımız için aşağıdaki taahhütname hazırlanmıştır.
-                </div>';
+                // Bu resmi formların tüm taahhüt, mevzuat ve politikaları alttaki 3 sayfalık resmi çıktıda basılır.
                 break;
         }
         
