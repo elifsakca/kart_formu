@@ -157,23 +157,23 @@ $bugun = date('Y-m-d');
             width: 52%;
         }
 
-        .paper { background: white; max-width: 900px; margin: 30px auto; padding: 40px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .paper { background: white; max-width: 900px; margin: 30px auto; padding: 40px; border-radius: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border: 1px solid #000; }
         
-        .photo-box { width: 120px; height: 150px; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px; }
+        .photo-box { width: 120px; height: 150px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 4px; }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; }
         
-        .grid-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
-        .grid-table th, .grid-table td { border: 1px solid #e0e0e0; padding: 10px 12px; font-size: 14px; text-align: left; }
-        .grid-table th { background: #f8f9fa; width: 30%; color: #1b656e; font-weight: 600; }
+        .grid-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; border: 1px solid #000; background: #fff; }
+        .grid-table th, .grid-table td { border: 1px solid #000; padding: 8px 12px; font-size: 13.5px; text-align: left; }
+        .grid-table th { background: #f4f4f4; width: 32%; color: #000; font-weight: bold; }
         
-        .status-badge { padding: 6px 14px; border-radius: 15px; font-size: 13px; font-weight: bold; display: inline-block; background: #e8f4f8; color: #1b656e; }
+        .status-badge { padding: 5px 12px; border-radius: 4px; font-size: 13px; font-weight: bold; display: inline-block; background: #fff; color: #000; border: 1px solid #000; }
 
         /* Yönetici Online Doldurma Alanı Stilleri */
         .yonetici-input {
             width: 100%;
             padding: 6px 10px;
-            border: 1px solid #1b656e;
-            border-radius: 4px;
+            border: 1px solid #000;
+            border-radius: 3px;
             box-sizing: border-box;
             font-family: inherit;
             font-size: 13px;
@@ -181,8 +181,8 @@ $bugun = date('Y-m-d');
         }
         .yonetici-input:focus {
             outline: none;
-            border-color: #27ae60;
-            box-shadow: 0 0 5px rgba(39, 174, 96, 0.4);
+            border-color: #000;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
         }
         .btn-yonetici-kaydet {
             background: #1b656e;
@@ -205,10 +205,15 @@ $bugun = date('Y-m-d');
         @media print {
             .noprint, .btn-yonetici-kaydet, .kayit-bildirimi { display: none !important; }
             .only-print { display: block !important; }
-            body { background: white; margin: 0; padding: 0; }
-            .paper { box-shadow: none; margin: 0; width: 100%; max-width: 100%; padding: 0; }
+            body { background: white; margin: 0; padding: 0; color: #000; }
+            .paper { box-shadow: none; margin: 0; width: 100%; max-width: 100%; padding: 0; border: none; }
             .kdys-header-table { border: 3px double #000 !important; }
             .kdys-header-table td, .kdys-info-subtable td { border: 1px solid #000 !important; color: #000 !important; }
+            .grid-table { border: 1px solid #000 !important; }
+            .grid-table th, .grid-table td { border: 1px solid #000 !important; color: #000 !important; }
+            .grid-table th { background: #f0f0f0 !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            div { border-color: #000 !important; }
+            h3, h4 { color: #000 !important; border-color: #000 !important; }
             .yonetici-input {
                 border: none !important;
                 background: transparent !important;
@@ -285,12 +290,12 @@ $bugun = date('Y-m-d');
         </table>
 
         <!-- TAKİP NO & FOTOĞRAF / DURUM BİLGİ ALANI -->
-        <div style="display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 12px 18px; border-radius: 6px; border: 1px solid #e0e0e0; margin-bottom: 25px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 12px 18px; border-radius: 4px; border: 1px solid #000; margin-bottom: 25px;">
             <div>
                 <p style="margin: 0 0 5px 0; font-size: 14px;">
-                    <strong>Takip No:</strong> <span style="font-size:16px; font-weight:bold; color:#1b656e;">#<?php echo htmlspecialchars($basvuru['takip_no'] ?: $basvuru['id']); ?></span>
+                    <strong>Takip No:</strong> <span style="font-size:16px; font-weight:bold; color:#000;">#<?php echo htmlspecialchars($basvuru['takip_no'] ?: $basvuru['id']); ?></span>
                 </p>
-                <p style="margin: 0; font-size: 13px; color: #555;">
+                <p style="margin: 0; font-size: 13px; color: #333;">
                     <strong>Başvuru Tarihi:</strong> <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?>
                 </p>
             </div>
@@ -306,13 +311,13 @@ $bugun = date('Y-m-d');
         </div>
 
         <?php if ($basvuru['durum'] == 'Reddedildi' && !empty($basvuru['red_sebebi'])): ?>
-            <div style="background:#fce8e6; border-left:5px solid #d93025; padding:12px 18px; border-radius:6px; margin-bottom:20px; color:#d93025;">
+            <div style="background:#fce8e6; border-left:5px solid #d93025; border:1px solid #d93025; padding:12px 18px; border-radius:4px; margin-bottom:20px; color:#d93025;">
                 <strong style="font-size:15px;"> Bu Başvuru Reddedilmiştir</strong><br>
                 <strong>Red Gerekçesi:</strong> <?php echo htmlspecialchars($basvuru['red_sebebi']); ?>
             </div>
         <?php endif; ?>
 
-        <h3 style="color:#1b656e; border-bottom:1px solid #ddd; padding-bottom:5px;">Forma Girilen Tüm Detaylar</h3>
+        <h3 style="color:#000; border-bottom:2px solid #000; padding-bottom:5px; margin-top:25px;">Forma Girilen Tüm Detaylar</h3>
         <table class="grid-table">
             <tbody>
                 <?php 
@@ -369,8 +374,8 @@ $bugun = date('Y-m-d');
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
 
-                <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
-                    <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
+                <div style="margin-top: 25px; border: 1px solid #000; border-radius: 4px; padding: 15px; background: #fff;">
+                    <h4 style="margin:0 0 10px 0; color:#000; text-align:center; border-bottom:1px solid #000; padding-bottom:5px; font-weight:bold;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
                     <table class="grid-table" style="margin-bottom:0;">
                         <tr>
                             <th style="width:30%;">İşlem Tarihi *</th>
@@ -408,8 +413,8 @@ $bugun = date('Y-m-d');
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
 
-                <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
-                    <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
+                <div style="margin-top: 25px; border: 1px solid #000; border-radius: 4px; padding: 15px; background: #fff;">
+                    <h4 style="margin:0 0 10px 0; color:#000; text-align:center; border-bottom:1px solid #000; padding-bottom:5px; font-weight:bold;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
                     <table class="grid-table" style="margin-bottom:0;">
                         <tr>
                             <th style="width:30%;">İşlem Tarihi *</th>
@@ -460,8 +465,8 @@ $bugun = date('Y-m-d');
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
 
-                <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
-                    <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
+                <div style="margin-top: 25px; border: 1px solid #000; border-radius: 4px; padding: 15px; background: #fff;">
+                    <h4 style="margin:0 0 10px 0; color:#000; text-align:center; border-bottom:1px solid #000; padding-bottom:5px; font-weight:bold;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
                     <table class="grid-table" style="margin-bottom:0;">
                         <tr>
                             <th style="width:30%;">İşlem Tarihi *</th>
@@ -499,8 +504,8 @@ $bugun = date('Y-m-d');
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
 
-                <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
-                    <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
+                <div style="margin-top: 25px; border: 1px solid #000; border-radius: 4px; padding: 15px; background: #fff;">
+                    <h4 style="margin:0 0 10px 0; color:#000; text-align:center; border-bottom:1px solid #000; padding-bottom:5px; font-weight:bold;">BİLGİ İŞLEM DAİRESİ İŞLEMLERİ (* Yönetici Tarafından Doldurulabilir)</h4>
                     <table class="grid-table" style="margin-bottom:0;">
                         <tr>
                             <th style="width:30%;">İşlem Tarihi *</th>
@@ -595,8 +600,8 @@ $bugun = date('Y-m-d');
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
 
-                <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #fafafa;">
-                    <h4 style="margin:0 0 10px 0; color:#1b656e; text-align:center; border-bottom:1px solid #ccc; padding-bottom:5px;">Aşağıdaki Bölümü Boş Bırakınız (Bilgi İşlem Dairesince Doldurulacaktır)</h4>
+                <div style="margin-top: 25px; border: 1px solid #000; border-radius: 4px; padding: 15px; background: #fff;">
+                    <h4 style="margin:0 0 10px 0; color:#000; text-align:center; border-bottom:1px solid #000; padding-bottom:5px; font-weight:bold;">Aşağıdaki Bölümü Boş Bırakınız (Bilgi İşlem Dairesince Doldurulacaktır)</h4>
                     <table class="grid-table" style="margin-bottom:0;">
                         <tr>
                             <th style="width:35%;">E-posta Adresi :</th>
@@ -622,8 +627,8 @@ $bugun = date('Y-m-d');
             <form method="POST" action="detay.php?id=<?php echo $id; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
 
-                <div style="margin-top: 25px; border: 2px solid #1b656e; border-radius: 6px; padding: 15px; background: #f0f7f7;">
-                    <h4 style="margin:0 0 12px 0; color:#1b656e; text-align:center; border-bottom:2px solid #1b656e; padding-bottom:8px; font-weight:bold;">
+                <div style="margin-top: 25px; border: 1px solid #000; border-radius: 4px; padding: 15px; background: #fff;">
+                    <h4 style="margin:0 0 12px 0; color:#000; text-align:center; border-bottom:2px solid #000; padding-bottom:8px; font-weight:bold;">
                         ⚙️ BİLGİ İŞLEM DAİRESİ / YÖNETİCİ DOLDURMA ALANI (* Sadece Yönetici Tarafından İşlenebilir)
                     </h4>
                     <table class="grid-table" style="margin-bottom:15px; width:100%;">
@@ -631,10 +636,10 @@ $bugun = date('Y-m-d');
                             $val = $veriler[$fa['name']] ?? '';
                         ?>
                             <tr>
-                                <th style="width:35%; background:#e4f0f0; color:#1b656e; padding:10px; border:1px solid #ccc; font-weight:bold;">
+                                <th style="width:35%; background:#f4f4f4; color:#000; padding:10px; border:1px solid #000; font-weight:bold;">
                                     <?php echo htmlspecialchars($fa['label']); ?> <?php echo $fa['required'] == 1 ? '*' : ''; ?>
                                 </th>
-                                <td style="padding:8px 10px; border:1px solid #ccc; background:#fff;">
+                                <td style="padding:8px 10px; border:1px solid #000; background:#fff;">
                                     <?php if ($fa['type'] === 'textarea'): ?>
                                         <textarea class="yonetici-input" name="yonetici[<?php echo htmlspecialchars($fa['name']); ?>]" rows="3" style="width:100%; padding:6px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;"><?php echo htmlspecialchars(is_array($val) ? implode(', ', $val) : $val); ?></textarea>
                                     <?php elseif ($fa['type'] === 'select'): ?>
