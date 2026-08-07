@@ -298,6 +298,12 @@ $bildirim_loglari = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC 
         .modal-content textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin: 10px 0; font-family: inherit; box-sizing: border-box; }
         .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; }
     </style>
+    <script>
+        function toggleBildirimKutusu() {
+            var el = document.getElementById('bildirimKutusu');
+            if (el) el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
 </head>
 <body>
 
@@ -306,11 +312,53 @@ $bildirim_loglari = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC 
             <img src="https://baunwebapi.balikesir.edu.tr/uploads/1729083231270.png" height="35" style="background:white; border-radius:4px; padding:2px;">
             BAÜN Form İşlem Merkezi - Yönetici Paneli
         </h1>
-        <div>
-            <span style="margin-right:15px; font-size:14px;">Hoş geldiniz, <strong><?php echo htmlspecialchars($admin_ad); ?></strong> (<?php echo $admin_rol === 'superadmin' ? 'Süper Admin' : 'Admin'; ?>)</span>
+        <div style="display:flex; align-items:center; gap:10px; position:relative;">
+            <span style="font-size:14px; margin-right:5px;">Hoş geldiniz, <strong><?php echo htmlspecialchars($admin_ad); ?></strong> (<?php echo $admin_rol === 'superadmin' ? 'Süper Admin' : 'Admin'; ?>)</span>
             
+            <!-- BİLDİRİMLER BUTONU VE AÇILIR PANEL -->
+            <div style="position:relative; display:inline-block;">
+                <button type="button" class="header-btn" onclick="toggleBildirimKutusu()" style="background:#34495e; color:white; border:none; cursor:pointer; display:flex; align-items:center; gap:6px; padding:8px 14px; border-radius:5px; font-weight:bold; font-size:13px;">
+                    🔔 Bildirimler
+                    <?php if ($okunmamis_sayisi > 0): ?>
+                        <span id="bildirimRozet" style="background:#d93025; color:white; font-size:11px; padding:2px 7px; border-radius:10px; font-weight:bold;"><?php echo $okunmamis_sayisi; ?></span>
+                    <?php endif; ?>
+                </button>
+
+                <!-- AÇILIR BİLDİRİM PANELİ -->
+                <div id="bildirimKutusu" style="display:none; position:absolute; top:42px; right:0; width:400px; background:white; color:#333; border-radius:8px; box-shadow:0 8px 30px rgba(0,0,0,0.3); z-index:999999; border:1px solid #d0e4eb; overflow:hidden;">
+                    <div style="background:#1b656e; color:white; padding:12px 15px; font-size:13.5px; font-weight:bold; display:flex; justify-content:space-between; align-items:center;">
+                        <span>🔔 Yönetici Bildirimleri & Günlüğü</span>
+                        <form method="POST" style="margin:0;">
+                            <button type="submit" name="tum_bildirimleri_oku" style="background:rgba(255,255,255,0.2); color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">✓ Tümünü Okundu Yap</button>
+                        </form>
+                    </div>
+                    <div style="max-height:400px; overflow-y:auto;">
+                        <?php if (count($bildirim_loglari) > 0): ?>
+                            <?php foreach ($bildirim_loglari as $log): ?>
+                                <div style="padding:12px 15px; border-bottom:1px solid #eee; background:<?php echo ($log['okundu'] == 0) ? '#f0f7f7' : '#ffffff'; ?>; text-align:left;">
+                                    <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px;">
+                                        <strong style="color:#1b656e;">👤 <?php echo htmlspecialchars($log['yonetici_adi']); ?></strong>
+                                        <span style="color:#888; font-size:11px;"><?php echo date('d.m.Y H:i', strtotime($log['tarih'])); ?></span>
+                                    </div>
+                                    <div style="font-size:13px; color:#444; line-height:1.4;">
+                                        <?php echo htmlspecialchars($log['islem_detayi']); ?>
+                                    </div>
+                                    <?php if ($log['basvuru_id'] > 0): ?>
+                                        <div style="margin-top:5px;">
+                                            <a href="detay.php?id=<?php echo $log['basvuru_id']; ?>" style="color:#1b656e; font-size:11.5px; font-weight:bold; text-decoration:none;">Başvuru Detayına Git →</a>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div style="padding:20px; text-align:center; color:#888; font-size:13px;">Henüz hiç bildirim yok.</div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
             <?php if($admin_rol === 'superadmin'): ?>
-                <a href="yetki.php" class="header-btn-yetki"> Admin & İzin Yönetimi</a>
+                <a href="yetki.php" class="header-btn-yetki" style="margin-right:0;"> Admin & İzin Yönetimi</a>
             <?php endif; ?>
             
             <a href="cikis.php" class="header-btn">Güvenli Çıkış</a>
