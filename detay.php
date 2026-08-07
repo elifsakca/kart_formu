@@ -783,18 +783,13 @@ $bugun = date('Y-m-d');
 
         <!-- FORMA ÖZEL TAAHHÜT, BİRİM YÖNETİCİSİ İMZA VE E-POSTA KULLANIM KURALLARI (OFFICIAL 3-PAGE FLOW) -->
         <?php if ($basvuru['form_kodu'] == 'KDYS.FR.0072' || strpos($basvuru['form_kodu'], '0072') !== false || $basvuru['form_kodu'] == 'KDYS.FR.0082' || $basvuru['form_kodu'] == 'KDYS.FR.0078' || strpos($basvuru['form_kodu'], '0078') !== false || $basvuru['form_kodu'] == 'KDYS.FR.0079' || strpos($basvuru['form_kodu'], '0079') !== false): ?>
-            <!-- PAGE 1 BOTTOM: TAAHHÜT VE İMZA KUTUSU -->
+            <!-- PAGE 1 BOTTOM: TAAHHÜT KUTUSU -->
             <div style="margin-top:20px; border:1px solid #000; padding:12px; font-size:12px; line-height:1.5; text-align:justify; background:#fff;">
                 Birimimiz adına kullanılmak üzere, sistemde yukarıda belirtilen e-posta hesabının açılmasını talep ediyoruz. Ayrıca bu sayfanın arkasında bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, T.C. Balıkesir Üniversitesi E-posta Kullanım Politikası ve Bilgi İşlem Daire Başkanlığı web sayfasında bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikalara okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.
                 
-                <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:flex-end;">
-                    <div>
-                        <strong>Tarih:</strong> _____ / _____ / ________
-                    </div>
-                    <div style="text-align:center;">
-                        <strong>Birim Yöneticisi / Proje Sorumlusu / Düzenleme Kurulu Başkanı</strong><br><br><br>
-                        <strong>İmza</strong>
-                    </div>
+                <div style="margin-top:15px; padding-top:8px; border-top:1px dashed #ccc; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:#1b656e; font-weight:bold;">
+                    <span>✓ Başvuru Sahibi Tarafından Çevrimiçi Dolduruldu ve Onaylandı</span>
+                    <span>Tarih: <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?></span>
                 </div>
             </div>
 
@@ -846,18 +841,13 @@ $bugun = date('Y-m-d');
                 <p style="margin:2px 0;">Kullanıcı, adına düzenlenmiş bu formu doldurup imzaladıktan sonra bu sözleşme yürürlüğe girer ve T.C. Balıkesir Üniversitesi birimi olduğu sürece devam eder.</p>
             </div>
         <?php elseif ($basvuru['form_kodu'] == 'KDYS.FR.0077' || strpos($basvuru['form_kodu'], '0077') !== false): ?>
-            <!-- PAGE 1 BOTTOM: PERSONEL TAAHHÜT VE İMZA KUTUSU -->
+            <!-- PAGE 1 BOTTOM: PERSONEL TAAHHÜT KUTUSU -->
             <div style="margin-top:20px; border:1px solid #000; padding:12px; font-size:12px; line-height:1.5; text-align:justify; background:#fff;">
                 Akademik/İdari çalışmalarımda kullanılmak üzere, sitemizde yukarıda belirtilen alan adının, 150 MB web ve 20 MB veritabanı (otomasyon) kuralı alan olarak tahsis edilmesini ve bu alanların kullanımına izin verilerek web alanının açılarak erişim bilgilerinin tarafıma teslim edilmesini talep ediyorum. Ayrıca bu sayfanın arkasında bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, ve http://bid.balikesir.edu.tr adresinde bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikalara okunduğu ve bunlara uygun hareket edileceğini taahhüt ederim.
                 
-                <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:flex-end;">
-                    <div>
-                        <strong>Tarih:</strong> _____ / _____ / ________
-                    </div>
-                    <div style="text-align:center;">
-                        <strong>PERSONEL</strong><br><br><br>
-                        <strong>İmza</strong>
-                    </div>
+                <div style="margin-top:15px; padding-top:8px; border-top:1px dashed #ccc; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:#1b656e; font-weight:bold;">
+                    <span>✓ Başvuran Personel Tarafından Çevrimiçi Dolduruldu ve Onaylandı</span>
+                    <span>Tarih: <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?></span>
                 </div>
             </div>
 

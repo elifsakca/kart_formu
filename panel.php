@@ -618,7 +618,7 @@ if ($admin_rol === 'superadmin') {
                                 </td>
                                 <td style="text-align:center; white-space:nowrap;">
                                     <a href="detay.php?id=<?php echo $b['id']; ?>" class="btn-detay">Detay Gör</a>
-                                    <a href="detay.php?id=<?php echo $b['id']; ?>&print=1" target="_blank" class="btn-detay" style="background:#27ae60; margin-left:4px;">PDF İndir</a>
+                                    <a href="detay.php?id=<?php echo $b['id']; ?>&print=1" class="btn-detay" style="background:#27ae60; margin-left:4px;">PDF İndir</a>
                                     <?php if ($b['durum'] == 'Silindi'): ?>
                                         <a href="panel.php?islem=geri_yukle&id=<?php echo $b['id']; ?>&tab=<?php echo $tab; ?>" class="btn-detay" style="background:#27ae60; margin-left:4px;">Geri Yükle</a>
                                         <a href="panel.php?islem=kalici_sil&id=<?php echo $b['id']; ?>&tab=<?php echo $tab; ?>" class="btn-sil" onclick="return confirm('Bu başvuruyu kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz!');">Kalıcı Sil</a>
