@@ -133,15 +133,15 @@ if (!file_exists($target_file)) {
             </div>
             <br>
             <div style="margin-top:15px; display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
-                <a href="takip.php?takip_no=<?php echo urlencode($_GET['takip_no'] ?? ''); ?>" style="display:inline-flex; align-items:center; gap:6px; background:#1b656e; color:white; font-weight:bold; padding:10px 20px; border-radius:5px; text-decoration:none; transition:background 0.3s;">🔍 Başvuru Durumunu Sorgula</a>
-                <a href="detay.php?takip_no=<?php echo urlencode($_GET['takip_no'] ?? ''); ?>" style="display:inline-flex; align-items:center; gap:6px; background:#28a745; color:white; font-weight:bold; padding:10px 20px; border-radius:5px; text-decoration:none; transition:background 0.3s;">📄 Başvurumu Görüntüle / PDF İndir</a>
+                <a href="takip.php?takip_no=<?php echo urlencode($_GET['takip_no'] ?? ''); ?>" style="display:inline-flex; align-items:center; gap:6px; background:#1b656e; color:white; font-weight:bold; padding:10px 20px; border-radius:5px; text-decoration:none; transition:background 0.3s;"> Başvuru Durumunu Sorgula</a>
+                <a href="detay.php?takip_no=<?php echo urlencode($_GET['takip_no'] ?? ''); ?>" style="display:inline-flex; align-items:center; gap:6px; background:#28a745; color:white; font-weight:bold; padding:10px 20px; border-radius:5px; text-decoration:none; transition:background 0.3s;"> Başvurumu Görüntüle / PDF İndir</a>
             </div>
         </div>
     <?php endif; ?>
 
     <?php if(isset($_GET['durum']) && $_GET['durum'] == 'hata'): ?>
         <div style="max-width:900px; margin:25px auto; background:#f8d7da; color:#721c24; padding:20px; border-radius:10px; border-left:8px solid #dc3545; text-align:center; position:relative; z-index:20; box-shadow:0 6px 18px rgba(0,0,0,0.1);">
-            <h3 style="margin:0 0 8px 0; font-size:18px;">❌ Form Kaydedilirken Hata Oluştu</h3>
+            <h3 style="margin:0 0 8px 0; font-size:18px;"> Form Kaydedilirken Hata Oluştu</h3>
             <p style="margin:0; font-size:14px;"><?php echo htmlspecialchars($_GET['mesaj'] ?? 'Bilinmeyen hata'); ?></p>
         </div>
     <?php endif; ?>
