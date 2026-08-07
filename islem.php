@@ -79,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_kodu'])) {
     $post_verileri = $_POST;
     unset($post_verileri['form_gonder']);
     $form_verileri_json = json_encode($post_verileri, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-
     try {
         $query = $db->prepare("INSERT INTO basvurular 
             (form_kodu, form_adi, takip_no, tc_no, ad_soyad, telefon, eposta, birim, fotograf_yolu, dekont_yolu, form_verileri, durum, kayit_tarihi) 
