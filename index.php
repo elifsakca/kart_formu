@@ -1017,7 +1017,7 @@ foreach ($aktif_formlar as $f) {
                             existingBadge.style.cssText = "text-align:center; font-size:12.5px; color:#1b656e; margin:-5px 0 15px 0; font-weight:bold; background:#e8f4f8; padding:5px 15px; border-radius:15px; display:block; border:1px solid #1b656e;";
                             h2Elem.insertAdjacentElement('afterend', existingBadge);
                         }
-                        existingBadge.innerHTML = "📅 Doküman Son Revize Tarihi: " + (formRevize || "07.08.2026 13:28");
+                        existingBadge.innerHTML = " Doküman Son Revize Tarihi: " + (formRevize || "07.08.2026 13:28");
                     }
                 }
 
