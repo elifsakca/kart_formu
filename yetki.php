@@ -820,37 +820,6 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             </div>
         <?php endforeach; ?>
         <?php endif; ?>
-
-        <!-- İŞLEM GÜNLÜĞÜ (AUDIT LOG) KARTI -->
-        <div class="card">
-            <h2> Yöneticilerin İşlem Günlüğü </h2>
-            <p style="font-size:13px; color:#666;">Yöneticilerin başvurular üzerinde yaptığı tüm durum güncellemeleri ve red sebepleri aşağıda kronolojik olarak listelenmektedir.</p>
-            
-            <?php if (count($loglar) > 0): ?>
-                <table class="log-table">
-                    <thead>
-                        <tr>
-                            <th>Tarih</th>
-                            <th>İşlemi Yapan Yönetici</th>
-                            <th>Takip No</th>
-                            <th>Yapılan İşlem ve Detayı</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($loglar as $l): ?>
-                            <tr>
-                                <td><?php echo date('d.m.Y H:i:s', strtotime($l['tarih'])); ?></td>
-                                <td><strong><?php echo htmlspecialchars($l['yonetici_adi']); ?></strong></td>
-                                <td><span style="color:#1b656e; font-weight:bold;">#<?php echo htmlspecialchars($l['takip_no']); ?></span></td>
-                                <td><?php echo htmlspecialchars($l['islem_detayi']); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php else: ?>
-                <p style="color:#999; text-align:center; padding:20px;">Henüz kaydedilmiş bir yönetici işlemi bulunmamaktadır.</p>
-            <?php endif; ?>
-        </div>
     </div>
 
     <script>
