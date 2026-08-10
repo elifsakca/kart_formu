@@ -43,7 +43,7 @@ if ($mode === 'input'):
         <table class="grid-table">
             <tr>
                 <td style="width: 20%; text-align: center; vertical-align: middle;">
-                    <img src="logo.png" alt="BAÜN Logo" style="width: 75px; height: auto;">
+                    <img src="https://baunwebapi.balikesir.edu.tr/uploads/1729083231270.png" alt="BAÜN Logo" style="width: 75px; height: auto;">
                 </td>
                 <td style="width: 55%; text-align: center; vertical-align: middle;">
                     <h3 style="margin: 0; font-size: 13px; font-weight: bold;">T.C.<br>BALIKESİR ÜNİVERSİTESİ REKTÖRLÜĞÜ</h3>
