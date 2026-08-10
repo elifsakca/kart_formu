@@ -92,7 +92,7 @@ foreach ($aktif_formlar as $f) {
 
     <!-- Banner -->
     <div class="banner">
-        <h1>Üniversitemiz Form İşlem Merkezi</h1>
+        <h1>Balıkesir Üniversitesi Form İşlem Merkezi</h1>
         <p><a href="https://bid.balikesir.edu.tr" target="_blank">ANASAYFA</a> > FORMLAR</p>
     </div>
 
