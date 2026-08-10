@@ -1,19 +1,41 @@
 <?php
+session_start();
 require_once 'baglan.php';
 
-$form_kodu = $_GET['kodu'] ?? $_GET['form_kodu'] ?? '';
-$form_id = $_GET['id'] ?? '';
+$form_kodu = trim($_GET['kodu'] ?? $_GET['form_kodu'] ?? '');
+$form_id   = trim($_GET['id'] ?? '');
 
 $form = null;
 if (!empty($form_kodu)) {
-    $stmt = $db->prepare("SELECT * FROM formlar WHERE (form_kodu = :kodu OR dosya_adi = :kodu OR REPLACE(form_kodu, '.', '') = :kodu) AND durum = 1 LIMIT 1");
-    $stmt->execute([':kodu' => $form_kodu]);
+    $clean_kodu  = preg_replace('/[^a-zA-Z0-9]/', '', $form_kodu);
+    $only_digits = preg_replace('/[^0-9]/', '', $form_kodu);
+    
+    $stmt = $db->prepare("
+        SELECT * FROM formlar 
+        WHERE form_kodu = :kodu 
+           OR dosya_adi = :kodu 
+           OR REPLACE(form_kodu, '.', '') = :kodu
+           OR REPLACE(REPLACE(form_kodu, '.', ''), '-', '') = :clean_kodu
+           OR form_kodu LIKE :like_kodu
+           OR (:digits != '' AND (RIGHT(form_kodu, LENGTH(:digits)) = :digits OR form_kodu LIKE :like_digits))
+        ORDER BY CASE WHEN form_kodu = :kodu THEN 0 ELSE 1 END, id ASC
+        LIMIT 1
+    ");
+    $stmt->execute([
+        ':kodu'        => $form_kodu,
+        ':clean_kodu'  => $clean_kodu,
+        ':like_kodu'   => '%' . $form_kodu . '%',
+        ':digits'      => $only_digits,
+        ':like_digits' => '%' . $only_digits
+    ]);
     $form = $stmt->fetch();
 } elseif (!empty($form_id)) {
-    $stmt = $db->prepare("SELECT * FROM formlar WHERE id = :id AND durum = 1 LIMIT 1");
+    $stmt = $db->prepare("SELECT * FROM formlar WHERE id = :id LIMIT 1");
     $stmt->execute([':id' => $form_id]);
     $form = $stmt->fetch();
 }
+
+$is_admin = isset($_SESSION['admin_giris']) && $_SESSION['admin_giris'] === true;
 
 if (!$form) {
     die("
@@ -24,9 +46,27 @@ if (!$form) {
     </head>
     <body>
         <div class='box'>
-            <h2 style='color:#e74c3c;'>Form Bulunamadı veya Pasif Durumda</h2>
-            <p>Talep ettiğiniz başvuru formu sisteme kayıtlı değil veya erişime kapatılmış.</p>
+            <h2 style='color:#e74c3c;'>Form Bulunamadı</h2>
+            <p>Aradığınız başvuru formu sisteme kayıtlı değil veya geçersiz bir kod girdiniz.</p>
             <a href='index.php' style='display:inline-block; margin-top:15px; background:#1b656e; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;'>← Tüm Formlar Listesine Dön</a>
+        </div>
+    </body>
+    </html>
+    ");
+}
+
+if ($form['durum'] == 0 && !$is_admin) {
+    die("
+    <!DOCTYPE html>
+    <html lang='tr'>
+    <head><meta charset='UTF-8'><title>Form Pasif Durumda</title>
+    <style>body{font-family:sans-serif; text-align:center; padding:50px; background:#f8f9fa;} .box{background:white; max-width:500px; margin:0 auto; padding:30px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}</style>
+    </head>
+    <body>
+        <div class='box'>
+            <h2 style='color:#e67e22;'>Form Şu An Pasif Durumda</h2>
+            <p><strong>" . htmlspecialchars($form['form_kodu'] . ' - ' . $form['form_adi']) . "</strong> başvuruya geçici olarak kapatılmıştır.</p>
+            <a href='index.php' style='display:inline-block; margin-top:15px; background:#1b656e; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;'>← Aktif Formlar Listesine Dön</a>
         </div>
     </body>
     </html>
@@ -38,7 +78,11 @@ $form_num_short = ltrim($form_num, '0');
 $target_file = __DIR__ . '/forms/' . $form_num_short . '.php';
 
 if (!file_exists($target_file)) {
-    $target_file = __DIR__ . '/forms/genel.php';
+    if (!empty($form['dosya_adi']) && file_exists(__DIR__ . '/forms/' . $form['dosya_adi'])) {
+        $target_file = __DIR__ . '/forms/' . $form['dosya_adi'];
+    } else {
+        $target_file = __DIR__ . '/forms/genel.php';
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -100,6 +144,12 @@ if (!file_exists($target_file)) {
     </style>
 </head>
 <body>
+
+    <?php if ($form['durum'] == 0 && $is_admin): ?>
+        <div style="background:#fff3cd; color:#856404; padding:12px 20px; text-align:center; font-weight:bold; border-bottom:2px solid #ffeeba; position:relative; z-index:999;">
+            ⚠️ Bu form (<?php echo htmlspecialchars($form['form_kodu']); ?>) şu an PASİF durumdadır. Yönetici önizleme modundasınız.
+        </div>
+    <?php endif; ?>
 
     <!-- Üst Menü -->
     <div class="navbar">
