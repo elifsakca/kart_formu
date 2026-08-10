@@ -5,7 +5,7 @@ $mode = $mode ?? 'input';
 if ($mode === 'input'):
 ?>
     <!-- KDYS.FR.0072 - Kurumsal E-posta Hesabı Açma Başvuru Formu -->
-    <div id="form_0072.php" class="gizli-form">
+    <div id="72.php" class="gizli-form">
         <h2>KDYS.FR.0072 - KURUMSAL E-POSTA HESABI AÇMA BAŞVURU FORMU</h2>
         <form method="POST" action="islem.php">
             <input type="hidden" name="form_kodu" value="KDYS.FR.0072">

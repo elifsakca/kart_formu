@@ -56,23 +56,41 @@ try {
     $form_kontrol = $db->query("SELECT COUNT(*) FROM formlar")->fetchColumn();
     if ($form_kontrol == 0) {
         $varsayilan_formlar = [
-            ['KDYS.FR.0553', 'Akıllı Kart İşlem Formu', 'Akıllı Kart Formları', 'form_f52.php'],
-            ['KDYS.FR.0556', 'Akıllı Kart Öğrenci İşlem Formu', 'Akıllı Kart Formları', 'form_f53.php'],
-            ['KDYS.FR.0555', 'Kayıp Akıllı Kart Müracaat Formu', 'Akıllı Kart Formları', 'form_f54.php'],
-            ['KDYS.FR.0554', 'Arızalı Akıllı Kart Müracaat Formu', 'Akıllı Kart Formları', 'form_f55.php'],
-            ['KDYS.FR.0072', 'Kurumsal E-Posta Talep Formu', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0072.php'],
-            ['KDYS.FR.0073', 'E-İmza Mini Kart Okuyucu Tutanağı', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0073.php'],
-            ['KDYS.FR.0074', 'E-İmza Talep Formu', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0074.php'],
-            ['KDYS.FR.0077', 'Kişisel Web Sözleşmesi', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0077.php'],
-            ['KDYS.FR.0078', 'Kurumsal Statik IP Sözleşmesi', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0078.php'],
-            ['KDYS.FR.0079', 'Kurumsal Web Sözleşmesi', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0079.php'],
-            ['KDYS.FR.0080', 'Mernis Taahhütnamesi', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0080.php'],
-            ['KDYS.FR.0082', 'Personel E-Posta Başvuru Formu', 'Bilgi İşlem Daire Başkanlığı Formları', 'form_0082.php']
+            ['KDYS.FR.0553', 'Akıllı Kart İşlem Formu', 'Akıllı Kart Formları', '553.php'],
+            ['KDYS.FR.0556', 'Akıllı Kart Öğrenci İşlem Formu', 'Akıllı Kart Formları', '556.php'],
+            ['KDYS.FR.0555', 'Kayıp Akıllı Kart Müracaat Formu', 'Akıllı Kart Formları', '555.php'],
+            ['KDYS.FR.0554', 'Arızalı Akıllı Kart Müracaat Formu', 'Akıllı Kart Formları', '554.php'],
+            ['KDYS.FR.0072', 'Kurumsal E-Posta Talep Formu', 'Bilgi İşlem Daire Başkanlığı Formları', '72.php'],
+            ['KDYS.FR.0073', 'E-İmza Mini Kart Okuyucu Tutanağı', 'Bilgi İşlem Daire Başkanlığı Formları', '73.php'],
+            ['KDYS.FR.0074', 'E-İmza Talep Formu', 'Bilgi İşlem Daire Başkanlığı Formları', '74.php'],
+            ['KDYS.FR.0077', 'Kişisel Web Sözleşmesi', 'Bilgi İşlem Daire Başkanlığı Formları', '77.php'],
+            ['KDYS.FR.0078', 'Kurumsal Statik IP Sözleşmesi', 'Bilgi İşlem Daire Başkanlığı Formları', '78.php'],
+            ['KDYS.FR.0079', 'Kurumsal Web Sözleşmesi', 'Bilgi İşlem Daire Başkanlığı Formları', '79.php'],
+            ['KDYS.FR.0080', 'Mernis Taahhütnamesi', 'Bilgi İşlem Daire Başkanlığı Formları', '80.php'],
+            ['KDYS.FR.0082', 'Personel E-Posta Başvuru Formu', 'Bilgi İşlem Daire Başkanlığı Formları', '82.php']
         ];
         $insertFormStmt = $db->prepare("INSERT INTO formlar (form_kodu, form_adi, kategori, dosya_adi, durum) VALUES (?, ?, ?, ?, 1)");
         foreach ($varsayilan_formlar as $vf) {
             $insertFormStmt->execute($vf);
         }
+    }
+
+    // Mevcut veri tabanındaki dosya_adi alanlarını güncelle
+    try {
+        $db->exec("UPDATE formlar SET dosya_adi = '553.php' WHERE form_kodu = 'KDYS.FR.0553'");
+        $db->exec("UPDATE formlar SET dosya_adi = '556.php' WHERE form_kodu = 'KDYS.FR.0556'");
+        $db->exec("UPDATE formlar SET dosya_adi = '555.php' WHERE form_kodu = 'KDYS.FR.0555'");
+        $db->exec("UPDATE formlar SET dosya_adi = '554.php' WHERE form_kodu = 'KDYS.FR.0554'");
+        $db->exec("UPDATE formlar SET dosya_adi = '72.php' WHERE form_kodu = 'KDYS.FR.0072'");
+        $db->exec("UPDATE formlar SET dosya_adi = '73.php' WHERE form_kodu = 'KDYS.FR.0073'");
+        $db->exec("UPDATE formlar SET dosya_adi = '74.php' WHERE form_kodu = 'KDYS.FR.0074'");
+        $db->exec("UPDATE formlar SET dosya_adi = '77.php' WHERE form_kodu = 'KDYS.FR.0077'");
+        $db->exec("UPDATE formlar SET dosya_adi = '78.php' WHERE form_kodu = 'KDYS.FR.0078'");
+        $db->exec("UPDATE formlar SET dosya_adi = '79.php' WHERE form_kodu = 'KDYS.FR.0079'");
+        $db->exec("UPDATE formlar SET dosya_adi = '80.php' WHERE form_kodu = 'KDYS.FR.0080'");
+        $db->exec("UPDATE formlar SET dosya_adi = '82.php' WHERE form_kodu = 'KDYS.FR.0082'");
+    } catch (Exception $e) {
+        // Hata oluşursa yoksay
     }
 
     // Sütun Kontrolü ve Güncellemesi (formlar)
