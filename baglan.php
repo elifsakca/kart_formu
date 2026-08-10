@@ -56,10 +56,6 @@ try {
     $form_kontrol = $db->query("SELECT COUNT(*) FROM formlar")->fetchColumn();
     if ($form_kontrol == 0) {
         $varsayilan_formlar = [
-            ['KDYS.FR.0553', 'Akıllı Kart İşlem Formu', 'Akıllı Kart Formları', '553.php'],
-            ['KDYS.FR.0556', 'Akıllı Kart Öğrenci İşlem Formu', 'Akıllı Kart Formları', '556.php'],
-            ['KDYS.FR.0555', 'Kayıp Akıllı Kart Müracaat Formu', 'Akıllı Kart Formları', '555.php'],
-            ['KDYS.FR.0554', 'Arızalı Akıllı Kart Müracaat Formu', 'Akıllı Kart Formları', '554.php'],
             ['KDYS.FR.0072', 'Kurumsal E-Posta Talep Formu', 'Bilgi İşlem Daire Başkanlığı Formları', '72.php'],
             ['KDYS.FR.0073', 'E-İmza Mini Kart Okuyucu Tutanağı', 'Bilgi İşlem Daire Başkanlığı Formları', '73.php'],
             ['KDYS.FR.0074', 'E-İmza Talep Formu', 'Bilgi İşlem Daire Başkanlığı Formları', '74.php'],
@@ -67,7 +63,11 @@ try {
             ['KDYS.FR.0078', 'Kurumsal Statik IP Sözleşmesi', 'Bilgi İşlem Daire Başkanlığı Formları', '78.php'],
             ['KDYS.FR.0079', 'Kurumsal Web Sözleşmesi', 'Bilgi İşlem Daire Başkanlığı Formları', '79.php'],
             ['KDYS.FR.0080', 'Mernis Taahhütnamesi', 'Bilgi İşlem Daire Başkanlığı Formları', '80.php'],
-            ['KDYS.FR.0082', 'Personel E-Posta Başvuru Formu', 'Bilgi İşlem Daire Başkanlığı Formları', '82.php']
+            ['KDYS.FR.0082', 'Personel E-Posta Başvuru Formu', 'Bilgi İşlem Daire Başkanlığı Formları', '82.php'],
+            ['KDYS.FR.0553', 'Akıllı Kart İşlem Formu', 'Akıllı Kart Formları', '553.php'],
+            ['KDYS.FR.0554', 'Arızalı Akıllı Kart Müracaat Formu', 'Akıllı Kart Formları', '554.php'],
+            ['KDYS.FR.0555', 'Kayıp Akıllı Kart Müracaat Formu', 'Akıllı Kart Formları', '555.php'],
+            ['KDYS.FR.0556', 'Akıllı Kart Öğrenci İşlem Formu', 'Akıllı Kart Formları', '556.php']
         ];
         $insertFormStmt = $db->prepare("INSERT INTO formlar (form_kodu, form_adi, kategori, dosya_adi, durum) VALUES (?, ?, ?, ?, 1)");
         foreach ($varsayilan_formlar as $vf) {

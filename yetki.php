@@ -30,7 +30,7 @@ $hata = "";
 
 // Tüm Sistem Formlarını Veritabanından Çek
 try {
-    $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
+    $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, form_kodu ASC")->fetchAll();
 } catch (PDOException $e) {
     $formlar_query = [];
 }
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_form_ekle'])) {
                 logEkle($db, $curAdmin, 0, $f_kodu, "Yeni başvuru formu oluşturdu: '{$f_adi}' ({$f_kodu})");
                 
                 // Formlar listesini ve izin tanımlarını yeniden yükle
-                $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
+                $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, form_kodu ASC")->fetchAll();
                 $tum_formlar = [];
                 foreach ($formlar_query as $f) {
                     $tum_formlar[$f['form_kodu']] = $f['form_kodu'] . ' - ' . $f['form_adi'] . ($f['durum'] == 0 ? ' (PASİF)' : '');
@@ -346,7 +346,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_revize_et'])) {
                 logEkle($db, $curAdmin, 0, $f_kodu, $detayMetni);
                 
                 // Formlar listesini ve izin tanımlarını yeniden yükleyelim
-                $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
+                $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, form_kodu ASC")->fetchAll();
                 $tum_formlar = [];
                 foreach ($formlar_query as $f) {
                     $tum_formlar[$f['form_kodu']] = $f['form_kodu'] . ' - ' . $f['form_adi'] . ($f['durum'] == 0 ? ' (PASİF)' : '');
@@ -380,7 +380,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_durum_degistir'])
         logEkle($db, $curAdmin, 0, $fRow['form_kodu'] ?? $f_id, "'{$fKoduAdi}' formunun durumunu {$durumMetni} yaptı.");
         
         // Formlar listesini ve izin tanımlarını yeniden yükleyelim
-        $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
+        $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, form_kodu ASC")->fetchAll();
         $tum_formlar = [];
         foreach ($formlar_query as $f) {
             $tum_formlar[$f['form_kodu']] = $f['form_kodu'] . ' - ' . $f['form_adi'] . ($f['durum'] == 0 ? ' (PASİF)' : '');
@@ -412,7 +412,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_sil'])) {
         logEkle($db, $curAdmin, 0, $f_kodu ?: $f_id, "'{$f_kodu} - {$f_adi}' isimli başvuru formunu sistemden tamamen sildi.");
         
         // Formlar listesini ve izin tanımlarını yeniden yükleyelim
-        $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, id ASC")->fetchAll();
+        $formlar_query = $db->query("SELECT * FROM formlar ORDER BY kategori ASC, form_kodu ASC")->fetchAll();
         $tum_formlar = [];
         foreach ($formlar_query as $f) {
             $tum_formlar[$f['form_kodu']] = $f['form_kodu'] . ' - ' . $f['form_adi'] . ($f['durum'] == 0 ? ' (PASİF)' : '');

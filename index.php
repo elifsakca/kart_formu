@@ -3,7 +3,7 @@ require_once 'baglan.php';
 
 // Aktif formları çekelim
 try {
-    $formsStmt = $db->query("SELECT * FROM formlar WHERE durum = 1 ORDER BY kategori ASC, id ASC");
+    $formsStmt = $db->query("SELECT * FROM formlar WHERE durum = 1 ORDER BY kategori ASC, form_kodu ASC");
     $aktif_formlar = $formsStmt->fetchAll();
 } catch (PDOException $e) {
     $aktif_formlar = [];
