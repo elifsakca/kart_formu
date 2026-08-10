@@ -243,7 +243,7 @@ $bugun = date('Y-m-d');
         <a href="panel.php">← Panele Dön</a>
         <div>
             <span style="margin-right: 15px;">Yönetici Paneli</span>
-            <button onclick="window.print()" style="font-size: 14px; padding: 8px 16px;">📄 PDF İndir / Yazdır</button>
+            <button onclick="window.print()" style="font-size: 14px; padding: 8px 16px;"> PDF İndir</button>
         </div>
     </div>
 
