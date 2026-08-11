@@ -72,7 +72,7 @@ if (!empty($takip_no)) {
         </a>
         <div>
             <a href="index.php" class="navbar-link">Formlar</a>
-            <a href="takip.php" class="navbar-link" >Başvuru Takibi</a>
+            
             
         </div>
     </div>

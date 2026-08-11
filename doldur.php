@@ -159,7 +159,7 @@ if (!file_exists($target_file)) {
         </a>
         <div>
             <a href="index.php" class="navbar-link" style="font-weight:bold; color:#1b656e; margin-right:15px;">← Tüm Formlar</a>
-            <a href="takip.php" class="navbar-link" style="font-weight:bold; color:#555; margin-right:15px;">Başvuru Takibi</a>
+            
             
         </div>
     </div>
