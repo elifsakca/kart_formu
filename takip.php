@@ -6,7 +6,7 @@ $basvuru = null;
 $hata = "";
 
 if (!empty($takip_no)) {
-    $stmt = $db->prepare("SELECT * FROM basvurular WHERE takip_no = :tno AND (durum IS NULL OR durum != 'Silindi')");
+    $stmt = $db->prepare("SELECT b.*, f.onay_mesaji FROM basvurular b LEFT JOIN formlar f ON b.form_kodu = f.form_kodu WHERE b.takip_no = :tno AND (b.durum IS NULL OR b.durum != 'Silindi')");
     $stmt->execute([':tno' => $takip_no]);
     $basvuru = $stmt->fetch();
 
@@ -134,7 +134,13 @@ if (!empty($takip_no)) {
                         </div>
                     <?php elseif ($durum == 'Onaylandı'): ?>
                         <div style="background:#e8f8f5; border-left:5px solid #27ae60; padding:15px 20px; border-radius:6px; margin-top:20px; color:#1e8449; text-align:left;">
-                             Başvurunuz onaylanmış ve gerekli işlemler tamamlanmıştır.
+                             <?php 
+                             if (!empty($basvuru['onay_mesaji'])) {
+                                 echo nl2br(htmlspecialchars($basvuru['onay_mesaji']));
+                             } else {
+                                 echo "Başvurunuz onaylanmış ve gerekli işlemler tamamlanmıştır.";
+                             }
+                             ?>
                         </div>
                     <?php else: ?>
                         <div style="background:#fef9e7; border-left:5px solid #f39c12; padding:15px 20px; border-radius:6px; margin-top:20px; color:#b7950b; text-align:left;">

@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_form_ekle'])) {
     $f_adi      = trim($_POST['form_adi'] ?? '');
     $f_kategori = trim($_POST['kategori'] ?? 'Bilgi İşlem Daire Başkanlığı Formları');
     $f_dosya    = trim($_POST['dosya_adi'] ?? 'form_genel.php');
+    $f_onay_mesaji = trim($_POST['onay_mesaji'] ?? '');
 
     if ($f_kategori === 'YENI_KAT') {
         $f_kategori = trim($_POST['yeni_kategori_adi'] ?? '');
@@ -82,13 +83,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['yeni_form_ekle'])) {
             if ($chk->fetchColumn() > 0) {
                 $hata = "Bu form kodu ($f_kodu) zaten kullanılmaktadır!";
             } else {
-                $ins = $db->prepare("INSERT INTO formlar (form_kodu, form_adi, kategori, dosya_adi, form_alanlari, durum) VALUES (:fkodu, :fadi, :fkat, :fdosya, :falanlar, 1)");
+                $ins = $db->prepare("INSERT INTO formlar (form_kodu, form_adi, kategori, dosya_adi, form_alanlari, onay_mesaji, durum) VALUES (:fkodu, :fadi, :fkat, :fdosya, :falanlar, :fonay_mesaji, 1)");
                 $ins->execute([
                     ':fkodu' => $f_kodu,
                     ':fadi'  => $f_adi,
                     ':fkat'  => $f_kategori,
                     ':fdosya' => $f_dosya,
-                    ':falanlar' => $form_alanlari_json
+                    ':falanlar' => $form_alanlari_json,
+                    ':fonay_mesaji' => $f_onay_mesaji
                 ]);
 
                 // Tüm normal adminlere otomatik olarak izin ekle
@@ -269,6 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_revize_et'])) {
     $f_adi      = trim($_POST['form_adi'] ?? '');
     $f_kategori = trim($_POST['kategori'] ?? '');
     $f_dosya    = trim($_POST['dosya_adi'] ?? '');
+    $f_onay_mesaji = trim($_POST['onay_mesaji'] ?? '');
 
     if ($f_kategori === 'YENI_KAT') {
         $f_kategori = trim($_POST['yeni_kategori_adi'] ?? '');
@@ -313,13 +316,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_revize_et'])) {
                 $old_kodu_stmt->execute([':id' => $f_id]);
                 $eski_kodu = $old_kodu_stmt->fetchColumn();
 
-                $up = $db->prepare("UPDATE formlar SET form_kodu = :fkodu, form_adi = :fadi, kategori = :fkat, dosya_adi = :fdosya, form_alanlari = :falanlar, son_revize_tarihi = NOW() WHERE id = :id");
+                $up = $db->prepare("UPDATE formlar SET form_kodu = :fkodu, form_adi = :fadi, kategori = :fkat, dosya_adi = :fdosya, form_alanlari = :falanlar, onay_mesaji = :fonay_mesaji, son_revize_tarihi = NOW() WHERE id = :id");
                 $up->execute([
                     ':fkodu' => $f_kodu,
                     ':fadi' => $f_adi,
                     ':fkat' => $f_kategori,
                     ':fdosya' => $f_dosya,
                     ':falanlar' => $form_alanlari_json,
+                    ':fonay_mesaji' => $f_onay_mesaji,
                     ':id' => $f_id
                 ]);
 
@@ -740,6 +744,13 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                     </div>
                 </div>
 
+                <div class="form-satir">
+                    <div class="form-grup" style="width: 100%;">
+                        <label>Onaylandığında Gösterilecek Özel Mesaj (Boş bırakılırsa varsayılan mesaj gösterilir)</label>
+                        <textarea name="onay_mesaji" placeholder="Örn: Başvurunuz onaylanmıştır. Kartınızı teslim almak için Kart Ofisine müracaat ediniz." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; height: 80px; font-family: inherit; font-size: 14px; resize: vertical;"></textarea>
+                    </div>
+                </div>
+
                 <h3 style="color:#1b656e; font-size:15px; margin-top:20px; border-bottom: 1px solid #eee; padding-bottom: 5px;">Form Alanları (Dinamik Bilgi Kutucukları)</h3>
                 <p style="font-size:12px; color:#666; margin-top:0;">Formda doldurulmasını istediğiniz bilgileri (ad, soyad, tc, telefon, dosya vb.) aşağıdan ekleyebilirsiniz.</p>
                 
@@ -817,6 +828,13 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                         </div>
                     </div>
 
+                    <div class="form-satir">
+                        <div class="form-grup" style="width: 100%;">
+                            <label>Onaylandığında Gösterilecek Özel Mesaj (Boş bırakılırsa varsayılan mesaj gösterilir)</label>
+                            <textarea name="onay_mesaji" id="edit_onay_mesaji" placeholder="Örn: Başvurunuz onaylanmıştır. Kartınızı teslim almak için Kart Ofisine müracaat ediniz." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; height: 80px; font-family: inherit; font-size: 14px; resize: vertical;"></textarea>
+                        </div>
+                    </div>
+
                     <h3 style="color:#1b656e; font-size:15px; margin-top:20px; border-bottom: 1px solid #eee; padding-bottom: 5px;">Form Alanları (Dinamik Bilgi Kutucukları)</h3>
                     <p style="font-size:12px; color:#666; margin-top:0;">Formda doldurulmasını istediğiniz bilgi alanlarını (ad, soyad, tc, telefon, dosya vb.) aşağıdan ekleyebilir, silebilir veya türlerini değiştirebilirsiniz.</p>
                     
@@ -891,6 +909,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
                                         data-kategori="<?php echo htmlspecialchars($f['kategori'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                                         data-dosya="<?php echo htmlspecialchars($f['dosya_adi'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                                         data-alanlar="<?php echo htmlspecialchars($alanlar_verisi ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-onay-mesaji="<?php echo htmlspecialchars($f['onay_mesaji'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                                         onclick="formuDuzenleBtn(this)">Revize Et</button>
                                     
                                     <form method="POST" style="margin:0; display:inline;">
@@ -993,11 +1012,12 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             var kategori = btn.getAttribute("data-kategori");
             var dosya = btn.getAttribute("data-dosya");
             var alanlarJson = btn.getAttribute("data-alanlar");
+            var onayMesaji = btn.getAttribute("data-onay-mesaji") || "";
             
-            formuDuzenle(id, kodu, adi, kategori, dosya, alanlarJson);
+            formuDuzenle(id, kodu, adi, kategori, dosya, alanlarJson, onayMesaji);
         }
 
-        function formuDuzenle(id, kodu, adi, kategori, dosya, alanlarJson) {
+        function formuDuzenle(id, kodu, adi, kategori, dosya, alanlarJson, onayMesaji) {
             document.getElementById("edit_form_container").style.display = "block";
             document.getElementById("edit_form_warning").style.display = "none";
             
@@ -1005,6 +1025,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             document.getElementById("edit_form_kodu").value = kodu;
             document.getElementById("edit_form_adi").value = adi;
             document.getElementById("edit_dosya_adi").value = dosya;
+            document.getElementById("edit_onay_mesaji").value = onayMesaji;
             
             var selectKat = document.getElementById("edit_form_kategori_sec");
             var found = false;
@@ -1182,6 +1203,7 @@ $loglar = $db->query("SELECT * FROM islem_loglari ORDER BY tarih DESC LIMIT 50")
             document.getElementById("edit_form_kodu").value = "";
             document.getElementById("edit_form_adi").value = "";
             document.getElementById("edit_dosya_adi").value = "";
+            document.getElementById("edit_onay_mesaji").value = "";
             document.getElementById("edit_alanlar_listesi").innerHTML = "";
         }
 
