@@ -134,7 +134,7 @@ if (!empty($takip_no)) {
                         </div>
                     <?php elseif ($durum == 'Onaylandı'): ?>
                         <div style="background:#e8f8f5; border-left:5px solid #27ae60; padding:15px 20px; border-radius:6px; margin-top:20px; color:#1e8449; text-align:left;">
-                            Başvurunuz onaylanmış ve gerekli işlemler tamamlanmıştır.
+                             <strong>Tebrikler:</strong> Başvurunuz onaylanmış ve gerekli işlemler tamamlanmıştır.
                         </div>
                     <?php else: ?>
                         <div style="background:#fef9e7; border-left:5px solid #f39c12; padding:15px 20px; border-radius:6px; margin-top:20px; color:#b7950b; text-align:left;">
