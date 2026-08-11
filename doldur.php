@@ -147,7 +147,7 @@ if (!file_exists($target_file)) {
 
     <?php if ($form['durum'] == 0 && $is_admin): ?>
         <div style="background:#fff3cd; color:#856404; padding:12px 20px; text-align:center; font-weight:bold; border-bottom:2px solid #ffeeba; position:relative; z-index:999;">
-            ⚠️ Bu form (<?php echo htmlspecialchars($form['form_kodu']); ?>) şu an PASİF durumdadır. Yönetici önizleme modundasınız.
+             Bu form (<?php echo htmlspecialchars($form['form_kodu']); ?>) şu an PASİF durumdadır. Yönetici önizleme modundasınız.
         </div>
     <?php endif; ?>
 
