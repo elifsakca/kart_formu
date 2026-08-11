@@ -138,7 +138,7 @@ if ($mode === 'input'):
             Şahsım adına kullanılmak üzere, sistemde yukarıda belirtilen e-posta hesabının açılmasını talep ediyorum. Ayrıca T.C. Balıkesir Üniversitesi E-posta Kullanım Politikası ve ilgili tüm yasal düzenlemeleri okuduğumu ve bunlara uygun hareket edeceğimi taahhüt ederim.
             
             <div style="margin-top:15px; padding-top:8px; border-top:1px dashed #ccc; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:#1b656e; font-weight:bold;">
-                <span>✓ Personel Tarafından Çevrimiçi Dolduruldu ve Onaylandı</span>
+                <span> Personel Tarafından Çevrimiçi Dolduruldu ve Onaylandı</span>
                 <span>Tarih: <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?></span>
             </div>
         </div>

@@ -142,7 +142,7 @@ if ($mode === 'input'):
             Birimimiz adına kullanılmak üzere, sistemde yukarıda belirtilen alan adının açılması, 250 MB web ve 100 MB veri tabanı (istenirse) kotalı alanın tahsis edilmesini ve bu alanların kullanımı için gerekli web kullanıcısının açılarak teslim edilmesini talep ediyoruz.
             
             <div style="margin-top:15px; padding-top:8px; border-top:1px dashed #ccc; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:#1b656e; font-weight:bold;">
-                <span>✓ Çevrimiçi Dolduruldu ve Onaylandı</span>
+                <span> Çevrimiçi Dolduruldu ve Onaylandı</span>
                 <span>Tarih: <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?></span>
             </div>
         </div>

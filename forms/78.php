@@ -150,7 +150,7 @@ if ($mode === 'input'):
             Birimimiz adına kullanılmak üzere, bir adet statik ip'nin tarafımıza tahsis edilmesini talep ediyoruz. Kullanacağımız tüm bilgisayar, sunucu ve cihazlar birimimiz tarafından temin edilecektir. Bu statik ip'nin erişim sağlayıcı (gateway) olarak kullanılmayacağını, ayrıca T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası ve http://bid.balikesir.edu.tr adresinde bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikalara okunduğu ve bunlara uygun hareket edileceğini taahhüt ederiz.
             
             <div style="margin-top:15px; padding-top:8px; border-top:1px dashed #ccc; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:#1b656e; font-weight:bold;">
-                <span>✓ Başvuru Sahibi Tarafından Çevrimiçi Dolduruldu ve Onaylandı</span>
+                <span> Başvuru Sahibi Tarafından Çevrimiçi Dolduruldu ve Onaylandı</span>
                 <span>Tarih: <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?></span>
             </div>
         </div>

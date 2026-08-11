@@ -149,7 +149,7 @@ if ($mode === 'input'):
             Akademik/İdari çalışmalarımda kullanılmak üzere, sitemizde yukarıda belirtilen alan adının, 150 MB web ve 20 MB veritabanı (otomasyon) kuralı alan olarak tahsis edilmesini ve bu alanların kullanımına izin verilerek web alanının açılarak erişim bilgilerinin tarafıma teslim edilmesini talep ediyorum. Ayrıca bu sayfanın arkasında bulunan T.C. Balıkesir Üniversitesi Bilişim Kaynakları Kullanım Politikası, ve http://bid.balikesir.edu.tr adresinde bulunan yasal düzenlemelerdeki kanun, yönetmelik ve politikalara okunduğu ve bunlara uygun hareket edileceğini taahhüt ederim.
             
             <div style="margin-top:15px; padding-top:8px; border-top:1px dashed #ccc; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:#1b656e; font-weight:bold;">
-                <span>✓ Başvuran Personel Tarafından Çevrimiçi Dolduruldu ve Onaylandı</span>
+                <span> Başvuran Personel Tarafından Çevrimiçi Dolduruldu ve Onaylandı</span>
                 <span>Tarih: <?php echo date('d.m.Y H:i', strtotime($basvuru['kayit_tarihi'])); ?></span>
             </div>
         </div>
