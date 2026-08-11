@@ -129,11 +129,16 @@ foreach ($aktif_formlar as $f) {
                         <div class="form-kart" data-search="<?php echo mb_strtolower($form_kodu . ' ' . $form_adi . ' ' . $kategori, 'UTF-8'); ?>">
                             <div class="form-sol-bilgi">
                                 <div>
+                                    
+                                    <span class="form-baslik"><?php echo $form_adi; ?> </span>
                                     <span class="form-kodu-badge"><?php echo $form_kodu; ?></span>
-                                    <span class="form-revize-badge">Son Revize: <?php echo $revize_tarihi; ?></span>
+                                    <div style="display: flex; justify-content: flex-end;">
+                                        <span class="form-revize-badge">Son Revize: <?php echo $revize_tarihi; ?></span>
+                                    </div>
+                                    
                                 </div>
-                                <h3 class="form-baslik"><?php echo $form_adi; ?></h3>
-                                <p class="form-aciklama">T.C. Balıkesir Üniversitesi Bilgi İşlem Daire Başkanlığı online başvuru ve talep formu.</p>
+                                
+                               
                             </div>
                             
                             <div>
